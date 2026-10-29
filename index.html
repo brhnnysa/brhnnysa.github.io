@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brhn Nysa 
-    | Official Website</title>
+    <title>Brhn Nysa</title>
     <style>
         :root {
             --bg-color: #0b0c10;
@@ -13,7 +12,6 @@
             --accent-hover: #45a29e;
             --card-bg: #1f2833;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -22,13 +20,11 @@
             padding: 0;
             line-height: 1.6;
         }
-
         header {
             text-align: center;
             padding: 4rem 2rem 2rem 2rem;
             background: linear-gradient(180deg, #1f2833 0%, #0b0c10 100%);
         }
-
         .profile-img {
             width: 200px;
             height: 200px;
@@ -38,33 +34,36 @@
             box-shadow: 0 0 20px rgba(102, 252, 241, 0.3);
             margin-bottom: 1.5rem;
         }
-
         header h1 {
             color: #fff;
             margin: 0 0 0.5rem 0;
             font-size: 2.5rem;
             letter-spacing: 2px;
         }
-
-        header p {
+        .subtitle-main {
             color: var(--accent-color);
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 300;
+            margin: 0 0 0.2rem 0;
+            font-size: 1.3rem;
+            font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
+        .subtitle-sub {
+            color: #fff;
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
         main {
             max-width: 900px;
             margin: 0 auto;
             padding: 2rem;
         }
-
         section {
             margin-bottom: 4rem;
         }
-
         h2 {
             color: #fff;
             border-bottom: 2px solid var(--accent-color);
@@ -72,66 +71,12 @@
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
         }
-
-        .featured-track {
-            background-color: var(--card-bg);
-            border-left: 4px solid var(--accent-color);
-            padding: 1.5rem;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 2rem;
-        }
-
-        .featured-track h3 {
-            margin: 0 0 0.5rem 0;
-            color: #fff;
-        }
-
-        .album-container {
+        .featured-track, .album-container, .discography-table {
             background-color: var(--card-bg);
             border-radius: 8px;
-            padding: 2rem;
+            padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-
-        .album-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            border-bottom: 1px solid #2f3b4c;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .album-title {
-            color: #fff;
-            font-size: 1.4rem;
-            margin: 0;
-        }
-
-        .album-year {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .track-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .track-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #2f3b4c;
-        }
-
-        .track-item:last-child {
-            border-bottom: none;
-        }
-
         .play-btn {
             background-color: var(--accent-color);
             color: var(--bg-color);
@@ -142,169 +87,25 @@
             font-weight: bold;
             text-decoration: none;
             font-size: 0.9rem;
-            transition: background-color 0.2s;
-        }
-
-        .play-btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .discography-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .discography-table th, .discography-table td {
-            padding: 1rem;
-            text-align: left;
-        }
-
-        .discography-table th {
-            background-color: #2f3b4c;
-            color: #fff;
-        }
-
-        .discography-table tr {
-            border-bottom: 1px solid #2f3b4c;
-        }
-
-        .discography-table tr:last-child {
-            border-bottom: none;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            padding: 2rem 0;
-        }
-
-        .social-icon {
-            background-color: var(--card-bg);
-            color: #fff;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            border: 1px solid #2f3b4c;
-            transition: all 0.3s;
-        }
-
-        .social-icon:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            font-size: 0.9rem;
-            color: #666;
-            border-top: 1px solid #1f2833;
         }
     </style>
 </head>
 <body>
-
     <header>
         <img src="https://wikimedia.org" alt="Brhn Nysa" class="profile-img">
         <h1>Brhn Nysa</h1>
-        <p>Nigerian Singer-Songwriter</p>
+        <p class="subtitle-main">Official Website</p>
+        <p class="subtitle-sub">Nigerian Singer-Songwriter</p>
     </header>
-
     <main>
         <section id="featured">
             <h2>Featured Release</h2>
             <div class="featured-track">
                 <h3>Still Us (2026)</h3>
-                <p><em>"Still Us" was inspired by an individual named Wynstar. Available now on your favorite streaming platforms.</em></p>
+                <p><em>"Still Us" was inspired by an individual named Wynstar.</em></p>
                 <a href="#" class="play-btn">Listen Now</a>
             </div>
         </section>
-
-        <section id="latest-album">
-            <h2>Latest Album</h2>
-            <div class="album-container">
-                <div class="album-header">
-                    <h3 class="album-title">Second Chances</h3>
-                    <span class="album-year">2026</span>
-                </div>
-                <ul class="track-list">
-                    <li class="track-item">
-                        <span>1. Let's Talk</span>
-                        <a href="#" class="play-btn">▶ Play</a>
-                    </li>
-                    <li class="track-item">
-                        <span>2. My Kind</span>
-                        <a href="#" class="play-btn">▶ Play</a>
-                    </li>
-                    <li class="track-item">
-                        <span>3. Still Us <small style="color: var(--accent-color); margin-left: 5px;">(Inspired by Wynstarr)</small></span>
-                        <a href="#" class="play-btn">▶ Play</a>
-                    </li>
-                    <li class="track-item">
-                        <span>4. My Last Apology</span>
-                        <a href="#" class="play-btn">▶ Play</a>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="discography">
-            <h2>Studio Albums</h2>
-            <table class="discography-table">
-                <thead>
-                    <tr>
-                        <th>Year</th>
-                        <th>Title</th>
-                        <th>Listen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025</td>
-                        <td>heisbrhn</td>
-                        <td><a href="#" class="play-btn">▶ Stream</a></td>
-                    </tr>
-                    <tr>
-                        <td>2026</td>
-                        <td>She Own It</td>
-                        <td><a href="#" class="play-btn">▶ Stream</a></td>
-                    </tr>
-                    <tr>
-                        <td>2026</td>
-                        <td>Second Chances</td>
-                        <td><a href="#" class="play-btn">▶ Stream</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section id="connect">
-            <h2>Connect & Follow</h2>
-            <div class="social-links">
-                <a href="https://artists.bandsintown.com/artists/15666367/profile" target="_blank" class="social-icon">Bandsintown</a>
-                <a href="https://wikidata.org" target="_blank" class="social-icon">Wikidata</a>
-                <a href="#" class="social-icon">Instagram</a>
-                <a href="#" class="social-icon">Facebook</a>
-                <a href="#" class="social-icon">TikTok</a>
-                <a href="#" class="social-icon">MusicBrainz</a>
-                <a href="#" class="social-icon">Discogs</a>
-            </div>
-        </section>
     </main>
-
-    <footer>
-        <p>&copy; 2026 Brhn Nysa. All rights reserved.</p>
-    </footer>
-
 </body>
-</html>     <div style="display:flex; justify-content:center; align-items:center; margin: 40px 0;">
-  <iframe width="560" height="315" src="https://youtube.com" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius:12px; box-shadow: 0px 4px 20px rgba(0,0,0,0.3);"></iframe>
-</div>
-
+</html>
