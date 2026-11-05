@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Brhn Nysa Website</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Smooth Fade Transitions */
+        .fade-screen {
+            position: absolute;
+            transition: opacity 1s ease;
+            opacity: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .hidden {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        /* 1. Facebook Style Loading Screen */
+        #loader-container {
+            max-width: 500px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: block;
+            width: calc(100% - 40px);
+        }
+
+        .animated-background {
+            animation-duration: 1.5s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-name: placeholderShimmer;
+            animation-timing-function: linear;
+            background: #f6f7f8;
+            background: linear-gradient(to right, #f6f7f8 8%, #e9ebee 18%, #f6f7f8 33%);
+            background-size: 800px 104px;
+            position: relative;
+        }
+
+        @keyframes placeholderShimmer {
+            0% { background-position: -468px 0; }
+            100% { background-position: 468px 0; }
+        }
+
+        .fb-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .fb-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .fb-header-text {
+            margin-left: 12px;
+            flex-grow: 1;
+        }
+
+        .fb-name {
+            font-weight: 600;
+            color: #050505;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .line-mini {
+            height: 10px;
+            width: 20%;
+            border-radius: 4px;
+        }
+
+        .fb-content-line {
+            height: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .fb-content-line.one { width: 100%; }
+        .fb-content-line.two { width: 90%; }
+        .fb-content-line.three { width: 65%; }
+
+        /* 2. Welcome Splash Screen */
+        #welcome-screen {
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .emoji {
+            font-size: 3rem;
+            animation: bounce 2s infinite;
+        }
+
+        #welcome-screen h2 {
+            font-size: 2.5rem;
+            color: #1877f2; /* Facebook Blue */
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 3. Main Website Home Page */
+        #main-content {
+            opacity: 0;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #main-content h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+        }
+
+        #main-content p {
+            color: #65676b;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: Facebook Loading Animation with Your Name -->
+    <div id="loader-container" class="fade-screen">
+        <div style="width: 100%;">
+            <div class="fb-header">
+                <div class="fb-avatar animated-background"></div>
+                <div class="fb-header-text">
+                    <div class="fb-name">Brhn Nysa</div>
+                    <div class="line-mini animated-background"></div>
+                </div>
+            </div>
+            <div class="fb-content-line one animated-background"></div>
+            <div class="fb-content-line two animated-background"></div>
+            <div class="fb-content-line three animated-background"></div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Welcome Text Transition with Emoji -->
+    <div id="welcome-screen" class="fade-screen">
+        <div>
+            <div class="emoji">(❁´◡`❁)</div>
+            <h2>Welcome to official Brhn Nysa Website</h2>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: The Actual Final Website Home Page -->
+    <div id="main-content" class="fade-screen">
+        <div>
+            <h1>Official Home Page</h1>
+            <p>Your beautiful modern website content will go right here. Everything loaded smoothly!</p>
+        </div>
+    </div>
+
+    <script>
+        const loader = document.getElementById('loader-container');
+        const welcome = document.getElementById('welcome-screen');
+        const mainSite = document.getElementById('main-content');
+
+        // Step 1: After 4 seconds, fade out the Facebook loader and fade in the Welcome message
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            welcome.style.opacity = '1';
+            
+            // Step 2: Allow the welcome message to stay for 3 seconds, then fade it out
+            setTimeout(() => {
+                welcome.classList.add('hidden');
+                mainSite.style.opacity = '1';
+                document.body.style.overflow = 'auto'; // Re-enable scrolling on main site
+            }, 3000);
+
+        }, 4000);
+    </script>
+
+</body>
+</html> 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Brhn Nysa, Nigerian singer-songwriter. Listen to Still Us and explore the journey from freestyles to original releases." />
+    <title>Brhn Nysa | Singer-Songwriter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
