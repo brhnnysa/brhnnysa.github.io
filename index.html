@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brhn Nysa</title>
+    <title>Brhn Nysa — Official Website</title>
     <style>
-        /* Base Reset & Styling */
+        /* Modern Typography & Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
         body {
-            background-color: #000000;
+            background-color: #050505;
             color: #ffffff;
             overflow-x: hidden;
+            letter-spacing: -0.02em;
         }
 
-        /* 4-Second Loading Intro Screen */
+        /* 4-Second Dynamic Loading Screen */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -29,109 +30,191 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            animation: changeBg 4s forwards, fadeOut 1s ease 4s forwards;
+            animation: changeBg 4s cubic-bezier(0.25, 1, 0.5, 1) forwards, fadeOut 0.8s ease 4s forwards;
         }
 
         #intro-overlay h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            font-weight: 300;
             text-align: center;
-            padding: 0 20px;
+            padding: 0 30px;
             color: #ffffff;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.7);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             animation: textPulse 2s infinite ease-in-out;
         }
 
-        /* Intro Background Animation (Changes color over 4 seconds) */
+        /* Ambient Background Transitions */
         @keyframes changeBg {
-            0% { background-color: #1a1a2e; }
-            33% { background-color: #16213e; }
-            66% { background-color: #0f3460; }
-            100% { background-color: #000000; }
+            0% { background-color: #0b0c10; }
+            40% { background-color: #1f2833; }
+            80% { background-color: #121212; }
+            100% { background-color: #050505; }
         }
 
         @keyframes textPulse {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.05); opacity: 1; }
+            0%, 100% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
         }
 
-        /* Smooth fade out animation for the loading screen */
         @keyframes fadeOut {
-            to {
-                opacity: 0;
-                visibility: hidden;
-            }
+            to { opacity: 0; visibility: hidden; }
         }
 
-        /* Main Website Layout (Hidden during loader, fades in) */
+        /* Main Website Layout (Fades in seamlessly) */
         #main-site {
             opacity: 0;
-            animation: fadeInSite 1s ease 4.2s forwards;
+            animation: fadeInSite 1.2s cubic-bezier(0.25, 1, 0.5, 1) 4.2s forwards;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
         }
 
         @keyframes fadeInSite {
             to { opacity: 1; }
         }
 
-        /* Main Content Block */
-        main {
-            max-width: 700px;
+        /* Premium Brand Navigation Header */
+        header {
+            max-width: 1200px;
             width: 100%;
-            text-align: left;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
         }
 
-        .profile-title {
-            font-size: 4rem;
+        /* Text Form Logo Setup */
+        .text-logo {
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 30px;
-            letter-spacing: -1px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
+            color: #ffffff;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 4px;
         }
 
-        /* Bio Text Styling */
-        .bio-text p {
-            font-size: 1.2rem;
-            line-height: 1.8;
+        /* Definition/Tagline */
+        .definition {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #888888;
+            font-weight: 500;
+        }
+
+        /* Main Music Artist Bio Interface */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 60px auto cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 0 24px;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+        }
+
+        /* Artist Large Typographic Display */
+        .hero-title-side h2 {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 0.95;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            background: linear-gradient(180deg, #ffffff 0%, #444444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Biography Content Blocks */
+        .bio-content-side {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .bio-content-side p {
+            font-size: 1.25rem;
+            line-height: 1.75;
             color: #e0e0e0;
-            margin-bottom: 20px;
+            font-weight: 300;
         }
 
-        .bio-text p:last-child {
-            margin-bottom: 0;
+        /* Subtle Accent Design Element */
+        .bio-content-side p::first-line {
+            color: #ffffff;
+            font-weight: 400;
         }
 
-        /* Responsive design adjustments for mobile devices */
+        /* Footer Elements */
+        footer {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px;
+            color: #444444;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-top: 1px solid #111111;
+        }
+
+        /* Responsive Mobile Architecture */
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                margin: 40px auto;
+            }
+            .hero-title-side h2 {
+                font-size: 3.5rem;
+            }
+        }
+
         @media (max-width: 600px) {
-            #intro-overlay h1 { font-size: 1.8rem; }
-            .profile-title { font-size: 2.8rem; }
-            .bio-text p { font-size: 1.1rem; }
+            #intro-overlay h1 { font-size: 1.5rem; }
+            header { flex-direction: column; gap: 8px; align-items: flex-start; padding: 30px 24px; }
+            .hero-title-side h2 { font-size: 3rem; }
+            .bio-content-side p { font-size: 1.1rem; line-height: 1.6; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading Intro Overlay Screen (Runs for exactly 4 seconds) -->
+    <!-- Intro Loading Screen -->
     <div id="intro-overlay">
         <h1>Welcome to Brhn Nysa Official Website</h1>
     </div>
 
-    <!-- Main Black Theme Site Container -->
+    <!-- Main Professional Site Layout Container -->
     <div id="main-site">
-        <main>
-            <!-- Your Name acting as the Logo/Header -->
-            <h1 class="profile-title">Brhn Nysa</h1>
+        <header>
+            <!-- Logo in Text Form -->
+            <div class="text-logo">Brhn Nysa</div>
+            <!-- Definition Section -->
+            <div class="definition">Nigerian Singer-Songwriter</div>
+        </header>
 
-            <!-- Your Biography -->
-            <div class="bio-text">
+        <main>
+            <!-- Large Left Branding Block -->
+            <div class="hero-title-side">
+                <h2>Brhn<br>Nysa</h2>
+            </div>
+
+            <!-- Modern Pro Biography Block -->
+            <div class="bio-content-side">
                 <p>Solomon Nweke, professionally known as Brhn Nysa, is a Nigerian singer and songwriter. He discovered his passion for music at a young age and began seriously exploring his artistry at just 16 years old.</p>
                 <p>His musical journey officially began in 2024, when he shared a short freestyle video of himself performing an open verse to “No Time” by Khaid. The video helped him gain recognition and attract the attention of listeners who began following his journey.</p>
             </div>
         </main>
+
+        <footer>
+            <p>&copy; 2026 Brhn Nysa. All Rights Reserved.</p>
+        </footer>
     </div>
 
 </body>
