@@ -1,19 +1,219 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Brhn Nysa, Nigerian singer-songwriter" />
-    <title>Brhn Nysa</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
-    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="description" content="Brhn Nysa, Nigerian singer-songwriter. Listen to Still Us and explore the journey from freestyles to original releases." />
+    <title>Brhn Nysa | Singer-Songwriter</title>
+    <link rel="preconnect" href="https://googleapis.com" />
+    <link rel="preconnect" href="https://gstatic.com" crossorigin />
+    <link href="https://googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+    <meta property="og:image" content="https://bolt.new">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:image" content="https://bolt.new">
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f0f2f5;
+        min-height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Transitions */
+      .fade-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: opacity 1s ease;
+        opacity: 1;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        z-index: 9999;
+        background-color: #f0f2f5;
+      }
+
+      .hidden {
+        opacity: 0 !important;
+        pointer-events: none;
+      }
+
+      /* 1. Facebook Style Loading Screen */
+      #loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      .fb-card {
+        max-width: 500px;
+        background: #fff;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        width: 100%;
+      }
+
+      .animated-background {
+        animation-duration: 1.5s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: placeholderShimmer;
+        animation-timing-function: linear;
+        background: #f6f7f8;
+        background: linear-gradient(to right, #f6f7f8 8%, #e9ebee 18%, #f6f7f8 33%);
+        background-size: 800px 104px;
+        position: relative;
+      }
+
+      @keyframes placeholderShimmer {
+        0% { background-position: -468px 0; }
+        100% { background-position: 468px 0; }
+      }
+
+      .fb-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .fb-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .fb-header-text {
+        margin-left: 12px;
+        flex-grow: 1;
+      }
+
+      .fb-name {
+        font-weight: 600;
+        color: #050505;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .line-mini {
+        height: 10px;
+        width: 20%;
+        border-radius: 4px;
+      }
+
+      .fb-content-line {
+        height: 12px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+      }
+      .fb-content-line.one { width: 100%; }
+      .fb-content-line.two { width: 90%; }
+      .fb-content-line.three { width: 65%; }
+
+      /* 2. Welcome Splash Screen */
+      #welcome-screen {
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+
+      .emoji {
+        font-size: 3rem;
+        animation: bounce 2s infinite;
+      }
+
+      #welcome-screen h2 {
+        font-size: 2.5rem;
+        color: #1877f2;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+
+      /* 3. React App Target Container */
+      #root {
+        width: 100%;
+        min-height: 100vh;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+      
+      .root-visible {
+        opacity: 1 !important;
+      }
+    </style>
   </head>
   <body>
+
+    <!-- SCREEN 1: Facebook Loading Animation with Your Name -->
+    <div id="loader-container" class="fade-screen">
+      <div class="fb-card">
+        <div class="fb-header">
+          <div class="fb-avatar animated-background"></div>
+          <div class="fb-header-text">
+            <div class="fb-name">Brhn Nysa</div>
+            <div class="line-mini animated-background"></div>
+          </div>
+        </div>
+        <div class="fb-content-line one animated-background"></div>
+        <div class="fb-content-line two animated-background"></div>
+        <div class="fb-content-line three animated-background"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Welcome Text Transition with Emoji -->
+    <div id="welcome-screen" class="fade-screen hidden">
+      <div>
+        <div class="emoji">(❁´◡`❁)</div>
+        <h2>Welcome to official Brhn Nysa Website</h2>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: React Root Target (Revealed last) -->
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      const loader = document.getElementById('loader-container');
+      const welcome = document.getElementById('welcome-screen');
+      const rootApp = document.getElementById('root');
+
+      // Step 1: After 4 seconds, fade out the Facebook loader and fade in the Welcome message
+      setTimeout(() => {
+          loader.classList.add('hidden');
+          welcome.classList.remove('hidden');
+          setTimeout(() => {
+              welcome.style.opacity = '1';
+          }, 50);
+          
+          // Step 2: Allow the welcome message to stay for 3 seconds, then fade it out to show the React app
+          setTimeout(() => {
+              welcome.classList.add('hidden');
+              rootApp.classList.add('root-visible');
+              document.body.style.overflow = 'auto'; // Re-enable scrolling for the actual site
+          }, 3000);
+
+      }, 4000);
+    </script>
   </body>
 </html>
