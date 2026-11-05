@@ -13,7 +13,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #0a0a0a;
+            background-color: #000000;
             color: #ffffff;
             overflow-x: hidden;
         }
@@ -37,7 +37,7 @@
             text-align: center;
             padding: 0 20px;
             color: #ffffff;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            text-shadow: 0px 4px 10px rgba(0,0,0,0.7);
             animation: textPulse 2s infinite ease-in-out;
         }
 
@@ -46,7 +46,7 @@
             0% { background-color: #1a1a2e; }
             33% { background-color: #16213e; }
             66% { background-color: #0f3460; }
-            100% { background-color: #0a0a0a; }
+            100% { background-color: #000000; }
         }
 
         @keyframes textPulse {
@@ -54,7 +54,7 @@
             50% { transform: scale(1.05); opacity: 1; }
         }
 
-        /* Smooth fade out animation for loading screen */
+        /* Smooth fade out animation for the loading screen */
         @keyframes fadeOut {
             to {
                 opacity: 0;
@@ -69,130 +69,69 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
         }
 
         @keyframes fadeInSite {
             to { opacity: 1; }
         }
 
-        /* Header / Navigation */
-        header {
-            max-width: 1100px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 30px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #1f1f1f;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #ffffff;
-        }
-
-        .tagline {
-            font-size: 0.9rem;
-            color: #888888;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
         /* Main Content Block */
         main {
-            max-width: 800px;
+            max-width: 700px;
             width: 100%;
-            margin: 80px auto;
-            padding: 0 20px;
-            flex: 1;
+            text-align: left;
         }
 
         .profile-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 30px;
             letter-spacing: -1px;
+            text-transform: uppercase;
         }
 
-        .description {
+        /* Bio Text Styling */
+        .bio-text p {
             font-size: 1.2rem;
-            color: #b3b3b3;
-            margin-bottom: 40px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
-        /* Bio Container styling */
-        .bio-card {
-            background: linear-gradient(145deg, #121212, #1c1c1c);
-            border: 1px solid #292929;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .bio-card p {
-            font-size: 1.15rem;
             line-height: 1.8;
             color: #e0e0e0;
             margin-bottom: 20px;
         }
 
-        .bio-card p:last-child {
+        .bio-text p:last-child {
             margin-bottom: 0;
-        }
-
-        /* Footer Element */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: #555555;
-            font-size: 0.85rem;
-            border-top: 1px solid #1f1f1f;
-            margin-top: auto;
         }
 
         /* Responsive design adjustments for mobile devices */
         @media (max-width: 600px) {
             #intro-overlay h1 { font-size: 1.8rem; }
-            header { flex-direction: column; gap: 10px; text-align: center; }
-            .profile-title { font-size: 2.5rem; }
-            .bio-card { padding: 25px; }
-            .bio-card p { font-size: 1.05rem; }
+            .profile-title { font-size: 2.8rem; }
+            .bio-text p { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading Intro Overlay Screen (Runs for 4 seconds) -->
+    <!-- Loading Intro Overlay Screen (Runs for exactly 4 seconds) -->
     <div id="intro-overlay">
         <h1>Welcome to Brhn Nysa Official Website</h1>
     </div>
 
     <!-- Main Black Theme Site Container -->
     <div id="main-site">
-        <header>
-            <div class="logo">Brhn Nysa</div>
-            <div class="tagline">Official Website</div>
-        </header>
-
         <main>
-            <h2 class="profile-title">Brhn Nysa</h2>
-            <p class="description">Nigerian singer-songwriter</p>
+            <!-- Your Name acting as the Logo/Header -->
+            <h1 class="profile-title">Brhn Nysa</h1>
 
-            <div class="bio-card">
+            <!-- Your Biography -->
+            <div class="bio-text">
                 <p>Solomon Nweke, professionally known as Brhn Nysa, is a Nigerian singer and songwriter. He discovered his passion for music at a young age and began seriously exploring his artistry at just 16 years old.</p>
                 <p>His musical journey officially began in 2024, when he shared a short freestyle video of himself performing an open verse to “No Time” by Khaid. The video helped him gain recognition and attract the attention of listeners who began following his journey.</p>
             </div>
         </main>
-
-        <footer>
-            <p>&copy; 2026 Brhn Nysa. All Rights Reserved.</p>
-        </footer>
     </div>
 
 </body>
