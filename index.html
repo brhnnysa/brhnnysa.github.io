@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brhn Nysa — Official Website</title>
+    <title>Brhn Nysa</title>
     <style>
-        /* Modern Typography & Reset */
+        /* Base Reset & Styling */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #050505;
+            background-color: #0a0a0a;
             color: #ffffff;
             overflow-x: hidden;
-            letter-spacing: -0.02em;
         }
 
-        /* 4-Second Dynamic Loading Screen */
+        /* 4-Second Loading Intro Screen */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -30,41 +29,43 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            animation: changeBg 4s cubic-bezier(0.25, 1, 0.5, 1) forwards, fadeOut 0.8s ease 4s forwards;
+            animation: changeBg 4s forwards, fadeOut 1s ease 4s forwards;
         }
 
         #intro-overlay h1 {
-            font-size: 2.2rem;
-            font-weight: 300;
+            font-size: 2.5rem;
             text-align: center;
-            padding: 0 30px;
+            padding: 0 20px;
             color: #ffffff;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
             animation: textPulse 2s infinite ease-in-out;
         }
 
-        /* Ambient Background Transitions */
+        /* Intro Background Animation (Changes color over 4 seconds) */
         @keyframes changeBg {
-            0% { background-color: #0b0c10; }
-            40% { background-color: #1f2833; }
-            80% { background-color: #121212; }
-            100% { background-color: #050505; }
+            0% { background-color: #1a1a2e; }
+            33% { background-color: #16213e; }
+            66% { background-color: #0f3460; }
+            100% { background-color: #0a0a0a; }
         }
 
         @keyframes textPulse {
-            0%, 100% { opacity: 0.6; transform: scale(0.98); }
-            50% { opacity: 1; transform: scale(1); }
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
         }
 
+        /* Smooth fade out animation for loading screen */
         @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
         }
 
-        /* Main Website Layout (Fades in seamlessly) */
+        /* Main Website Layout (Hidden during loader, fades in) */
         #main-site {
             opacity: 0;
-            animation: fadeInSite 1.2s cubic-bezier(0.25, 1, 0.5, 1) 4.2s forwards;
+            animation: fadeInSite 1s ease 4.2s forwards;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -74,140 +75,117 @@
             to { opacity: 1; }
         }
 
-        /* Premium Brand Navigation Header */
+        /* Header / Navigation */
         header {
-            max-width: 1200px;
+            max-width: 1100px;
             width: 100%;
             margin: 0 auto;
-            padding: 40px 24px;
+            padding: 30px 20px;
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
+            border-bottom: 1px solid #1f1f1f;
         }
 
-        /* Text Form Logo Setup */
-        .text-logo {
-            font-size: 1.5rem;
+        .logo {
+            font-size: 1.8rem;
             font-weight: 800;
-            letter-spacing: 0.1em;
+            letter-spacing: 2px;
             text-transform: uppercase;
             color: #ffffff;
-            border-bottom: 2px solid #ffffff;
-            padding-bottom: 4px;
         }
 
-        /* Definition/Tagline */
-        .definition {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
+        .tagline {
+            font-size: 0.9rem;
             color: #888888;
-            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        /* Main Music Artist Bio Interface */
+        /* Main Content Block */
         main {
-            max-width: 1200px;
+            max-width: 800px;
             width: 100%;
-            margin: 60px auto cubic-bezier(0.25, 1, 0.5, 1);
-            padding: 0 24px;
+            margin: 80px auto;
+            padding: 0 20px;
             flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 80px;
         }
 
-        /* Artist Large Typographic Display */
-        .hero-title-side h2 {
-            font-size: 5rem;
-            font-weight: 900;
-            line-height: 0.95;
-            text-transform: uppercase;
-            letter-spacing: -0.04em;
-            background: linear-gradient(180deg, #ffffff 0%, #444444 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .profile-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
         }
 
-        /* Biography Content Blocks */
-        .bio-content-side {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            justify-content: center;
-        }
-
-        .bio-content-side p {
-            font-size: 1.25rem;
-            line-height: 1.75;
-            color: #e0e0e0;
-            font-weight: 300;
-        }
-
-        /* Subtle Accent Design Element */
-        .bio-content-side p::first-line {
-            color: #ffffff;
+        .description {
+            font-size: 1.2rem;
+            color: #b3b3b3;
+            margin-bottom: 40px;
             font-weight: 400;
+            letter-spacing: 0.5px;
         }
 
-        /* Footer Elements */
+        /* Bio Container styling */
+        .bio-card {
+            background: linear-gradient(145deg, #121212, #1c1c1c);
+            border: 1px solid #292929;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .bio-card p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .bio-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Footer Element */
         footer {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 40px 24px;
-            color: #444444;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            border-top: 1px solid #111111;
+            text-align: center;
+            padding: 40px 20px;
+            color: #555555;
+            font-size: 0.85rem;
+            border-top: 1px solid #1f1f1f;
+            margin-top: auto;
         }
 
-        /* Responsive Mobile Architecture */
-        @media (max-width: 900px) {
-            main {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                margin: 40px auto;
-            }
-            .hero-title-side h2 {
-                font-size: 3.5rem;
-            }
-        }
-
+        /* Responsive design adjustments for mobile devices */
         @media (max-width: 600px) {
-            #intro-overlay h1 { font-size: 1.5rem; }
-            header { flex-direction: column; gap: 8px; align-items: flex-start; padding: 30px 24px; }
-            .hero-title-side h2 { font-size: 3rem; }
-            .bio-content-side p { font-size: 1.1rem; line-height: 1.6; }
+            #intro-overlay h1 { font-size: 1.8rem; }
+            header { flex-direction: column; gap: 10px; text-align: center; }
+            .profile-title { font-size: 2.5rem; }
+            .bio-card { padding: 25px; }
+            .bio-card p { font-size: 1.05rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Intro Loading Screen -->
+    <!-- Loading Intro Overlay Screen (Runs for 4 seconds) -->
     <div id="intro-overlay">
         <h1>Welcome to Brhn Nysa Official Website</h1>
     </div>
 
-    <!-- Main Professional Site Layout Container -->
+    <!-- Main Black Theme Site Container -->
     <div id="main-site">
         <header>
-            <!-- Logo in Text Form -->
-            <div class="text-logo">Brhn Nysa</div>
-            <!-- Definition Section -->
-            <div class="definition">Nigerian Singer-Songwriter</div>
+            <div class="logo">Brhn Nysa</div>
+            <div class="tagline">Official Website</div>
         </header>
 
         <main>
-            <!-- Large Left Branding Block -->
-            <div class="hero-title-side">
-                <h2>Brhn<br>Nysa</h2>
-            </div>
+            <h2 class="profile-title">Brhn Nysa</h2>
+            <p class="description">Nigerian singer-songwriter</p>
 
-            <!-- Modern Pro Biography Block -->
-            <div class="bio-content-side">
-                <p>Solomon Nweke, professionally known as Brhn Nysa, is a Nigerian singer and songwriter. He discovered his passion for music at a young age and began seriously exploring his artistry at just 16 years old.</p>
+            <div class="bio-card">
+                <p>Solomon Nweke, professionally known as Brhn Nysa, is a Nigerian singer and songwriter. He discovered his passion for music at a young age and began seriously exploring his artistry at just 16 years old. His musical journey officially began in 2024, when he shared a short freestyle video of himself performing an open verse to “No Time” by Khaid. The video helped him gain recognition and attract the attention of listeners who began following his journey.</p>
                 <p>His musical journey officially began in 2024, when he shared a short freestyle video of himself performing an open verse to “No Time” by Khaid. The video helped him gain recognition and attract the attention of listeners who began following his journey.</p>
             </div>
         </main>
