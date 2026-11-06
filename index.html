@@ -1,20 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brhn Nysa</title>
 
-<!-- wp:spacer {"height":"223px"} -->
-<div style="height:223px" aria-hidden="true" class="wp-block-spacer"></div>
-<!-- /wp:spacer -->
+    <!-- Browser Tab Icon (Favicon) -->
+    <link rel="icon" type="image/jpeg" href="https://beatstorapon.com/static/images/brhnnysa/profile_e8a15111-c2e7-47c5-988e-0abdf26f156d.jpeg">
 
-<!-- wp:template-part {"slug":"header","theme":"pub/assembler"} /-->
+    <!-- Meta Tags for Link Sharing Preview -->
+    <meta name="description" content="Brhn Nysa - Nigerian singer-songwriter">
+    <meta property="og:title" content="Brhn Nysa Official Website">
+    <meta property="og:description" content="Brhn Nysa - Nigerian singer-songwriter">
+    <meta property="og:image" content="https://beatstorapon.com/static/images/brhnnysa/profile_e8a15111-c2e7-47c5-988e-0abdf26f156d.jpeg">
+    <meta property="og:type" content="profile">
+    <meta name="twitter:card" content="summary_large_image">
 
-<!-- wp:details -->
-<details class="wp-block-details"><summary>Still Us</summary><!-- wp:file {"href":"https://audiomack.com/brhnnysa/song/still-us"} -->
-<div class="wp-block-file"><a href="https://audiomack.com/brhnnysa/song/still-us">still us</a><a href="https://audiomack.com/brhnnysa/song/still-us" class="wp-block-file__button wp-element-button" download>Download</a></div>
-<!-- /wp:file --></details>
-<!-- /wp:details -->
+    <style>
+        /* Base Reset & Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
 
-<!-- wp:audio {"id":44,"metadata":{"name":"My Darling"}} -->
-<figure class="wp-block-audio"><audio controls src="https://brhnnysa.wordpress.com/wp-content/uploads/2026/11/rightnowart.jpeg"></audio><figcaption class="wp-element-caption">rtt</figcaption></figure>
-<!-- /wp:audio -->
+        /* 4-Second Loading Intro Screen */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: changeBg 4s forwards, fadeOut 1s ease 4s forwards;
+        }
 
-<!-- wp:file /-->
+        #intro-overlay h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            padding: 0 20px;
+            color: #ffffff;
+            text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            animation: textPulse 2s infinite ease-in-out;
+        }
 
-<!-- wp:template-part {"slug":"footer","theme":"pub/assembler"} /-->
+        /* Intro Background Animation */
+        @keyframes changeBg {
+            0% { background-color: #1a1a2e; }
+            33% { background-color: #16213e; }
+            66% { background-color: #0f3460; }
+            100% { background-color: #0a0a0a; }
+        }
+
+        @keyframes textPulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* Smooth fade out animation for loading screen */
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* Main Website Layout */
+        #main-site {
+            opacity: 0;
+            animation: fadeInSite 1s ease 4.2s forwards;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeInSite {
+            to { opacity: 1; }
+        }
+
+        /* Header / Navigation */
+        header {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f1f1f;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #292929;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: #888888;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Main Content Block */
+        main {
+            max-width: 800px;
+            width: 100%;
+            margin: 80px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .profile-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #b3b3b3;
+            margin-bottom: 40px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bio Container styling */
+        .bio-card {
+            background: linear-gradient(145deg, #121212, #1c1c1c);
+            border: 1px solid #292929;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .bio-card p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .bio-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Tap Nudge Scale effect with flashing green bottom border */
+        .album-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-style: italic;
+            display: inline-block;
+            animation: tapNudge 3s infinite ease-in-out, blinkUnderline 3s infinite steps(1);
+            transform-origin: center;
+        }
+        .album-link:hover {
+            color: #b3b3b3;
+        }
+
+        @keyframes tapNudge {
+            0%, 100% { transform: scale(1); }
+            10% { transform: scale(1.12); }
+            20% { transform: scale(0.95); }
+            30% { transform: scale(1.08); }
+            40% { transform: scale(1); }
+        }
+
+        @keyframes blinkUnderline {
+            0%, 40%, 100% { border-bottom: 2px solid transparent; padding-bottom: 0px; }
+            10%, 30% { border-bottom: 2px solid #00ff66; padding-bottom: 0px; }
+            20% { border-bottom: 2px solid transparent; padding-bottom: 0px; }
+        }
+
+        /* Custom Wikidata Color Accent with subtle horizontal jitter */
+        .wikidata-highlight {
+            color: #ffcc00; 
+            text-decoration: none;
+            display: inline-block;
+            animation: subtleShake 4s infinite ease-in-out;
+        }
+        .wikidata-highlight:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes subtleShake {
+            0%, 80%, 100% { transform: translateX(0); }
+            85% { transform: translateX(-2px); }
+            90% { transform: translateX(2px); }
+            95% { transform: translateX(-1px); }
+        }
+
+        /* Footer Element */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #555555;
+            font-size: 0.85rem;
+            border-top: 1px solid #1f1f1f;
+            margin-top: auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            #intro-overlay h1 { font-size: 1.8rem; }
+            header { flex-direction: column; gap: 10px; text-align: center; }
+            .profile-title { font-size: 2.5rem; }
+            .bio-card { padding: 25px; }
+            .bio-card p { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Intro Overlay Screen -->
+    <div id="intro-overlay">
+        <h1>Welcome to Brhn Nysa Official Website</h1>
+    </div>
+
+    <!-- Main Black Theme Site Container -->
+    <div id="main-site">
+        <header>
+            <div class="logo-container">
+                <img src="https://beatstorapon.com/static/images/brhnnysa/profile_e8a15111-c2e7-47c5-988e-0abdf26f156d.jpeg" alt="Brhn Nysa Logo" class="logo-img">
+                <div class="logo">Brhn Nysa</div>
+            </div>
+            <div class="tagline">Official Website</div>
+        </header>
+
+        <main>
+            <h2 class="profile-title">Brhn Nysa</h2>
+            <p class="description">Nigerian singer-songwriter</p>
+
+            <div class="bio-card">
+                <p>Solomon Nweke, known professionally as Brhn Nysa, is a Nigerian singer-songwriter. He began his musical journey at a young age by releasing open-verse freestyle covers on social media. In 2026, he released a studio album, <a href="https://audiomack.com/brhnnysa/album/second-chances-1" class="album-link" target="_blank">Second Chances</a>, under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk". <a href="https://www.wikidata.org/wiki/Q141479857" class="wikidata-highlight" target="_blank">Wikidata</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; Official Pages and Highlights.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
+ <!-- Main Black Theme Site Container -->
+    <div id="main-site">
+        <header>
+            <div class="logo-container">
+                <img src="https://i.audiomack.com/brhn_nysa/32eeeb1068.webp?width=1000&height=1000" alt="Brhn Nysa Logo" class="logo-img">
+                <div class="logo">Still Us</div>
+            </div>
+            <div class="header-right">
+                <div class="tagline">Listen Now</div>
+                <div class="social-links">
+                    < Audiomack >
+                    <a href="https://audiomack.com/brhnnysa" class="social-icon" target="_blank" title="Audiomack">
+                    
+                    <!-- X/Twitter Icon Link -->
+                    <a href="https://x.com/brhnnysa" class="social-icon" target="_blank" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <!-- TikTok Icon Link -->
+                    <a href="https://www.tiktok.com/@brhnnysa" class="social-icon" target="_blank" title="TikTok">
+                        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.043 2.51.353 3.543 1.135.88.666 1.42 1.511 1.777 2.512.115.321.21.657.34 1.054a6.431 6.431 0 0 0 3.656-1.196c.038-.026.084-.04.123-.062v3.743a8.814 8.814 0 0 1-3.69-.33c-.027-.008-.052-.023-.089-.04v7.411c0 3.738-2.611 7.027-6.289 7.574A7.747 7.747 0 0 1 3.1 14.545a7.712 7.712 0 0 1 6.307-7.614v3.834a3.864 3.864 0 0 0-2.457 3.593 3.882 3.882 0 0 0 3.886 3.873 3.856 3.856 0 0 0 3.844-3.52c.026-.289.034-.582.034-.873V0h3.811z"/></svg>
+                    </a>
+                    <!-- YouTube Icon Link -->
+                    <a href="https://www.youtube.com/@brhnnysa" class="social-icon" target="_blank" title="YouTube">
+                        <svg viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </a>
+                    
+        <footer>
+            <p>&copy; 2026 Brhn Nysa. All Rights Reserved.</p>
