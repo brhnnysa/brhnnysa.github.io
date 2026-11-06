@@ -41,7 +41,7 @@
             animation: textPulse 2s infinite ease-in-out;
         }
 
-        /* Intro Background Animation (Changes color over 4 seconds) */
+        /* Intro Background Animation */
         @keyframes changeBg {
             0% { background-color: #1a1a2e; }
             33% { background-color: #16213e; }
@@ -62,7 +62,7 @@
             }
         }
 
-        /* Main Website Layout (Hidden during loader, fades in) */
+        /* Main Website Layout */
         #main-site {
             opacity: 0;
             animation: fadeInSite 1s ease 4.2s forwards;
@@ -146,36 +146,49 @@
             margin-bottom: 0;
         }
 
-        /* Shaking/Dancing Album Link Style without Underline */
+        /* Tap Nudge Scale effect with flashing green bottom border */
         .album-link {
             color: #ffffff;
             text-decoration: none;
             font-style: italic;
             display: inline-block;
-            animation: shakeDance 2.5s infinite ease-in-out;
+            animation: tapNudge 3s infinite ease-in-out, blinkUnderline 3s infinite steps(1);
             transform-origin: center;
         }
         .album-link:hover {
             color: #b3b3b3;
         }
 
-        /* Shaking/Dancing Keyframes Animation */
-        @keyframes shakeDance {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            10% { transform: rotate(-3deg) scale(1.05); }
-            20% { transform: rotate(3deg) scale(1.05); }
-            30% { transform: rotate(-3deg) scale(1.05); }
-            40% { transform: rotate(3deg) scale(1.05); }
-            50% { transform: rotate(0deg) scale(1); }
+        @keyframes tapNudge {
+            0%, 100% { transform: scale(1); }
+            10% { transform: scale(1.12); }
+            20% { transform: scale(0.95); }
+            30% { transform: scale(1.08); }
+            40% { transform: scale(1); }
         }
 
-        /* Custom Wikidata Color Accent - Points directly to Wikidata Page */
+        @keyframes blinkUnderline {
+            0%, 40%, 100% { border-bottom: 2px solid transparent; padding-bottom: 0px; }
+            10%, 30% { border-bottom: 2px solid #00ff66; padding-bottom: 0px; }
+            20% { border-bottom: 2px solid transparent; padding-bottom: 0px; }
+        }
+
+        /* Custom Wikidata Color Accent with subtle horizontal jitter */
         .wikidata-highlight {
             color: #ffcc00; 
             text-decoration: none;
+            display: inline-block;
+            animation: subtleShake 4s infinite ease-in-out;
         }
         .wikidata-highlight:hover {
             text-decoration: underline;
+        }
+
+        @keyframes subtleShake {
+            0%, 80%, 100% { transform: translateX(0); }
+            85% { transform: translateX(-2px); }
+            90% { transform: translateX(2px); }
+            95% { transform: translateX(-1px); }
         }
 
         /* Footer Element */
@@ -188,7 +201,7 @@
             margin-top: auto;
         }
 
-        /* Responsive design adjustments for mobile devices */
+        /* Responsive adjustments */
         @media (max-width: 600px) {
             #intro-overlay h1 { font-size: 1.8rem; }
             header { flex-direction: column; gap: 10px; text-align: center; }
