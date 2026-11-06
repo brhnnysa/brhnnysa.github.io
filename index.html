@@ -121,11 +121,54 @@
             color: #ffffff;
         }
 
+        /* Header Right Side Layout */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
         .tagline {
             font-size: 0.9rem;
             color: #888888;
             letter-spacing: 1px;
             text-transform: uppercase;
+        }
+
+        /* Social Icons Wrapper */
+        .social-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #141414;
+            border: 1px solid #222;
+            color: #888888;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Hover animations for header socials */
+        .social-icon:hover {
+            color: #ffffff;
+            background: #1f1f1f;
+            border-color: #444;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
 
         /* Main Content Block */
@@ -228,9 +271,10 @@
         }
 
         /* Responsive adjustments */
-        @media (max-width: 600px) {
-            #intro-overlay h1 { font-size: 1.8rem; }
-            header { flex-direction: column; gap: 10px; text-align: center; }
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; text-align: center; }
+            .header-right { align-items: center; }
+            .social-links { justify-content: center; }
             .profile-title { font-size: 2.5rem; }
             .bio-card { padding: 25px; }
             .bio-card p { font-size: 1.05rem; }
@@ -251,22 +295,16 @@
                 <img src="https://beatstorapon.com/static/images/brhnnysa/profile_e8a15111-c2e7-47c5-988e-0abdf26f156d.jpeg" alt="Brhn Nysa Logo" class="logo-img">
                 <div class="logo">Brhn Nysa</div>
             </div>
-            <div class="tagline">Official Website</div>
-        </header>
-
-        <main>
-            <h2 class="profile-title">Brhn Nysa</h2>
-            <p class="description">Nigerian singer-songwriter</p>
-
-            <div class="bio-card">
-                <p>Solomon Nweke, known professionally as Brhn Nysa, is a Nigerian singer-songwriter. He began his musical journey at a young age by releasing open-verse freestyle covers on social media. In 2026, he released a studio album, <a href="https://audiomack.com/brhnnysa/album/second-chances-1" class="album-link" target="_blank">Second Chances</a>, under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk". <a href="https://www.wikidata.org/wiki/Q141479857" class="wikidata-highlight" target="_blank">Wikidata</a>.</p>
-            </div>
-        </main>
-
-        <footer>
-            <p>&copy; 2026 Brhn Nysa. All Rights Reserved.</p>
-        </footer>
-    </div>
-
-</body>
-</html>
+            <div class="header-right">
+                <div class="tagline">Official Website</div>
+                <div class="social-links">
+                    <!-- Audiomack Icon Link -->
+                    <a href="https://audiomack.com/brhnnysa" class="social-icon" target="_blank" title="Audiomack">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </a>
+                    <!-- X/Twitter Icon Link -->
+                    <a href="https://x.com/brhnnysa" class="social-icon" target="_blank" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <!-- TikTok Icon Link -->
+                    <a href="https://www.tiktok.com/@brhnnysa" class="social-icon" target="_blank" title="TikTok">
