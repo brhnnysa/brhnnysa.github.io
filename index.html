@@ -146,14 +146,27 @@
             margin-bottom: 0;
         }
 
-        /* Clickable Album Title styling */
+        /* Shaking/Dancing Album Link Style without Underline */
         .album-link {
             color: #ffffff;
-            text-decoration: underline;
+            text-decoration: none;
             font-style: italic;
+            display: inline-block;
+            animation: shakeDance 2.5s infinite ease-in-out;
+            transform-origin: center;
         }
         .album-link:hover {
             color: #b3b3b3;
+        }
+
+        /* Shaking/Dancing Keyframes Animation */
+        @keyframes shakeDance {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            10% { transform: rotate(-3deg) scale(1.05); }
+            20% { transform: rotate(3deg) scale(1.05); }
+            30% { transform: rotate(-3deg) scale(1.05); }
+            40% { transform: rotate(3deg) scale(1.05); }
+            50% { transform: rotate(0deg) scale(1); }
         }
 
         /* Custom Wikidata Color Accent - Pointing directly to Wikidata item */
@@ -204,7 +217,7 @@
             <p class="description">Nigerian singer-songwriter</p>
 
             <div class="bio-card">
-                <p>Solomon Nweke, known professionally as Brhn Nysa, is a Nigerian singer-songwriter. He began his musical journey at a young age by releasing open-verse freestyle covers on social media. In 2026, he released a studio album, <a href="https://audiomack.com/brhnnysa/album/second-chances-1" class="album-link" target="_blank">Second Chances</a>, under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk". <a href="https://www.wikidata.org/wiki/Q141479857" class="wikidata-highlight" target="_blank">Wikidata</a>.</p>
+                <p>Solomon Nweke, known professionally as Brhn Nysa, is a Nigerian singer-songwriter. He began his musical journey at a young age by releasing open-verse freestyle covers on social media. In 2026, he released a studio album, <a href="https://audiomack.com" class="album-link" target="_blank">Second Chances</a>, under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk". <a href="https://wikidata.org" class="wikidata-highlight" target="_blank">Wikidata</a>.</p>
             </div>
         </main>
 
