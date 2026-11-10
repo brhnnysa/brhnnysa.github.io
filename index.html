@@ -270,7 +270,30 @@
             </div>
         </main>
 
-            <h2 class="profile-title">Official Pages And Highlights</h2>
+<h2 class="profile-title" style="display: flex; align-items: center; gap: 8px;">
+    Official Pages And Highlights
+    <span class="running-horse" style="display: inline-block; animation: horseRunMove 0.8s infinite linear;">🐎</span>
+</h2>
+
+<style>
+@keyframes horseRunMove {
+    0% {
+        transform: translate(0, 0) scaleX(1);
+    }
+    25% {
+        transform: translate(2px, -3px) scaleX(1.02); /* Slight hop up and forward */
+    }
+    50% {
+        transform: translate(4px, 0) scaleX(1); /* Land down */
+    }
+    75% {
+        transform: translate(2px, -2px) scaleX(0.98); /* Small bounce back up */
+    }
+    100% {
+        transform: translate(0, 0) scaleX(1); /* Loop back cleanly */
+    }
+}
+</style>
     </div>
 
 </body>
