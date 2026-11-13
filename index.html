@@ -652,6 +652,7 @@ document.getElementById("releaseNext").onclick = () => {
          data-elfsight-app-lazy></div>
 </section>
 
+
 <section class="video-section">
     <h2 class="video-heading">VIDEOS</h2>
 
@@ -659,101 +660,221 @@ document.getElementById("releaseNext").onclick = () => {
         <button aria-label="Previous videos" class="video-arrow prev">❮</button>
 
         <div class="video-track" id="videoTrack">
+
+            <!-- VIDEO 1 -->
             <div class="video-card" data-video="a8BxcF1fSis">
-                <img alt="Video 1"
-                     src="https://img.youtube.com/vi/a8BxcF1fSis/hqdefault.jpg"/>
-                <button aria-label="Play video" class="play-button">▶</button>
+                <div class="video-thumb">
+                    <img alt="Video 1"
+                         src="https://img.youtube.com/vi/a8BxcF1fSis/hqdefault.jpg"/>
+                    <button type="button" aria-label="Play video" class="play-button">▶</button>
+                </div>
+                <div class="video-info">
+                    <h3>ADD VIDEO TITLE</h3>
+                    <p>Release Year: ADD YEAR</p>
+                </div>
             </div>
-<div class="video-card" data-video="465VfZYWfVw">
-<img alt="Video 2" src="https://img.youtube.com/vi/465VfZYWfVw/hqdefault.jpg"/>
-<button aria-label="Play video" class="play-button">▶</button>
-</div>
-<div class="video-card" data-video="rxOamoQx-qk">
-<img alt="Video 3" src="https://img.youtube.com/vi/rxOamoQx-qk/hqdefault.jpg"/>
-<button aria-label="Play video" class="play-button">▶</button>
-</div>
-<div class="video-card" data-video="UQvVGZL7NnM">
-<img alt="Video 4" src="https://img.youtube.com/vi/UQvVGZL7NnM/hqdefault.jpg"/>
-<button aria-label="Play video" class="play-button">▶</button>
-</div>
-</div>
-<button aria-label="Next videos" class="video-arrow next">❯</button>
-</div>
+
+            <!-- VIDEO 2 -->
+            <div class="video-card" data-video="465VfZYWfVw">
+                <div class="video-thumb">
+                    <img alt="Video 2"
+                         src="https://img.youtube.com/vi/465VfZYWfVw/hqdefault.jpg"/>
+                    <button type="button" aria-label="Play video" class="play-button">▶</button>
+                </div>
+                <div class="video-info">
+                    <h3>ADD VIDEO TITLE</h3>
+                    <p>Release Year: ADD YEAR</p>
+                </div>
+            </div>
+
+            <!-- VIDEO 3 -->
+            <div class="video-card" data-video="rxOamoQx-qk">
+                <div class="video-thumb">
+                    <img alt="Video 3"
+                         src="https://img.youtube.com/vi/rxOamoQx-qk/hqdefault.jpg"/>
+                    <button type="button" aria-label="Play video" class="play-button">▶</button>
+                </div>
+                <div class="video-info">
+                    <h3>ADD VIDEO TITLE</h3>
+                    <p>Release Year: ADD YEAR</p>
+                </div>
+            </div>
+
+            <!-- VIDEO 4 -->
+            <div class="video-card" data-video="UQvVGZL7NnM">
+                <div class="video-thumb">
+                    <img alt="Video 4"
+                         src="https://img.youtube.com/vi/UQvVGZL7NnM/hqdefault.jpg"/>
+                    <button type="button" aria-label="Play video" class="play-button">▶</button>
+                </div>
+                <div class="video-info">
+                    <h3>ADD VIDEO TITLE</h3>
+                    <p>Release Year: ADD YEAR</p>
+                </div>
+            </div>
+
+        </div>
+
+        <button aria-label="Next videos" class="video-arrow next">❯</button>
+    </div>
 </section>
+
 <style>
 .video-section {
-  background: #080808;
-  padding: 55px 5%;
-  color: #d6b56d;
-  overflow: hidden;
+    background: #080808;
+    padding: 45px 5%;
+    color: #d6b56d;
+    overflow: hidden;
 }
 
 .video-heading {
-  text-align: center;
-  font-size: 30px;
-  letter-spacing: 5px;
-  margin: 0 0 35px;
-  color: #d6b56d;
+    text-align: center;
+    font-size: 27px;
+    letter-spacing: 5px;
+    margin: 0 0 28px;
+    color: #d6b56d;
 }
 
 .video-carousel {
-  position: relative;
-  max-width: 1200px;
-  margin: auto;
+    position: relative;
+    max-width: 1100px;
+    margin: auto;
 }
 
 .video-track {
-  display: flex;
-  gap: 22px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  padding: 8px 2px 18px;
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: 8px 2px 18px;
 }
 
 .video-track::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .video-card {
     position: relative;
-    flex: 0 0 calc(50% - 12px);
+    flex: 0 0 calc(50% - 11px);
+    min-width: 0;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
+
+.video-thumb {
+    position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border: 1px solid #9d7b38;
     border-radius: 8px;
     background: #151515;
-    scroll-snap-align: start;
+}
+
+.video-thumb img,
+.video-thumb iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+    display: block;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 54px;
+    height: 54px;
+    border: 1px solid #e3c477;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .78);
+    color: #e3c477;
+    font-size: 23px;
     cursor: pointer;
+}
+
+.video-card:hover .play-button {
+    background: #d6b56d;
+    color: #080808;
+}
+
+.video-info {
+    padding: 10px 2px 2px;
+    text-align: left;
+}
+
+.video-info h3 {
+    color: #e3c477;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 5px;
+    letter-spacing: .5px;
+}
+
+.video-info p {
+    color: #aaa;
+    font-size: 12px;
+    margin: 0;
+}
+
+.video-arrow {
+    position: absolute;
+    z-index: 2;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border: 1px solid #d6b56d;
+    border-radius: 50%;
+    background: #080808;
+    color: #d6b56d;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.video-arrow.prev {
+    left: -19px;
+}
+
+.video-arrow.next {
+    right: -19px;
 }
 
 @media (max-width: 700px) {
     .video-section {
-        padding: 30px 3%;
+        padding: 32px 4%;
     }
 
     .video-heading {
         font-size: 23px;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
 
     .video-track {
-        gap: 12px;
+        gap: 14px;
         padding: 5px 0 15px;
     }
 
     .video-card {
-        flex: 0 0 100%;
-        width: 100%;
-        aspect-ratio: 16 / 9;
+        flex: 0 0 88%;
     }
 
     .play-button {
-        width: 58px;
-        height: 58px;
-        font-size: 24px;
+        width: 48px;
+        height: 48px;
+        font-size: 21px;
+    }
+
+    .video-info h3 {
+        font-size: 14px;
+    }
+
+    .video-info p {
+        font-size: 11px;
     }
 
     .video-arrow {
@@ -761,29 +882,37 @@ document.getElementById("releaseNext").onclick = () => {
     }
 }
 </style>
+
 <script>
 const track = document.getElementById("videoTrack");
 
 document.querySelector(".video-arrow.prev").addEventListener("click", () => {
-  track.scrollBy({ left: -track.clientWidth * 0.75, behavior: "smooth" });
+    track.scrollBy({
+        left: -track.clientWidth * 0.75,
+        behavior: "smooth"
+    });
 });
 
 document.querySelector(".video-arrow.next").addEventListener("click", () => {
-  track.scrollBy({ left: track.clientWidth * 0.75, behavior: "smooth" });
+    track.scrollBy({
+        left: track.clientWidth * 0.75,
+        behavior: "smooth"
+    });
 });
 
 document.querySelectorAll(".video-card").forEach(card => {
-  card.addEventListener("click", () => {
-    const videoId = card.dataset.video;
-    const iframe = document.createElement("iframe");
+    card.addEventListener("click", () => {
+        const videoId = card.dataset.video;
+        const thumb = card.querySelector(".video-thumb");
 
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-    iframe.title = "YouTube video player";
-    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-    iframe.allowFullscreen = true;
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        iframe.title = "YouTube video player";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
 
-    card.replaceChildren(iframe);
-  }, { once: true });
+        thumb.replaceChildren(iframe);
+    }, { once: true });
 });
 </script>
 <style>
