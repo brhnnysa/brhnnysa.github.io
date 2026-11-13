@@ -717,80 +717,48 @@ document.getElementById("releaseNext").onclick = () => {
 }
 
 .video-card {
-  position: relative;
-  flex: 0 0 calc(50% - 11px);
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border: 1px solid #9d7b38;
-  border-radius: 8px;
-  background: #151515;
-  scroll-snap-align: start;
-  cursor: pointer;
+    position: relative;
+    flex: 0 0 calc(50% - 12px);
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid #9d7b38;
+    border-radius: 8px;
+    background: #151515;
+    scroll-snap-align: start;
+    cursor: pointer;
 }
-
-.video-card img,
-.video-card iframe {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border: 0;
-  display: block;
-}
-
-.play-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 62px;
-  height: 62px;
-  border: 1px solid #e3c477;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, .78);
-  color: #e3c477;
-  font-size: 25px;
-  cursor: pointer;
-}
-
-.video-card:hover .play-button {
-  background: #d6b56d;
-  color: #080808;
-}
-
-.video-arrow {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
-  border: 1px solid #d6b56d;
-  border-radius: 50%;
-  background: #080808;
-  color: #d6b56d;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.video-arrow.prev { left: -20px; }
-.video-arrow.next { right: -20px; }
 
 @media (max-width: 700px) {
-  .video-section {
-    padding: 40px 5%;
-  }
+    .video-section {
+        padding: 30px 3%;
+    }
 
-  .video-heading {
-    font-size: 24px;
-  }
+    .video-heading {
+        font-size: 23px;
+        margin-bottom: 22px;
+    }
 
-  .video-card {
-    flex: 0 0 85%;
-  }
+    .video-track {
+        gap: 12px;
+        padding: 5px 0 15px;
+    }
 
-  .video-arrow {
-    display: none;
-  }
+    .video-card {
+        flex: 0 0 100%;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+    }
+
+    .play-button {
+        width: 58px;
+        height: 58px;
+        font-size: 24px;
+    }
+
+    .video-arrow {
+        display: none;
+    }
 }
 </style>
 <script>
