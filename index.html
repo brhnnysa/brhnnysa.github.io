@@ -314,7 +314,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BRHN NYSA | Upcoming Events</title>
 
 <style>
@@ -326,7 +325,7 @@
 
 body {
     background: #090909;
-    color: #ffffff;
+    color: #fff;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -349,7 +348,7 @@ body {
 }
 
 .section-heading p {
-    color: #c0c0c0;
+    color: #bbb;
     font-size: 13px;
     letter-spacing: 3px;
     margin-top: 14px;
@@ -366,11 +365,11 @@ body {
     align-items: center;
     gap: 25px;
     flex-wrap: wrap;
-    transition: .3s ease;
+    transition: .3s;
 }
 
 .event-card:hover {
-    border-color: #d5ad65;
+    border-color: #e5b85c;
     transform: translateY(-3px);
 }
 
@@ -380,12 +379,12 @@ body {
 }
 
 .event-info h2 {
-    font-size: 25px;
-    margin-bottom: 16px;
+    font-size: 24px;
+    margin-bottom: 15px;
 }
 
 .event-info p {
-    color: #c2c2c2;
+    color: #bbb;
     font-size: 14px;
     line-height: 1.9;
 }
@@ -442,7 +441,7 @@ body {
     font-weight: 800;
     letter-spacing: 1px;
     text-align: center;
-    transition: .3s ease;
+    transition: .3s;
 }
 
 .ticket-button:hover {
@@ -450,8 +449,7 @@ body {
     transform: translateY(-2px);
 }
 
-.empty-message,
-.loading-message {
+.message {
     text-align: center;
     color: #aaa;
     padding: 40px 15px;
@@ -471,7 +469,7 @@ body {
     color: #e5b85c;
 }
 
-@media (max-width: 600px) {
+@media(max-width:600px) {
     .events-section {
         margin: 25px auto;
         padding: 20px 15px;
@@ -494,10 +492,6 @@ body {
         padding: 10px 5px;
     }
 
-    .time-box strong {
-        font-size: 20px;
-    }
-
     .ticket-button {
         width: 100%;
     }
@@ -515,7 +509,7 @@ body {
     </div>
 
     <div id="events-container">
-        <div class="loading-message">
+        <div class="message">
             Loading upcoming events...
         </div>
     </div>
@@ -524,8 +518,7 @@ body {
         class="artist-link"
         href="https://www.bandsintown.com/a/15666367-brhn-nysa"
         target="_blank"
-        rel="noopener noreferrer"
-    >
+        rel="noopener noreferrer">
         Event information powered by Bandsintown
     </a>
 
@@ -533,65 +526,61 @@ body {
 
 <script>
 
-// ======================================
-// BRHN NYSA EVENT CONFIGURATION
-// ======================================
+// ===================================
+// BRHN NYSA CONFIGURATION
+// ===================================
 
 const ARTIST_ID = "15666367";
 
-const BANDSINTOWN_APP_ID =
-    "84610745a9c36219ffda7dc902864730";
+const APP_ID = "84610745a9c36219ffda7dc902864730";
 
 const TICKET_URL =
-    "https://www.techmore.ng/event/brhnnysa/profile";
+"https://www.techmore.ng/event/brhnnysa/profile";
+
+const ARTIST_URL =
+`https://rest.bandsintown.com/artists/id_${ARTIST_ID}/?app_id=${encodeURIComponent(APP_ID)}`;
 
 const EVENTS_URL =
-    `https://rest.bandsintown.com/artists/id_${ARTIST_ID}/events/?app_id=${encodeURIComponent(BANDSINTOWN_APP_ID)}&date=upcoming`;
+`https://rest.bandsintown.com/artists/id_${ARTIST_ID}/events/?app_id=${encodeURIComponent(APP_ID)}&date=upcoming`;
 
 const container =
-    document.getElementById("events-container");
+document.getElementById("events-container");
 
-let countdownTimers = [];
+let countdownInterval = null;
 
 
-// ======================================
-// COUNTDOWN FUNCTION
-// ======================================
+// ===================================
+// COUNTDOWN
+// ===================================
 
-function createCountdown(eventDate, countdownElement) {
+function updateCountdowns() {
 
-    function updateCountdown() {
+    document.querySelectorAll("[data-event-date]")
+    .forEach(element => {
 
-        const difference =
-            new Date(eventDate).getTime() - Date.now();
+        const eventDate =
+        new Date(element.dataset.eventDate).getTime();
+
+        const difference = eventDate - Date.now();
 
         if (difference <= 0) {
-            countdownElement.textContent =
-                "Event is happening now!";
+            element.textContent = "EVENT IS HAPPENING NOW!";
             return;
         }
 
         const days =
-            Math.floor(difference / (1000 * 60 * 60 * 24));
+        Math.floor(difference / 86400000);
 
         const hours =
-            Math.floor(
-                (difference % (1000 * 60 * 60 * 24)) /
-                (1000 * 60 * 60)
-            );
+        Math.floor((difference % 86400000) / 3600000);
 
         const minutes =
-            Math.floor(
-                (difference % (1000 * 60 * 60)) /
-                (1000 * 60)
-            );
+        Math.floor((difference % 3600000) / 60000);
 
         const seconds =
-            Math.floor(
-                (difference % (1000 * 60)) / 1000
-            );
+        Math.floor((difference % 60000) / 1000);
 
-        countdownElement.innerHTML = `
+        element.innerHTML = `
             <div class="time-box">
                 <strong>${days}</strong>
                 <span>DAYS</span>
@@ -612,23 +601,19 @@ function createCountdown(eventDate, countdownElement) {
                 <span>SECONDS</span>
             </div>
         `;
-    }
-
-    updateCountdown();
-
-    return setInterval(updateCountdown, 1000);
+    });
 }
 
 
-// ======================================
-// EVENT CARD CREATION
-// ======================================
+// ===================================
+// CREATE EVENT CARD
+// ===================================
 
-function createEventCard(event, index) {
+function createEventCard(event) {
 
-    const eventDate = new Date(event.datetime);
+    const date = new Date(event.datetime);
 
-    const formattedDate = eventDate.toLocaleDateString(
+    const formattedDate = date.toLocaleDateString(
         "en-US",
         {
             weekday: "long",
@@ -638,7 +623,7 @@ function createEventCard(event, index) {
         }
     );
 
-    const formattedTime = eventDate.toLocaleTimeString(
+    const formattedTime = date.toLocaleTimeString(
         "en-US",
         {
             hour: "2-digit",
@@ -656,35 +641,39 @@ function createEventCard(event, index) {
     ].filter(Boolean).join(", ");
 
     const card = document.createElement("div");
-
     card.className = "event-card";
 
     const info = document.createElement("div");
     info.className = "event-info";
 
-    const title = document.createElement("h2");
-    title.textContent = event.title || "BRHN NYSA LIVE";
+    const heading = document.createElement("h2");
 
-    const date = document.createElement("p");
-    date.className = "event-date";
-    date.textContent = "📅 " + formattedDate;
+    heading.textContent =
+        event.title ||
+        (event.lineup && event.lineup.length
+            ? event.lineup.join(" / ")
+            : "BRHN NYSA LIVE");
 
-    const time = document.createElement("p");
-    time.textContent = "🕒 " + formattedTime;
+    const dateText = document.createElement("p");
+    dateText.className = "event-date";
+    dateText.textContent = "📅 " + formattedDate;
 
-    const venueInfo = document.createElement("p");
-    venueInfo.textContent =
+    const timeText = document.createElement("p");
+    timeText.textContent = "🕒 " + formattedTime;
+
+    const venueText = document.createElement("p");
+    venueText.textContent =
         "📍 " + (location || "Venue to be announced");
 
-    const countdownTitle = document.createElement("div");
-    countdownTitle.className = "countdown-title";
-    countdownTitle.textContent = "EVENT COUNTDOWN";
+    const countdownHeading = document.createElement("div");
+    countdownHeading.className = "countdown-title";
+    countdownHeading.textContent = "EVENT COUNTDOWN";
 
     const countdown = document.createElement("div");
     countdown.className = "countdown";
+    countdown.dataset.eventDate = event.datetime;
 
     const ticketButton = document.createElement("a");
-
     ticketButton.className = "ticket-button";
     ticketButton.href = TICKET_URL;
     ticketButton.target = "_blank";
@@ -692,115 +681,166 @@ function createEventCard(event, index) {
     ticketButton.textContent = "GET TICKETS NOW";
 
     info.append(
-        title,
-        date,
-        time,
-        venueInfo,
-        countdownTitle,
+        heading,
+        dateText,
+        timeText,
+        venueText,
+        countdownHeading,
         countdown
     );
 
     card.append(info, ticketButton);
 
     container.appendChild(card);
-
-    const timer = createCountdown(
-        event.datetime,
-        countdown
-    );
-
-    countdownTimers.push(timer);
 }
 
 
-// ======================================
-// LOAD BANDSINTOWN EVENTS
-// ======================================
+// ===================================
+// DISPLAY ERRORS CLEARLY
+// ===================================
+
+function showError(message) {
+
+    container.innerHTML = "";
+
+    const error = document.createElement("div");
+    error.className = "message";
+    error.textContent = message;
+
+    container.appendChild(error);
+}
+
+
+// ===================================
+// FETCH ARTIST AND EVENT INFORMATION
+// ===================================
+
+async function fetchJSON(url) {
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    const body = await response.text();
+
+    if (!response.ok) {
+        throw new Error(
+            `Bandsintown HTTP ${response.status}: ${body.slice(0, 250)}`
+        );
+    }
+
+    let data;
+
+    try {
+        data = JSON.parse(body);
+    } catch {
+        throw new Error(
+            "Bandsintown did not return valid JSON: " +
+            body.slice(0, 200)
+        );
+    }
+
+    if (data && !Array.isArray(data) &&
+        (data.error || data.errors)) {
+        throw new Error(
+            JSON.stringify(data.error || data.errors)
+        );
+    }
+
+    return data;
+}
+
+
+// ===================================
+// LOAD UPCOMING EVENTS
+// ===================================
 
 async function loadEvents() {
 
     try {
 
-        const response = await fetch(EVENTS_URL);
+        // First verify that the artist can be found.
+        const artist = await fetchJSON(ARTIST_URL);
 
-        if (!response.ok) {
+        if (!artist || !artist.id) {
             throw new Error(
-                "Bandsintown returned an error: " +
-                response.status
+                "Artist was not found. Check the artist ID and API key."
             );
         }
 
-        const events = await response.json();
+        console.log("Bandsintown artist verified:", artist.name);
+        console.log("Upcoming event count:", artist.upcoming_event_count);
+
+        // Then retrieve the artist's upcoming events.
+        const events = await fetchJSON(EVENTS_URL);
 
         if (!Array.isArray(events)) {
-            throw new Error("Invalid event response.");
+            throw new Error(
+                "The events endpoint did not return an event list."
+            );
         }
 
         const upcomingEvents = events
-            .filter(event => {
-                return (
-                    event.datetime &&
-                    new Date(event.datetime).getTime() >
-                    Date.now()
-                );
-            })
-            .sort((a, b) => {
-                return (
-                    new Date(a.datetime) -
-                    new Date(b.datetime)
-                );
-            });
-
-        // Clear previous countdown timers.
-        countdownTimers.forEach(timer =>
-            clearInterval(timer)
-        );
-
-        countdownTimers = [];
+            .filter(event =>
+                event.datetime &&
+                new Date(event.datetime).getTime() > Date.now()
+            )
+            .sort((a, b) =>
+                new Date(a.datetime) - new Date(b.datetime)
+            );
 
         container.innerHTML = "";
 
         if (upcomingEvents.length === 0) {
 
             const empty = document.createElement("div");
-
-            empty.className = "empty-message";
-
+            empty.className = "message";
             empty.textContent =
                 "No upcoming events at the moment. " +
                 "Please check back soon for new BRHN NYSA shows.";
 
             container.appendChild(empty);
 
-            return;
+        } else {
+
+            upcomingEvents.forEach(event => {
+                createEventCard(event);
+            });
         }
 
-        upcomingEvents.forEach((event, index) => {
-            createEventCard(event, index);
-        });
+        // Start one shared countdown clock.
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+
+        updateCountdowns();
+
+        countdownInterval =
+            setInterval(updateCountdowns, 1000);
 
     } catch (error) {
 
-        console.error("Event loading error:", error);
+        console.error("BRHN NYSA event integration error:", error);
 
-        container.innerHTML = `
-            <div class="empty-message">
-                Unable to load upcoming events right now.
-                Please refresh the page or check back later.
-            </div>
-        `;
+        showError(
+            "Unable to load upcoming events. " +
+            "Technical details: " + error.message
+        );
     }
 }
 
 
-// ======================================
-// INITIALIZE AND AUTO-REFRESH
-// ======================================
+// ===================================
+// INITIAL LOAD AND AUTOMATIC REFRESH
+// ===================================
 
 loadEvents();
 
-// Check Bandsintown for new events every 5 minutes.
-setInterval(loadEvents, 300000);
+// Check for newly published events every 5 minutes.
+setInterval(loadEvents, 5 * 60 * 1000);
 
 </script>
 
