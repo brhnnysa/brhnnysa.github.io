@@ -309,6 +309,177 @@
                 <div class="tagline">Listen Now</div>
 <iframe src="https://www.boomplay.com/embed/EQu27kYzR96vQA5pC7oxvEqW/MUSIC" width="100%" height="420" frameborder="0"></iframe>
 
+<section class="video-section">
+  <h2 class="video-heading">VIDEOS</h2>
+
+  <div class="video-carousel">
+    <button class="video-arrow prev" aria-label="Previous videos">&#10094;</button>
+
+    <div class="video-track" id="videoTrack">
+      <div class="video-card" data-video="a8BxcF1fSis">
+        <img src="https://img.youtube.com/vi/a8BxcF1fSis/hqdefault.jpg" alt="Video 1">
+        <button class="play-button" aria-label="Play video">&#9654;</button>
+      </div>
+
+      <div class="video-card" data-video="465VfZYWfVw">
+        <img src="https://img.youtube.com/vi/465VfZYWfVw/hqdefault.jpg" alt="Video 2">
+        <button class="play-button" aria-label="Play video">&#9654;</button>
+      </div>
+
+      <div class="video-card" data-video="rxOamoQx-qk">
+        <img src="https://img.youtube.com/vi/rxOamoQx-qk/hqdefault.jpg" alt="Video 3">
+        <button class="play-button" aria-label="Play video">&#9654;</button>
+      </div>
+
+      <div class="video-card" data-video="UQvVGZL7NnM">
+        <img src="https://img.youtube.com/vi/UQvVGZL7NnM/hqdefault.jpg" alt="Video 4">
+        <button class="play-button" aria-label="Play video">&#9654;</button>
+      </div>
+    </div>
+
+    <button class="video-arrow next" aria-label="Next videos">&#10095;</button>
+  </div>
+</section>
+
+<style>
+.video-section {
+  background: #080808;
+  padding: 55px 5%;
+  color: #d6b56d;
+  overflow: hidden;
+}
+
+.video-heading {
+  text-align: center;
+  font-size: 30px;
+  letter-spacing: 5px;
+  margin: 0 0 35px;
+  color: #d6b56d;
+}
+
+.video-carousel {
+  position: relative;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.video-track {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 8px 2px 18px;
+}
+
+.video-track::-webkit-scrollbar {
+  display: none;
+}
+
+.video-card {
+  position: relative;
+  flex: 0 0 calc(50% - 11px);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid #9d7b38;
+  border-radius: 8px;
+  background: #151515;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+
+.video-card img,
+.video-card iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  display: block;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 62px;
+  height: 62px;
+  border: 1px solid #e3c477;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .78);
+  color: #e3c477;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.video-card:hover .play-button {
+  background: #d6b56d;
+  color: #080808;
+}
+
+.video-arrow {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d6b56d;
+  border-radius: 50%;
+  background: #080808;
+  color: #d6b56d;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.video-arrow.prev { left: -20px; }
+.video-arrow.next { right: -20px; }
+
+@media (max-width: 700px) {
+  .video-section {
+    padding: 40px 5%;
+  }
+
+  .video-heading {
+    font-size: 24px;
+  }
+
+  .video-card {
+    flex: 0 0 85%;
+  }
+
+  .video-arrow {
+    display: none;
+  }
+}
+</style>
+
+<script>
+const track = document.getElementById("videoTrack");
+
+document.querySelector(".video-arrow.prev").addEventListener("click", () => {
+  track.scrollBy({ left: -track.clientWidth * 0.75, behavior: "smooth" });
+});
+
+document.querySelector(".video-arrow.next").addEventListener("click", () => {
+  track.scrollBy({ left: track.clientWidth * 0.75, behavior: "smooth" });
+});
+
+document.querySelectorAll(".video-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const videoId = card.dataset.video;
+    const iframe = document.createElement("iframe");
+
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    iframe.title = "YouTube video player";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+
+    card.replaceChildren(iframe);
+  }, { once: true });
+});
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
