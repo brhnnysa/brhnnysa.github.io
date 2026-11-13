@@ -351,31 +351,97 @@ img, iframe, video { max-width:100%; }
 <h2 class="profile-title">Brhn Nysa</h2>
 <p class="description">Nigerian singer-songwriter</p>
 <div class="bio-card">
-<p>Solomon Nweke, known professionally as Brhn Nysa, is a Nigerian singer-songwriter. He began his musical journey at a young age by releasing open-verse freestyle covers on social media. In 2026, he released a studio album, <a href="https://audiomack.com/brhnnysa/album/second-chances-1" class="album-link" target="_blank">Second Chances</a>, under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk". <a href="https://www.wikidata.org/wiki/Q141479857" class="wikidata-highlight" target="_blank">Wikidata</a>.</p>
+<p>Solomon Nweke, known professionally as Brhn Nysa, is a Nigerian singer-songwriter. He began his musical journey at a young age by releasing open-verse freestyle covers on social media. In 2026, he released a studio album,
+    <a href="https://audiomack.com/brhnnysa/album/second-chances-1"
+       class="album-link"
+       target="_blank"
+       rel="noopener noreferrer">Second Chances</a>,
+    under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk".
+    <a href="https://www.wikidata.org/wiki/Q141479857"
+       class="wikidata-highlight"
+       target="_blank"
+       rel="noopener noreferrer">Wikidata</a>.
+</p>
 </div>
 </main>
+
 <h2 class="profile-title" style="display: flex; align-items: center; gap: 8px;">
-<span class="running-horse" style="display: inline-block; animation: horseRunMove 0.8s infinite linear;">🎶</span>
+    <span class="running-horse" style="display: inline-block; animation: horseRunMove 0.8s infinite linear;">🎶</span>
 </h2>
+
 <style>
+/* Second Chances: blinking gold underline */
+.album-link {
+    color: #d6b56d;
+    text-decoration: none;
+    font-weight: 700;
+    position: relative;
+    white-space: nowrap;
+}
+
+.album-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 2px;
+    background: #d6b56d;
+    animation: albumBlink 1.1s ease-in-out infinite;
+}
+
+@keyframes albumBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+}
+
+/* Wikidata: gentle shaking highlight */
+.wikidata-highlight {
+    display: inline-block;
+    color: #d6b56d;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: #d6b56d;
+    text-underline-offset: 3px;
+    animation: wikidataShake 2.5s ease-in-out infinite;
+}
+
+@keyframes wikidataShake {
+    0%, 85%, 100% { transform: translateX(0); }
+    88% { transform: translateX(-2px); }
+    91% { transform: translateX(2px); }
+    94% { transform: translateX(-2px); }
+    97% { transform: translateX(0); }
+}
+
+/* Running music icon */
 @keyframes horseRunMove {
     0% {
         transform: translate(0, 0) scaleX(1);
     }
     25% {
-        transform: translate(2px, -3px) scaleX(1.02); /* Slight hop up and forward */
+        transform: translate(2px, -3px) scaleX(1.02);
     }
     50% {
-        transform: translate(4px, 0) scaleX(1); /* Land down */
+        transform: translate(4px, 0) scaleX(1);
     }
     75% {
-        transform: translate(2px, -2px) scaleX(0.98); /* Small bounce back up */
+        transform: translate(2px, -2px) scaleX(0.98);
     }
     100% {
-        transform: translate(0, 0) scaleX(1); /* Loop back cleanly */
+        transform: translate(0, 0) scaleX(1);
     }
 }
-<style>
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .album-link::after,
+    .wikidata-highlight,
+    .running-horse {
+        animation: none !important;
+    }
+}
+</style>
 /* Artist's Pick: featured on-site player and official listening destinations */
 .artist-pick {
     padding: 42px 0 48px !important;
