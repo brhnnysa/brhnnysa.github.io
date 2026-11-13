@@ -737,20 +737,42 @@ document.getElementById("releaseNext").onclick = () => {
 </script>
 
 
-<!-- BRHN NYSA LATEST POSTS -->
 <section class="site-section latest-post-feed">
     <h2 class="section-heading">LATEST POSTS</h2>
 
-    <iframe
-        src="https://snapwidget.com/embed/4423dc07-66d5-4bce-b1ba-613dc859ca00"
-        class="snapwidget-widget"
-        allowtransparency="true"
-        frameborder="0"
-        scrolling="no"
-        title="Brhn Nysa Latest Instagram Posts"
-        style="width:100%; height:480px; border:none; display:block;">
-    </iframe>
+    <div class="snapwidget-container">
+        <iframe
+            src="https://snapwidget.com/embed/03da6bb3-a7c3-4e58-95f9-50b2a18386fa"
+            class="snapwidget-widget"
+            allowtransparency="true"
+            frameborder="0"
+            scrolling="no"
+            title="Brhn Nysa Latest Instagram Posts">
+        </iframe>
+    </div>
 </section>
+
+<style>
+.snapwidget-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.snapwidget-container iframe {
+    display: block;
+    width: 100%;
+    height: 420px;
+    border: none;
+}
+
+@media (max-width: 600px) {
+    .snapwidget-container iframe {
+        height: 500px;
+    }
+}
+</style>
 
 
 <section class="video-section">
