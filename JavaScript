@@ -1,0 +1,25 @@
+
+function openNewsletterForm() {
+    document.getElementById("newsletter-modal").style.display = "flex";
+}
+
+function closeNewsletterForm() {
+    document.getElementById("newsletter-modal").style.display = "none";
+}
+
+function openBookingForm() {
+    document.getElementById("booking-modal").style.display = "flex";
+}
+
+function closeBookingForm() {
+    document.getElementById("booking-modal").style.display = "none";
+}
+
+// Close either popup when clicking outside it
+document.querySelectorAll(".booking-modal").forEach(function(modal) {
+    modal.addEventListener("click", function(e) {
+        if (e.target === this) {
+            this.style.display = "none";
+        }
+    });
+});
