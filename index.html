@@ -337,6 +337,162 @@ img, iframe, video { max-width:100%; }
 }
 </style>
 <section aria-label="Listen to Brhn Nysa" class="audio-section site-section"><h2 class="section-heading">LISTEN NOW</h2><div class="audio-frame"><iframe frameborder="0" height="420" src="https://www.boomplay.com/embed/EQu27kYzR96vQA5pC7oxvEqW/MUSIC" width="100%"></iframe></div></section>
+<style>
+/* Artist's Pick: featured on-site player and official listening destinations */
+.artist-pick {
+    padding: 42px 0 48px !important;
+    text-align: center;
+}
+
+.artist-pick-heading {
+    margin: 0 auto 22px;
+    max-width: 720px;
+}
+
+.artist-pick-kicker {
+    display: block;
+    margin-bottom: 8px;
+    color: #d6b56d;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.artist-pick-heading .section-heading {
+    margin: 0 0 10px;
+}
+
+.artist-pick-heading p {
+    margin: 0;
+    color: inherit;
+    line-height: 1.6;
+}
+
+.artist-pick .audio-frame {
+    max-width: 850px;
+}
+
+.artist-pick-platforms {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 22px auto 0;
+}
+
+.artist-pick-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 19px;
+    border: 1px solid #d6b56d;
+    border-radius: 999px;
+    color: #f4e5bd;
+    background: #151515;
+    font-size: .92rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease;
+}
+
+.artist-pick-link:hover,
+.artist-pick-link:focus-visible {
+    background: #d6b56d;
+    color: #111;
+}
+
+.artist-pick-note {
+    margin: 12px auto 0;
+    max-width: 680px;
+    color: #aaa;
+    font-size: .78rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .artist-pick {
+        padding: 30px 0 36px !important;
+    }
+
+    .artist-pick-platforms {
+        gap: 9px;
+    }
+
+    .artist-pick-link {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .artist-pick .audio-frame iframe {
+        height: 360px;
+    }
+}
+</style>
+
+<section aria-label="Artist's Pick" class="audio-section site-section artist-pick">
+
+    <div class="artist-pick-heading">
+        <span class="artist-pick-kicker">FEATURED MUSIC</span>
+
+        <h2 class="section-heading">ARTIST'S PICK</h2>
+
+        <p>
+            Press play and enjoy Brhn Nysa's featured music
+            right here on the website.
+        </p>
+    </div>
+
+    <div class="audio-frame">
+        <iframe
+            title="Brhn Nysa featured music player"
+            loading="lazy"
+            frameborder="0"
+            height="420"
+            src="https://www.boomplay.com/embed/EQu27kYzR96vQA5pC7oxvEqW/MUSIC"
+            width="100%"
+            allow="autoplay; encrypted-media; clipboard-write; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <div class="artist-pick-platforms"
+         aria-label="Listen to Brhn Nysa on music platforms">
+
+        <a
+            class="artist-pick-link boomplay-link"
+            href="https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn"
+            target="_blank"
+            rel="noopener noreferrer">
+            More on Boomplay
+        </a>
+
+        <a
+            class="artist-pick-link audiomack-link"
+            href="https://audiomack.com/brhnnysa/"
+            target="_blank"
+            rel="noopener noreferrer">
+            Listen on Audiomack
+        </a>
+
+        <a
+            class="artist-pick-link mdundo-link"
+            href="https://play.mdundo.com/artist/717441/Brhn-Nysa"
+            target="_blank"
+            rel="noopener noreferrer">
+            Listen / Download on Mdundo
+        </a>
+
+    </div>
+
+    <p class="artist-pick-note">
+        Availability of downloads depends on the music platform
+        and the individual release.
+    </p>
+
+</section>
 <!-- LATEST RELEASES SECTION -->
 <section class="latest-releases">
 <h2 class="release-heading">LATEST RELEASES</h2>
