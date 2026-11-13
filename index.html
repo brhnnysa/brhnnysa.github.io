@@ -1226,21 +1226,64 @@ body {
         width: 100%;
     }
 }
+
+/* BRHN NYSA - HORIZONTAL EVENTS */
+#events-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    width: 100%;
+}
+
+.event-card {
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 700px) {
+    #events-container {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 15px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 8px 4% 18px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    #events-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    #events-container .event-card {
+        flex: 0 0 88%;
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+}
 </style>
+
 <section class="events-section">
-<div class="section-heading">
-<h1>BRHN NYSA</h1>
-<p>UPCOMING EVENTS &amp; LIVE SHOWS</p>
-</div>
-<div id="events-container">
-<div class="message">
+    <div class="section-heading">
+        <h1>BRHN NYSA</h1>
+        <p>UPCOMING EVENTS &amp; LIVE SHOWS</p>
+    </div>
+
+    <div id="events-container">
+        <div class="message">
             Loading upcoming events...
         </div>
-</div>
-<a class="artist-link" href="https://www.bandsintown.com/a/15666367-brhn-nysa" rel="noopener noreferrer" target="_blank">
+    </div>
+
+    <a class="artist-link"
+       href="https://www.bandsintown.com/a/15666367-brhn-nysa"
+       rel="noopener noreferrer"
+       target="_blank">
         Event information powered by Bandsintown
     </a>
 </section>
+
 <script>
 
 // ===================================
