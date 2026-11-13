@@ -746,21 +746,50 @@ document.getElementById("releaseNext").onclick = () => {
 };
 </script>
 
-<section class="site-section latest-post-feed">
-    <h2 class="section-heading">LATEST POSTS</h2>
 
-    <div class="elfsight-app-e320d855-3cc7-49d7-b597-acfc0225428a"
-         data-elfsight-app-lazy></div>
+<!-- BRHN NYSA LATEST POSTS -->
+<section class="instagram-section">
+    <h2>LATEST POSTS</h2>
+
+    <div class="snapwidget-container">
+        <iframe
+            src="https://snapwidget.com/embed/4423dc07-66d5-4bce-b1ba-613dc859ca00"
+            class="snapwidget-widget"
+            allowtransparency="true"
+            frameborder="0"
+            scrolling="no"
+            title="Brhn Nysa Latest Instagram Posts">
+        </iframe>
+    </div>
 </section>
 
+<style>
+.instagram-section {
+    padding: 35px 12px;
+    text-align: center;
+}
 
-<section class="video-section">
-    <h2 class="video-heading">VIDEOS</h2>
+.instagram-section h2 {
+    color: #d6b56d;
+    margin-bottom: 22px;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
 
-    <div class="video-carousel">
-        <button aria-label="Previous videos" class="video-arrow prev">❮</button>
+.snapwidget-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
 
-        <div class="video-track" id="videoTrack">
+.snapwidget-container iframe {
+    display: block;
+    width: 100%;
+    height: 160px;
+    border: none;
+    overflow: hidden;
+}
+</style>
 
             <!-- VIDEO 1 -->
             <div class="video-card" data-video="a8BxcF1fSis">
