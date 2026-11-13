@@ -761,6 +761,14 @@ document.getElementById("releaseNext").onclick = () => {
     overflow: hidden;
 }
 
+<style>
+.snapwidget-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
 .snapwidget-container iframe {
     display: block;
     width: 100%;
@@ -768,23 +776,22 @@ document.getElementById("releaseNext").onclick = () => {
     border: none;
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
     .snapwidget-container {
         width: 100%;
         overflow: visible;
+        padding: 0;
     }
 
     .snapwidget-container iframe {
         width: 100%;
-        height: 650px;
-        transform: scale(1.15);
+        height: 850px;
+        transform: scale(1.4);
         transform-origin: top center;
-        margin-bottom: 90px;
+        margin-bottom: 340px;
     }
 }
 </style>
-
-
 <section class="video-section">
     <h2 class="video-heading">VIDEOS</h2>
 
