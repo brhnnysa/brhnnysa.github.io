@@ -1755,53 +1755,5 @@ setInterval(loadEvents, 5 * 60 * 1000);
 </div>
 
 <script src="https://elfsightcdn.com/platform.js" async></script>
-
-(async function () {
-    const percentage = document.getElementById("loaderPercentage");
-    const message = document.getElementById("loaderMessage");
-    const progress = document.getElementById("loaderProgress");
-    const loader = document.getElementById("site-loader");
-
-    if (!loader) return;
-
-    const stages = [
-        [20, "Loading..."],
-        [37, "Please wait..."],
-        [66, "Getting things ready for you..."],
-        [88, "Almost there..."],
-        [99, "Almost there..."]
-    ];
-
-    function wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function updateLoader(value, text) {
-        percentage.textContent = value + "%";
-        message.textContent = text;
-        progress.style.width = value + "%";
-    }
-
-    for (const [value, text] of stages) {
-        updateLoader(value, text);
-        await wait(850);
-    }
-
-    // Wait until the website has fully loaded.
-    if (document.readyState !== "complete") {
-        await new Promise(resolve => {
-            window.addEventListener("load", resolve, { once: true });
-        });
-    }
-
-    updateLoader(100, "Welcome!");
-
-    await wait(900);
-
-    loader.classList.add("loader-hidden");
-
-    await wait(1600);
-    loader.remove();
-})();
 </body>
 </html>
