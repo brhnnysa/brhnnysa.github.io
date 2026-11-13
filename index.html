@@ -1847,45 +1847,6 @@ setInterval(loadEvents, 5 * 60 * 1000);
 
 </div>
 
-
-<!-- NEWSLETTER AND BOOKING BUTTONS -->
-<section class="bottom-actions">
-
-    <button class="bottom-action-btn news-btn" type="button"
-            onclick="openNewsletterForm()">
-        Sign Up for a Newsletter
-    </button>
-
-    <button class="bottom-action-btn booking-btn" type="button"
-            onclick="openBookingForm()">
-        Booking
-    </button>
-
-</section>
-
-<!-- NEWSLETTER POPUP -->
-<div id="newsletter-modal" class="booking-modal">
-    <div class="booking-box">
-        <button class="booking-close" type="button"
-                onclick="closeNewsletterForm()">&times;</button>
-
-        <h2>NEWSLETTER SIGN UP</h2>
-        <p>Sign up to receive updates, music news and announcements from Brhn Nysa.</p>
-
-        <form action="https://formspree.io/f/YOUR_NEWSLETTER_FORM_ID"
-              method="POST">
-
-            <input type="email" name="email"
-                   placeholder="Your Email Address" required>
-
-            <button type="submit" class="booking-submit">
-                Sign Up
-            </button>
-        </form>
-    </div>
-</div>
-
-
 <!-- BOTTOM NEWSLETTER AND BOOKING BUTTONS -->
 <div class="bottom-actions">
     <button type="button" onclick="openPopup('newsletter-modal')">
