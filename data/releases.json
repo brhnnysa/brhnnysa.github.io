@@ -1,60 +1,299 @@
 {
   "artist": "BRHN NYSA",
-  "source": "Audiomack public artist profile",
-  "updatedAt": "2026-11-14T18:57:16.146117+00:00",
+  "source": "SoundCloud artist RSS",
+  "sourceUrl": "https://feeds.soundcloud.com/users/soundcloud:users:1559781363/sounds.rss",
+  "updatedAt": "2026-11-14T19:08:26.353540+00:00",
   "releases": [
     {
-      "id": "my-kind",
-      "title": "My Kind",
-      "artist": "Brhn Nysa",
+      "id": "tag:soundcloud,2010:tracks/2426689311",
+      "title": "My Darling (SpeedUP )",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-10-27",
+      "artwork": "https://i1.sndcdn.com/artworks-bDPyFrqRRHyDmc2Y-9ANUGg-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/my-darling-speedup",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2425824015",
+      "title": "My Darling",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-10-26",
+      "artwork": "https://i1.sndcdn.com/artworks-3XSONWGm6ILVKO8y-zG421Q-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/my-darling",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2421421647",
+      "title": "Kadidja",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-10-18",
+      "artwork": "https://i1.sndcdn.com/artworks-SpOTo7bMyF1oDXoY-85pxjg-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/kadidja",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2418384792",
+      "title": "Right now remix",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-10-13",
+      "artwork": "https://i1.sndcdn.com/artworks-kNCImCyXG24x22cQ-GpSKLQ-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/right-now-remix",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2412316791",
+      "title": "Right now",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-10-03",
+      "artwork": "https://i1.sndcdn.com/artworks-1PwslRNDKzcNeAL5-fQkdsg-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/right-now",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2410700826",
+      "title": "Leals Talk",
+      "artist": "BRHN NYSA",
       "releaseDate": "2026-09-30",
-      "artwork": "https://i.audiomack.com/brhnnysa/4160b7e7fa.webp?width=1200",
+      "artwork": "https://i1.sndcdn.com/artworks-MPhzPnuc1KPz0yM0-vEQaKQ-t3000x3000.jpg",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/my-kind",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/leals-talk",
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
         "genius": "https://genius.com/Brhn-nysa"
       }
     },
     {
-      "id": "still-us",
+      "id": "tag:soundcloud,2010:tracks/2410506099",
+      "title": "My Kind",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-09-30",
+      "artwork": "https://i1.sndcdn.com/artworks-r7yTyXgoCS9kx7y4-tzpyDQ-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/my-kind",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2404205406",
+      "title": "Sanity ft Newlord",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-09-20",
+      "artwork": "https://i1.sndcdn.com/artworks-YoMtlLx1CEl4Ibic-Z8oYbA-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/sanity-ft-newlord",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2398453728",
       "title": "Still Us",
-      "artist": "Brhn Nysa",
+      "artist": "BRHN NYSA",
       "releaseDate": "2026-09-11",
-      "artwork": "https://i.audiomack.com/brhn_nysa/32eeeb1068.webp?width=1200",
+      "artwork": "https://i1.sndcdn.com/artworks-L4kL2N92UTtpUNWG-t2y29A-t3000x3000.jpg",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/still-us",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/still-us",
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
         "genius": "https://genius.com/Brhn-nysa"
       }
     },
     {
-      "id": "in-love",
+      "id": "tag:soundcloud,2010:tracks/2359656644",
       "title": "In love",
-      "artist": "Brhn Nysa",
+      "artist": "BRHN NYSA",
       "releaseDate": "2026-07-13",
-      "artwork": "https://i.audiomack.com/brhn_nysa/0f97bf2c32.webp?width=1200",
+      "artwork": "https://i1.sndcdn.com/avatars-GypXdRy4rTsI2bCW-FbxxTw-original.jpg",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/in-love",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/in-love",
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
         "genius": "https://genius.com/Brhn-nysa"
       }
     },
     {
-      "id": "chidindu",
-      "title": "Chidindu",
-      "artist": "Brhn Nysa",
-      "releaseDate": "2026-03-02",
-      "artwork": "https://i.audiomack.com/brhn-nysa/a27abf576a.webp?width=1200",
+      "id": "tag:soundcloud,2010:tracks/2350214981",
+      "title": "My Last Apology",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-06-29",
+      "artwork": "https://i1.sndcdn.com/avatars-GypXdRy4rTsI2bCW-FbxxTw-original.jpg",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/chidindu",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/my-last-apology",
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2277669464",
+      "title": "Ass Niggas",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-03-05",
+      "artwork": "https://i1.sndcdn.com/artworks-0yxWOyGsoMnAFM34-yClQTw-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/ass-niggas",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2276073254",
+      "title": "Chidindu",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-03-02",
+      "artwork": "https://i1.sndcdn.com/artworks-AzZLUshMCk4tWjfa-ZXGAGQ-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/chidindu",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2256030746",
+      "title": "Themselves",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2026-01-28",
+      "artwork": "https://i1.sndcdn.com/artworks-nm1Xak3rL0Ssx5P9-kRoUvg-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/themselves",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2172295902",
+      "title": "Chisindu.mp3",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-09-18",
+      "artwork": "https://i1.sndcdn.com/artworks-vAiMH90wVcyyM5JQ-mh0JUg-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/chisindump3",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2115946938",
+      "title": "No Time (cover)",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-06-19",
+      "artwork": "https://i1.sndcdn.com/artworks-XETDbCZ9ayQR6FGK-bop9yQ-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/no-time",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2107371663",
+      "title": "Brhn Nysa Dj-Mix",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-06-04",
+      "artwork": "https://i1.sndcdn.com/artworks-qEl7yzPzMyuHtzpl-gsjXZg-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/brhn-nysa-dj-mix",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2107357653",
+      "title": "Brhn Nysa Dj-Mix",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-06-04",
+      "artwork": "https://i1.sndcdn.com/artworks-veCqbAgeZP8Y5uQu-4kTTDg-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/brhnnysa",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2104641792",
+      "title": "Forsake",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-05-30",
+      "artwork": "https://i1.sndcdn.com/artworks-H2PdhtTGrRdThXuS-oK4E4Q-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/forsake",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2104639467",
+      "title": "Khaid ft Brhn x rema",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-05-30",
+      "artwork": "https://i1.sndcdn.com/artworks-TJm1ACAg2vgzaJ6J-7M7z7A-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/khaid-ft-brhn-x-rema",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "tag:soundcloud,2010:tracks/2104629492",
+      "title": "Runaway remix",
+      "artist": "BRHN NYSA",
+      "releaseDate": "2025-05-30",
+      "artwork": "https://i1.sndcdn.com/artworks-tGZRAKeJyeArnWT1-VU77AA-t3000x3000.png",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/3c39dae7-1e15-4911-b645-fcee1fef5527",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
         "genius": "https://genius.com/Brhn-nysa"
       }
