@@ -34,7 +34,7 @@ jobs:
           AUDIOMACK_CONSUMER_SECRET: ${{ secrets.AUDIOMACK_CONSUMER_SECRET }}
 
       - name: Refresh YouTube uploads
-        run: python scripts/update_youtube_videos.py || echo "YouTube feed refresh skipped; keeping the last published feed."
+        run: python scripts/update_youtube_videos.py
 
       - name: Commit feed when it changes
         run: |
