@@ -2542,5 +2542,55 @@ document.addEventListener('keydown', function(event) {
 @media(max-width:700px) { #events-container .brhn-event-ticket { flex:0 0 86% !important; min-width:0; max-width:360px; } #events-container .brhn-event-body { min-height:235px; padding:19px 17px 17px; } }
 </style>
 
+
+<style id="brhn-desktop-fullscreen-and-mobile-video-size">
+/* Desktop and TV: let the website use the full available screen width. */
+@media (min-width:701px) {
+  html, body, #main-site {
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+  }
+  #main-site > header,
+  #main-site > main,
+  #main-site > footer,
+  #main-site .site-section,
+  #main-site .latest-releases,
+  #main-site .video-section,
+  #main-site .events-section,
+  #main-site .social-area {
+    width:calc(100% - 80px) !important;
+    max-width:none !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    box-sizing:border-box !important;
+  }
+  #main-site > main {
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  .video-section .video-carousel {
+    max-width:none !important;
+  }
+}
+/* Mobile: enlarge each separate video card slightly; keep the current swipe layout. */
+@media (max-width:700px) {
+  .video-section .video-track {
+    gap:14px !important;
+    padding-left:5% !important;
+    padding-right:5% !important;
+  }
+  .video-section .video-card {
+    flex:0 0 90% !important;
+    width:90% !important;
+    min-width:90% !important;
+    padding:12px !important;
+  }
+  .video-section .video-thumb {
+    aspect-ratio:16 / 9 !important;
+  }
+}
+</style>
+
 </body>
 </html>
