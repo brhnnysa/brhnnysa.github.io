@@ -211,7 +211,10 @@ def main():
     FEED.parent.mkdir(parents=True, exist_ok=True)
     FEED.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Updated release feed with {len(discovered)} Audiomack songs.")
-    update_top_plays()
+    try:
+        update_top_plays()
+    except Exception as exc:
+        print(f"Audiomack top plays could not be refreshed: {exc}")
 
 
 if __name__ == "__main__":
