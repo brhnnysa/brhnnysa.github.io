@@ -83,6 +83,7 @@ def main() -> None:
             "title": title,
             "url": url,
             "published": date_label,
+            "published_at": datetime.fromtimestamp(timestamp, timezone.utc).isoformat() if timestamp else "",
             "summary": summary,
         }
         if image and image.startswith(("https://", "http://")):
