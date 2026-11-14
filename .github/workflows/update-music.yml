@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - '.github/workflows/update-music.yml'
-      - 'scripts/update_social_posts.py'
       - 'scripts/update_releases.py'
   schedule:
     - cron: "17 * * * *"
