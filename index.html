@@ -1426,8 +1426,8 @@ body {
 
 <section class="events-section">
     <div class="section-heading">
-        <h1>BRHN NYSA</h1>
-        <p>UPCOMING EVENTS &amp; LIVE SHOWS</p>
+        <h1>LIVE SHOWS</h1>
+        <p>UPCOMING EVENTS &amp; TOUR DATES</p>
     </div>
 
     <div id="events-container">
@@ -1447,320 +1447,122 @@ body {
 <script>
 
 // ===================================
-// BRHN NYSA CONFIGURATION
+// BRHN NYSA EVENTS
 // ===================================
+const BRHN_EVENTS_APP_ID = "84610745a9c36219ffda7dc902864730";
+const BRHN_EVENTS_ARTIST_ID = "15666367";
+const BRHN_EVENTS_API = `https://rest.bandsintown.com/artists/id_${BRHN_EVENTS_ARTIST_ID}/events/?app_id=${encodeURIComponent(BRHN_EVENTS_APP_ID)}&date=upcoming`;
+const BRHN_EVENTS_ARTIST_API = `https://rest.bandsintown.com/artists/id_${BRHN_EVENTS_ARTIST_ID}/?app_id=${encodeURIComponent(BRHN_EVENTS_APP_ID)}`;
+const BRHN_TICKET_FALLBACK = "https://www.techmore.ng/event/brhnnysa/profile";
+const BRHN_FEATURED_EVENT = {
+  id: "day-in-the-life-2026",
+  title: "Day In The Life",
+  datetime: "2026-11-22T21:00:00+01:00",
+  description: "3 Years of Brhn Nysa in the industry",
+  venue: { name: "Dom Sampros Hotel and Suites", city: "Abakaliki", region: "Ebonyi", country: "Nigeria" },
+  url: "https://beatstorapon.com/event/day-life-a7e7h5-6af5bff663f2b82362671787",
+  ticketUrl: "https://beatstorapon.com/checkout/event/day-life-a7e7h5-6af5bff663f2b82362671787",
+  image: "https://media.beatstorapon.com/events/brhnnysa/day-life-a7e7h5/flyers/flyer-hCVKjL9fNf-imresizer-resize-BrhnNysapressphotonowjpeg3000x3000pxjpg.jpg",
+  source: "BeatsToRapOn"
+};
+const eventsContainer = document.getElementById("events-container");
+let brhnCountdownTimer = null;
 
-const ARTIST_ID = "15666367";
-
-const APP_ID = "84610745a9c36219ffda7dc902864730";
-
-const TICKET_URL =
-"https://www.techmore.ng/event/brhnnysa/profile";
-
-const ARTIST_URL =
-`https://rest.bandsintown.com/artists/id_${ARTIST_ID}/?app_id=${encodeURIComponent(APP_ID)}`;
-
-const EVENTS_URL =
-`https://rest.bandsintown.com/artists/id_${ARTIST_ID}/events/?app_id=${encodeURIComponent(APP_ID)}&date=upcoming`;
-
-const container =
-document.getElementById("events-container");
-
-let countdownInterval = null;
-
-
-// ===================================
-// COUNTDOWN
-// ===================================
-
-function updateCountdowns() {
-
-    document.querySelectorAll("[data-event-date]")
-    .forEach(element => {
-
-        const eventDate =
-        new Date(element.dataset.eventDate).getTime();
-
-        const difference = eventDate - Date.now();
-
-        if (difference <= 0) {
-            element.textContent = "EVENT IS HAPPENING NOW!";
-            return;
-        }
-
-        const days =
-        Math.floor(difference / 86400000);
-
-        const hours =
-        Math.floor((difference % 86400000) / 3600000);
-
-        const minutes =
-        Math.floor((difference % 3600000) / 60000);
-
-        const seconds =
-        Math.floor((difference % 60000) / 1000);
-
-        element.innerHTML = `
-            <div class="time-box">
-                <strong>${days}</strong>
-                <span>DAYS</span>
-            </div>
-
-            <div class="time-box">
-                <strong>${hours}</strong>
-                <span>HOURS</span>
-            </div>
-
-            <div class="time-box">
-                <strong>${minutes}</strong>
-                <span>MINUTES</span>
-            </div>
-
-            <div class="time-box">
-                <strong>${seconds}</strong>
-                <span>SECONDS</span>
-            </div>
-        `;
-    });
+function brhnFormatEventDate(value, options) {
+  return new Date(value).toLocaleDateString("en-GB", options);
 }
+function brhnMakeEventCard(event) {
+  const date = new Date(event.datetime);
+  if (Number.isNaN(date.getTime())) return null;
 
-
-// ===================================
-// CREATE EVENT CARD
-// ===================================
-
-function createEventCard(event) {
-
-    const date = new Date(event.datetime);
-
-    const formattedDate = date.toLocaleDateString(
-        "en-US",
-        {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        }
-    );
-
-    const formattedTime = date.toLocaleTimeString(
-        "en-US",
-        {
-            hour: "2-digit",
-            minute: "2-digit"
-        }
-    );
-
-    const venue = event.venue || {};
-
-    const location = [
-        venue.name,
-        venue.city,
-        venue.region,
-        venue.country
-    ].filter(Boolean).join(", ");
-
-    const card = document.createElement("div");
-    card.className = "event-card";
-
-    const info = document.createElement("div");
-    info.className = "event-info";
-
-    const heading = document.createElement("h2");
-
-    heading.textContent =
-        event.title ||
-        (event.lineup && event.lineup.length
-            ? event.lineup.join(" / ")
-            : "BRHN NYSA LIVE");
-
-    const dateText = document.createElement("p");
-    dateText.className = "event-date";
-    dateText.textContent = "📅 " + formattedDate;
-
-    const timeText = document.createElement("p");
-    timeText.textContent = "🕒 " + formattedTime;
-
-    const venueText = document.createElement("p");
-    venueText.textContent =
-        "📍 " + (location || "Venue to be announced");
-
-    const countdownHeading = document.createElement("div");
-    countdownHeading.className = "countdown-title";
-    countdownHeading.textContent = "EVENT COUNTDOWN";
-
-    const countdown = document.createElement("div");
-    countdown.className = "countdown";
-    countdown.dataset.eventDate = event.datetime;
-
-    const ticketButton = document.createElement("a");
-    ticketButton.className = "ticket-button";
-    ticketButton.href = TICKET_URL;
-    ticketButton.target = "_blank";
-    ticketButton.rel = "noopener noreferrer";
-    ticketButton.textContent = "GET TICKETS NOW";
-
-    info.append(
-        heading,
-        dateText,
-        timeText,
-        venueText,
-        countdownHeading,
-        countdown
-    );
-
-    card.append(info, ticketButton);
-
-    container.appendChild(card);
+  const venue = event.venue || {};
+  const location = [venue.name, venue.city, venue.region, venue.country].filter(Boolean).join(", ");
+  const offers = Array.isArray(event.offers) ? event.offers : [];
+  const availableOffer = offers.find(offer => offer && offer.url && (!offer.status || offer.status === "available"));
+  const ticketHref = event.ticketUrl || (availableOffer && availableOffer.url) || event.url || BRHN_TICKET_FALLBACK;
+  const card = document.createElement("article");
+  card.className = "event-card brhn-event-ticket";
+  card.innerHTML = `
+    <div class="brhn-event-art"><img src="${event.image || BRHN_FEATURED_EVENT.image}" alt="" loading="lazy"></div>
+    <div class="brhn-event-body">
+      <div class="brhn-event-kicker">BRHN NYSA LIVE <span>•</span> UPCOMING SHOW</div>
+      <h2 class="brhn-event-title"></h2>
+      <p class="brhn-event-description"></p>
+      <div class="brhn-event-details">
+        <div class="brhn-event-detail"><span class="brhn-event-detail-icon">▦</span><span class="brhn-event-date"></span></div>
+        <div class="brhn-event-detail"><span class="brhn-event-detail-icon">◷</span><span class="brhn-event-time"></span></div>
+        <div class="brhn-event-detail"><span class="brhn-event-detail-icon">⌖</span><span class="brhn-event-location"></span></div>
+      </div>
+      <div class="brhn-event-count-label">COUNTDOWN TO THE SHOW</div>
+      <div class="countdown brhn-event-countdown" data-event-date="${date.toISOString()}"></div>
+      <a class="ticket-button brhn-event-ticket-button" href="${ticketHref}" target="_blank" rel="noopener noreferrer">GET TICKETS NOW <span aria-hidden="true">↗</span></a>
+      <div class="brhn-event-source">Event details via ${event.source || "Bandsintown"}</div>
+    </div>`;
+  card.querySelector(".brhn-event-title").textContent = event.title || (event.lineup && event.lineup.join(" / ")) || "BRHN NYSA LIVE";
+  card.querySelector(".brhn-event-description").textContent = event.description || "Come experience BRHN NYSA live.";
+  card.querySelector(".brhn-event-date").textContent = brhnFormatEventDate(date, { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+  card.querySelector(".brhn-event-time").textContent = date.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" });
+  card.querySelector(".brhn-event-location").textContent = location || "Venue to be announced";
+  const art = card.querySelector(".brhn-event-art img");
+  art.addEventListener("error", () => { card.querySelector(".brhn-event-art").classList.add("no-event-image"); art.remove(); });
+  return card;
 }
-
-
-// ===================================
-// DISPLAY ERRORS CLEARLY
-// ===================================
-
-function showError(message) {
-
-    container.innerHTML = "";
-
-    const error = document.createElement("div");
-    error.className = "message";
-    error.textContent = message;
-
-    container.appendChild(error);
+function brhnUpdateEventCountdowns() {
+  document.querySelectorAll(".brhn-event-countdown[data-event-date]").forEach(node => {
+    const remaining = new Date(node.dataset.eventDate).getTime() - Date.now();
+    if (remaining <= 0) { node.textContent = "THE SHOW IS ON!"; return; }
+    const parts = [
+      [Math.floor(remaining / 86400000), "DAYS"],
+      [Math.floor((remaining % 86400000) / 3600000), "HRS"],
+      [Math.floor((remaining % 3600000) / 60000), "MINS"],
+      [Math.floor((remaining % 60000) / 1000), "SECS"]
+    ];
+    node.replaceChildren(...parts.map(([number, label]) => {
+      const item = document.createElement("div");
+      item.className = "brhn-event-timebox";
+      const strong = document.createElement("strong"); strong.textContent = String(number).padStart(2, "0");
+      const small = document.createElement("span"); small.textContent = label;
+      item.append(strong, small); return item;
+    }));
+  });
 }
-
-
-// ===================================
-// FETCH ARTIST AND EVENT INFORMATION
-// ===================================
-
-async function fetchJSON(url) {
-
-    const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            "Accept": "application/json"
-        }
-    });
-
-    const body = await response.text();
-
-    if (!response.ok) {
-        throw new Error(
-            `Bandsintown HTTP ${response.status}: ${body.slice(0, 250)}`
-        );
+function brhnRenderEvents(events) {
+  eventsContainer.replaceChildren();
+  events.forEach(event => {
+    const card = brhnMakeEventCard(event);
+    if (card) eventsContainer.appendChild(card);
+  });
+  if (!eventsContainer.children.length) {
+    const empty = document.createElement("div");
+    empty.className = "message";
+    empty.textContent = "No upcoming shows are listed right now. Check back soon for the next BRHN NYSA date.";
+    eventsContainer.appendChild(empty);
+  }
+  brhnUpdateEventCountdowns();
+}
+async function brhnLoadEvents() {
+  try {
+    const response = await fetch(BRHN_EVENTS_API, { headers: { Accept:"application/json" }, cache:"no-store" });
+    if (!response.ok) throw new Error("Bandsintown events request returned " + response.status);
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error("Bandsintown returned an unexpected event response.");
+    const upcoming = data.filter(event => event.datetime && new Date(event.datetime).getTime() > Date.now())
+      .sort((a,b) => new Date(a.datetime) - new Date(b.datetime));
+    if (upcoming.length) {
+      const featuredAlreadyListed = upcoming.some(event => event.title === BRHN_FEATURED_EVENT.title || event.id === BRHN_FEATURED_EVENT.id);
+      brhnRenderEvents(featuredAlreadyListed ? upcoming : [BRHN_FEATURED_EVENT, ...upcoming].sort((a,b) => new Date(a.datetime) - new Date(b.datetime)));
+    } else {
+      brhnRenderEvents([BRHN_FEATURED_EVENT]);
     }
-
-    let data;
-
-    try {
-        data = JSON.parse(body);
-    } catch {
-        throw new Error(
-            "Bandsintown did not return valid JSON: " +
-            body.slice(0, 200)
-        );
-    }
-
-    if (data && !Array.isArray(data) &&
-        (data.error || data.errors)) {
-        throw new Error(
-            JSON.stringify(data.error || data.errors)
-        );
-    }
-
-    return data;
+  } catch (error) {
+    console.warn("BRHN NYSA live event feed fallback:", error);
+    brhnRenderEvents([BRHN_FEATURED_EVENT]);
+  }
 }
-
-
-// ===================================
-// LOAD UPCOMING EVENTS
-// ===================================
-
-async function loadEvents() {
-
-    try {
-
-        // First verify that the artist can be found.
-        const artist = await fetchJSON(ARTIST_URL);
-
-        if (!artist || !artist.id) {
-            throw new Error(
-                "Artist was not found. Check the artist ID and API key."
-            );
-        }
-
-        console.log("Bandsintown artist verified:", artist.name);
-        console.log("Upcoming event count:", artist.upcoming_event_count);
-
-        // Then retrieve the artist's upcoming events.
-        const events = await fetchJSON(EVENTS_URL);
-
-        if (!Array.isArray(events)) {
-            throw new Error(
-                "The events endpoint did not return an event list."
-            );
-        }
-
-        const upcomingEvents = events
-            .filter(event =>
-                event.datetime &&
-                new Date(event.datetime).getTime() > Date.now()
-            )
-            .sort((a, b) =>
-                new Date(a.datetime) - new Date(b.datetime)
-            );
-
-        container.innerHTML = "";
-
-        if (upcomingEvents.length === 0) {
-
-            const empty = document.createElement("div");
-            empty.className = "message";
-            empty.textContent =
-                "No upcoming events at the moment. " +
-                "Please check back soon for new BRHN NYSA shows.";
-
-            container.appendChild(empty);
-
-        } else {
-
-            upcomingEvents.forEach(event => {
-                createEventCard(event);
-            });
-        }
-
-        // Start one shared countdown clock.
-        if (countdownInterval) {
-            clearInterval(countdownInterval);
-        }
-
-        updateCountdowns();
-
-        countdownInterval =
-            setInterval(updateCountdowns, 1000);
-
-    } catch (error) {
-
-        console.error("BRHN NYSA event integration error:", error);
-
-        showError(
-            "Unable to load upcoming events. " +
-            "Technical details: " + error.message
-        );
-    }
-}
-
-
-// ===================================
-// INITIAL LOAD AND AUTOMATIC REFRESH
-// ===================================
-
-loadEvents();
-
-// Check for newly published events every 5 minutes.
-setInterval(loadEvents, 5 * 60 * 1000);
+brhnLoadEvents();
+if (brhnCountdownTimer) clearInterval(brhnCountdownTimer);
+brhnCountdownTimer = setInterval(brhnUpdateEventCountdowns, 1000);
+setInterval(brhnLoadEvents, 5 * 60 * 1000);
 
 
 <!-- BRHN NYSA AUDIOMACK TOP PLAYS -->
@@ -2674,5 +2476,45 @@ document.addEventListener('keydown', function(event) {
 })();
 </script>
 
+
+<style id="brhn-event-ticket-design">
+.events-section { padding: 34px 0 48px !important; }
+.events-section .section-heading { margin-bottom: 24px !important; }
+.events-section .section-heading h1 { color:#f5f5f5; font-size:clamp(1.65rem,5vw,2.35rem); letter-spacing:.18em; }
+.events-section .section-heading p { color:#d6b56d; font-size:.68rem; letter-spacing:.2em; }
+#events-container { display:flex !important; flex-wrap:nowrap !important; gap:18px !important; overflow-x:auto !important; overflow-y:hidden !important; padding:8px 2px 18px !important; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:#80612d #171717; }
+#events-container .brhn-event-ticket { flex:0 0 calc((100% - 36px)/3) !important; min-width:250px; max-width:360px; display:flex !important; flex-direction:column !important; justify-content:flex-start !important; align-items:stretch !important; gap:0 !important; padding:0 !important; margin:0 !important; overflow:hidden; background:linear-gradient(155deg,#191919,#0d0d0d 72%); border:1px solid rgba(214,181,109,.42); border-radius:14px; scroll-snap-align:start; box-shadow:0 12px 30px rgba(0,0,0,.28); transition:transform .25s,border-color .25s,box-shadow .25s; }
+#events-container .brhn-event-ticket:hover { transform:translateY(-4px); border-color:#d6b56d; box-shadow:0 16px 34px rgba(0,0,0,.4); }
+.brhn-event-art { height:155px; position:relative; overflow:hidden; background:radial-gradient(circle at 50% 20%,#72552a,#17130d 65%,#090909); }
+.brhn-event-art:after { content:"BRHN NYSA"; position:absolute; left:16px; bottom:12px; color:rgba(255,255,255,.86); font-size:.7rem; font-weight:900; letter-spacing:.22em; text-shadow:0 2px 8px #000; }
+.brhn-event-art img { width:100%; height:100%; object-fit:cover; object-position:center 38%; display:block; opacity:.82; }
+.brhn-event-art.no-event-image { min-height:155px; }
+.brhn-event-body { padding:19px 18px 18px; display:flex; flex-direction:column; flex:1; }
+.brhn-event-kicker { color:#d6b56d; font-size:.59rem; font-weight:800; letter-spacing:.16em; }
+.brhn-event-kicker span { padding:0 4px; color:#777; }
+.brhn-event-title { color:#fff; font-size:1.28rem; line-height:1.2; margin:10px 0 5px; }
+.brhn-event-description { color:#aaa; font-size:.78rem; line-height:1.5; min-height:2.3em; margin:0 0 15px; }
+.brhn-event-details { display:grid; gap:9px; padding:13px 0; border-top:1px solid #333; border-bottom:1px solid #333; }
+.brhn-event-detail { display:flex; align-items:flex-start; gap:9px; color:#ddd; font-size:.76rem; line-height:1.4; }
+.brhn-event-detail-icon { width:17px; flex:0 0 17px; color:#d6b56d; font-size:1rem; text-align:center; }
+.brhn-event-count-label { color:#888; font-size:.56rem; font-weight:800; letter-spacing:.17em; margin:15px 0 8px; }
+.brhn-event-countdown { display:flex; gap:6px; margin-bottom:17px; }
+.brhn-event-timebox { flex:1; min-width:0; text-align:center; background:#211d16; border:1px solid rgba(214,181,109,.18); border-radius:6px; padding:8px 3px; }
+.brhn-event-timebox strong { display:block; color:#e2bd72; font-size:1.05rem; font-variant-numeric:tabular-nums; }
+.brhn-event-timebox span { display:block; color:#999; font-size:.49rem; letter-spacing:.08em; margin-top:3px; }
+#events-container .brhn-event-ticket-button { display:flex; justify-content:center; align-items:center; gap:9px; width:100%; margin-top:auto; padding:13px 12px; border-radius:6px; background:#d6b56d; color:#111; font-size:.7rem; letter-spacing:.13em; font-weight:900; }
+#events-container .brhn-event-ticket-button:hover { background:#f4dfae; }
+.brhn-event-source { color:#666; font-size:.57rem; margin-top:10px; text-align:center; }
+.events-section .artist-link { margin-top:15px; }
+@media(max-width:700px) {
+ .events-section { width:calc(100% - 28px) !important; padding:25px 0 35px !important; }
+ .events-section .section-heading { text-align:left; margin-bottom:16px !important; }
+ .events-section .section-heading h1 { letter-spacing:.12em; }
+ #events-container { gap:13px !important; padding:5px 1px 15px !important; }
+ #events-container .brhn-event-ticket { flex:0 0 86% !important; min-width:0; max-width:360px; }
+ .brhn-event-art { height:145px; }
+ .brhn-event-body { padding:17px 16px 16px; }
+}
+</style>
 </body>
 </html>
