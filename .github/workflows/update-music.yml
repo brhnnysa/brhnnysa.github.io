@@ -33,14 +33,17 @@ jobs:
           AUDIOMACK_CONSUMER_KEY: ${{ secrets.AUDIOMACK_CONSUMER_KEY }}
           AUDIOMACK_CONSUMER_SECRET: ${{ secrets.AUDIOMACK_CONSUMER_SECRET }}
 
+      - name: Refresh YouTube uploads
+        run: python scripts/update_youtube_videos.py || echo "YouTube feed refresh skipped; keeping the last published feed."
+
       - name: Commit feed when it changes
         run: |
-          if git diff --quiet -- data/releases.json data/top-plays.json; then
+          if git diff --quiet -- data/releases.json data/top-plays.json data/youtube-videos.json; then
             echo "No new release metadata."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/releases.json data/top-plays.json
+          git add data/releases.json data/top-plays.json data/youtube-videos.json
           git commit -m "chore: refresh BRHN NYSA music releases"
           git push
