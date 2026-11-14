@@ -1787,6 +1787,20 @@ body {
     if(text)el.textContent=text;
     return el;
   }
+  function relativeAge(value){
+    var date=new Date(value),seconds=Math.max(0,Math.floor((Date.now()-date.getTime())/1000));
+    if(Number.isNaN(date.getTime()))return '';
+    if(seconds<60)return 'Just now';
+    if(seconds<3600)return Math.floor(seconds/60)+' min ago';
+    if(seconds<86400)return Math.floor(seconds/3600)+' hr ago';
+    if(seconds<604800)return Math.floor(seconds/86400)+' days ago';
+    return date.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+  }
+  function refreshAges(){
+    track.querySelectorAll('[data-published-at]').forEach(function(node){
+      node.textContent=relativeAge(node.dataset.publishedAt);
+    });
+  }
   function render(posts){
     track.replaceChildren();
     if(!Array.isArray(posts)||!posts.length){
@@ -1803,7 +1817,13 @@ body {
         img.src=post.image;img.alt='';img.loading='lazy';card.appendChild(img);
       }
       var body=make('div','brhn-news-card-body');
-      body.appendChild(make('div','brhn-news-date',post.published||'BRHN NYSA NEWS'));
+      var timeLabel=make('div','brhn-news-date',post.published||'BRHN NYSA NEWS');
+      if(post.published_at){
+        timeLabel.dataset.publishedAt=post.published_at;
+        timeLabel.textContent=relativeAge(post.published_at);
+        timeLabel.title=post.published||post.published_at;
+      }
+      body.appendChild(timeLabel);
       body.appendChild(make('h3','',post.title||'BRHN NYSA update'));
       if(post.summary)body.appendChild(make('p','brhn-news-summary',post.summary));
       var a=make('a','brhn-news-read','READ STORY ↗');
@@ -1811,7 +1831,9 @@ body {
       a.target='_blank';a.rel='noopener noreferrer';
       body.appendChild(a);card.appendChild(body);track.appendChild(card);
     });
+    refreshAges();
   }
+  window.setInterval(refreshAges,60000);
   fetch('data/news.json?refresh='+Date.now(),{cache:'no-store'})
     .then(function(response){if(!response.ok)throw new Error('News feed is not ready');return response.json();})
     .then(function(data){render(data.posts||[]);})
