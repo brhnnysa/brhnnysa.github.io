@@ -6,7 +6,7 @@ on:
       - '.github/workflows/update-youtube.yml'
       - 'scripts/update_youtube_videos.py'
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
