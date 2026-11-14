@@ -86,6 +86,17 @@
             font-weight: 800; letter-spacing: -.06em; color: #f5f5f5; }
         .intro-message { min-height: 30px; margin-top: 18px; color: #d6b56d;
             font-size: clamp(1rem, 3vw, 1.2rem); letter-spacing: .04em; }
+        .loading-dots span { display: inline-block; animation: loading-dot 1.2s infinite; }
+        .loading-dots span:nth-child(2) { animation-delay: .2s; }
+        .loading-dots span:nth-child(3) { animation-delay: .4s; }
+        @keyframes loading-dot {
+            0%, 20% { opacity: .2; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-2px); }
+            80%, 100% { opacity: .2; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .loading-dots span { animation: none; opacity: 1; }
+        }
         .intro-progress { height: 3px; width: 100%; margin-top: 30px;
             background: #292929; overflow: hidden; }
         .intro-progress-fill { height: 100%; width: 0; background: #d6b56d;
@@ -314,8 +325,8 @@ img, iframe, video { max-width:100%; }
   const fill = document.getElementById('intro-progress-fill');
   const site = document.getElementById('main-site');
   const steps = [
-    { value: 10, text: 'Please wait, slowly no rush eheh.', delay: 0 },
-    { value: 27, text: 'Loading…', delay: 1800 },
+    { value: 10, text: 'Please wait', delay: 0 },
+    { value: 27, text: 'Loading', dots: true, delay: 1800 },
     { value: 44, text: 'Getting things ready for you.', delay: 3900 },
     { value: 88, text: 'Almost there…', delay: 6500 },
     { value: 100, text: 'Welcome to the official website of BRHN NYSA.', delay: 8500 }
@@ -324,6 +335,13 @@ img, iframe, video { max-width:100%; }
     window.setTimeout(function () {
       percent.textContent = step.value + '%';
       message.textContent = step.text;
+      if (step.dots) {
+        const dots = document.createElement('span');
+        dots.className = 'loading-dots';
+        dots.setAttribute('aria-hidden', 'true');
+        dots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
+        message.appendChild(dots);
+      }
       fill.style.width = step.value + '%';
       if (step.value === 100) {
         window.setTimeout(function () {
