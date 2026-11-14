@@ -845,10 +845,15 @@ Stream & download anywhere.    </p>
 <section class="brhn-latest-posts" aria-labelledby="brhn-latest-posts-title">
   <div class="brhn-post-divider" aria-hidden="true"></div>
   <h2 id="brhn-latest-posts-title">LATEST POSTS</h2>
-  <div class="commonninja-container">
-    <script src="https://cdn.commoninja.com/sdk/latest/commonninja.js" defer></script>
-    <div class="commonninja_component pid-f389a5b3-454a-4710-8da1-157f1ec05862"></div>
+  <p class="brhn-social-posts-intro">Latest public posts from Instagram</p>
+  <div class="brhn-social-posts-shell">
+    <button type="button" class="brhn-social-post-arrow prev" id="brhn-social-post-prev" aria-label="Previous posts">‹</button>
+    <div class="brhn-social-posts-track" id="brhn-social-post-track" aria-live="polite">
+      <p class="brhn-social-post-status">Loading latest posts…</p>
+    </div>
+    <button type="button" class="brhn-social-post-arrow next" id="brhn-social-post-next" aria-label="Next posts">›</button>
   </div>
+  <p class="brhn-social-post-status" id="brhn-social-post-updated">Posts refresh automatically.</p>
   <button type="button" class="brhn-post-feature" id="brhn-open-post-options" aria-haspopup="dialog">
     <span class="brhn-post-play" aria-hidden="true">▶</span>
     <span class="brhn-post-copy">
@@ -858,85 +863,81 @@ Stream & download anywhere.    </p>
     <span class="brhn-post-arrow" aria-hidden="true">↗</span>
   </button>
 </section>
+<script>
+(function () {
+  const track = document.getElementById('brhn-social-post-track');
+  const status = document.getElementById('brhn-social-post-updated');
+  if (!track) return;
+  const make = (tag, className, text) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  };
+  const prev = document.getElementById('brhn-social-post-prev');
+  const next = document.getElementById('brhn-social-post-next');
+  const scroll = direction => track.scrollBy({left: direction * Math.max(track.clientWidth * 0.82, 260), behavior: 'smooth'});
+  if (prev) prev.addEventListener('click', () => scroll(-1));
+  if (next) next.addEventListener('click', () => scroll(1));
 
-<section class="brhn-tiktok-feed" aria-labelledby="brhn-tiktok-title">
-  <div class="brhn-tiktok-divider" aria-hidden="true"></div>
-  <h2 id="brhn-tiktok-title">LATEST ON TIKTOK</h2>
-  <p class="brhn-tiktok-intro">Watch BRHN NYSA's latest videos</p>
-  <div class="brhn-tiktok-embed-wrap">
-    <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@brhnnysa" data-unique-id="brhnnysa" data-embed-type="creator" style="max-width:720px; min-width:288px;">
-      <section>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.tiktok.com/@brhnnysa?refer=creator_embed">@brhnnysa</a>
-      </section>
-    </blockquote>
-  </div>
-  <p class="brhn-tiktok-follow"><a href="https://www.tiktok.com/@brhnnysa" target="_blank" rel="noopener noreferrer">FOLLOW @BRHNNYSA ON TIKTOK ↗</a></p>
-</section>
-<style>
-.brhn-tiktok-feed {
-  width: min(100% - 40px, 1100px);
-  margin: 0 auto;
-  padding: 38px 0 52px;
-  color: #fff;
-  text-align: center;
-}
-.brhn-tiktok-divider {
-  width: 54px;
-  height: 3px;
-  margin: 0 auto 24px;
-  background: #d6b56d;
-}
-.brhn-tiktok-feed h2 {
-  margin: 0 0 10px;
-  color: #d6b56d;
-  font-size: clamp(21px, 3vw, 27px);
-  letter-spacing: 4px;
-  font-weight: 800;
-}
-.brhn-tiktok-intro {
-  margin: 0 0 22px;
-  color: #c8c1b3;
-  font-size: 14px;
-}
-.brhn-tiktok-embed-wrap {
-  width: 100%;
-  max-width: 720px;
-  min-width: 0;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 12px;
-}
-.brhn-tiktok-embed-wrap .tiktok-embed {
-  width: 100%;
-  max-width: 720px !important;
-  min-width: 288px !important;
-  margin: 0 auto !important;
-}
-.brhn-tiktok-follow {
-  margin: 18px 0 0;
-}
-.brhn-tiktok-follow a {
-  color: #d6b56d;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-decoration: none;
-}
-.brhn-tiktok-follow a:hover {
-  color: #fff;
-}
-@media (max-width: 480px) {
-  .brhn-tiktok-feed {
-    width: min(100% - 24px, 1100px);
-    padding: 30px 0 40px;
-  }
-  .brhn-tiktok-embed-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-</style>
-<script async src="https://www.tiktok.com/embed.js"></script>
+  fetch('./data/social-posts.json?updated=' + Date.now(), {cache: 'no-store'})
+    .then(response => {
+      if (!response.ok) throw new Error('Feed unavailable');
+      return response.json();
+    })
+    .then(data => {
+      const posts = Array.isArray(data.posts) ? data.posts.slice(0, 5) : [];
+      if (!posts.length) throw new Error('No posts are available yet');
+      const cards = posts.map(post => {
+        const link = make('a', 'brhn-social-post-card');
+        link.href = post.url || 'https://www.instagram.com/heisbrhn/';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        const media = make('div', 'brhn-social-post-media');
+        if (post.media_url && post.media_type === 'video') {
+          const video = make('video');
+          video.src = post.media_url;
+          video.muted = true;
+          video.playsInline = true;
+          video.controls = true;
+          video.preload = 'metadata';
+          media.appendChild(video);
+        } else if (post.media_url) {
+          const img = make('img');
+          img.src = post.media_url;
+          img.alt = 'BRHN NYSA Instagram post';
+          img.loading = 'lazy';
+          img.referrerPolicy = 'no-referrer';
+          media.appendChild(img);
+        } else {
+          media.appendChild(make('span', 'brhn-social-post-no-media', 'BRHN NYSA'));
+        }
+        const body = make('div', 'brhn-social-post-body');
+        body.appendChild(make('span', 'brhn-social-post-platform', 'INSTAGRAM'));
+        body.appendChild(make('p', 'brhn-social-post-caption', post.caption || 'View BRHN NYSA’s latest post'));
+        const meta = [];
+        if (post.published_at) {
+          const date = new Date(Number(post.published_at) * 1000);
+          if (!Number.isNaN(date.getTime())) meta.push(date.toLocaleDateString());
+        }
+        if (post.likes != null) meta.push(Number(post.likes).toLocaleString() + ' likes');
+        if (meta.length) body.appendChild(make('small', 'brhn-social-post-meta', meta.join(' · ')));
+        body.appendChild(make('span', 'brhn-social-post-link', 'VIEW POST ↗'));
+        link.append(media, body);
+        return link;
+      });
+      track.replaceChildren(...cards);
+      if (status && data.updated_at) {
+        const date = new Date(data.updated_at);
+        status.textContent = 'Automatically refreshed · ' + date.toLocaleString();
+      }
+    })
+    .catch(() => {
+      track.replaceChildren(make('p', 'brhn-social-post-status', 'The latest posts are temporarily unavailable. Please visit Instagram to view them.'));
+      if (status) status.textContent = 'The feed will try again on the next automatic refresh.';
+    });
+})();
+</script>
 
 <dialog id="brhn-post-options" class="brhn-post-dialog" aria-labelledby="brhn-post-dialog-title">
   <div class="brhn-post-dialog-inner">
@@ -982,24 +983,73 @@ Stream & download anywhere.    </p>
   letter-spacing: 4px;
   font-weight: 800;
 }
-.commonninja-container {
-  width: 100%;
-  max-width: 1100px;
-  min-height: 280px;
-  margin: 0 auto 12px;
-  overflow: visible;
-  border-radius: 12px;
+.brhn-social-posts-intro {
+  margin: -10px 0 22px;
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
 }
-.commonninja-container .commonninja_component {
+.brhn-social-posts-shell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  position: relative;
+}
+.brhn-social-posts-track {
+  display: flex;
+  gap: 16px;
   width: 100%;
   min-width: 0;
+  overflow-x: auto;
+  padding: 4px 2px 14px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #8e713c #171717;
 }
-.commonninja-container iframe {
+.brhn-social-post-card {
+  flex: 0 0 calc((100% - 64px) / 5);
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(145deg, #151515, #0b0b0b);
+  border: 1px solid #3b3020;
+  border-radius: 11px;
+  scroll-snap-align: start;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.brhn-social-post-card:hover { border-color: #d6b56d; transform: translateY(-2px); }
+.brhn-social-post-media {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #111;
+  display: grid;
+  place-items: center;
+}
+.brhn-social-post-media img, .brhn-social-post-media video {
   display: block;
-  width: 100% !important;
-  height: 500px !important;
-  border: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+.brhn-social-post-no-media { color: #d6b56d; font-weight: 800; letter-spacing: 2px; }
+.brhn-social-post-body { padding: 13px 12px 14px; display: flex; flex: 1; flex-direction: column; gap: 8px; }
+.brhn-social-post-platform { color: #d6b56d; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; }
+.brhn-social-post-caption { color: #ddd; font-size: 12px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 54px; overflow-wrap: anywhere; }
+.brhn-social-post-meta { color: #888; font-size: 10px; }
+.brhn-social-post-link { margin-top: auto; color: #d6b56d; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
+.brhn-social-post-status { color: #999; text-align: center; font-size: 12px; padding: 22px 10px; width: 100%; }
+.brhn-social-post-arrow {
+  flex: 0 0 34px; width: 34px; height: 42px;
+  border: 1px solid #8e713c; border-radius: 7px;
+  background: #111; color: #d6b56d; font-size: 27px; cursor: pointer;
+}
+.brhn-social-post-arrow:hover { border-color: #d6b56d; color: #fff; }
 .brhn-post-feature {
   width: min(100%, 760px);
   min-height: 112px;
@@ -1047,15 +1097,12 @@ Stream & download anywhere.    </p>
 .brhn-post-platforms a span { color:#d6b56d; }
 @media(max-width:600px) {
   .brhn-latest-posts { padding:24px 0 30px; }
-  .commonninja-container {
-    min-height:240px;
-    margin:0 auto 8px;
-    border-radius:10px;
-  }
-  .commonninja-container .commonninja_component {
-    width:100%;
-    min-width:0;
-  }
+  .brhn-social-posts-shell { gap: 0; }
+  .brhn-social-post-arrow { display: none; }
+  .brhn-social-posts-track { gap: 12px; padding-left: 1px; padding-right: 12px; }
+  .brhn-social-post-card { flex: 0 0 78%; }
+  .brhn-social-post-body { padding: 12px; }
+  .brhn-social-post-caption { font-size: 13px; }
   .brhn-post-feature {
     width:100%;
     min-height:68px;
