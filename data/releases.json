@@ -1,44 +1,16 @@
 {
   "artist": "BRHN NYSA",
-  "source": "Existing official website release artwork; automatic Audiomack updates enabled",
-  "updatedAt": null,
+  "source": "Audiomack public artist profile",
+  "updatedAt": "2026-11-14T18:12:35.604850+00:00",
   "releases": [
-    {
-      "id": "my-darling-speed-up",
-      "title": "MY DARLING (SPEED UP)",
-      "artist": "Brhn Nysa",
-      "releaseDate": "",
-      "artwork": "https://i.audiomack.com/brhnnysa/ef5a06a736.webp?width=208",
-      "links": {
-        "audiomack": "https://audiomack.com/brhnnysa",
-        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
-        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
-        "genius": "https://genius.com/Brhn-nysa"
-      }
-    },
-    {
-      "id": "my-darling",
-      "title": "My Darling",
-      "artist": "Brhn Nysa",
-      "releaseDate": "",
-      "artwork": "https://i.audiomack.com/brhnnysa/7d0b0aa13c.webp?width=208",
-      "links": {
-        "audiomack": "https://audiomack.com/brhnnysa",
-        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
-        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
-        "genius": "https://genius.com/Brhn-nysa"
-      }
-    },
     {
       "id": "my-kind",
       "title": "My Kind",
       "artist": "Brhn Nysa",
-      "releaseDate": "",
-      "artwork": "https://i.audiomack.com/brhnnysa/4160b7e7fa.webp?width=208",
+      "releaseDate": "2026-09-30",
+      "artwork": "https://i.audiomack.com/brhnnysa/4160b7e7fa.webp?width=1200",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa",
+        "audiomack": "https://audiomack.com/brhnnysa/song/my-kind",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
@@ -46,13 +18,13 @@
       }
     },
     {
-      "id": "leals-talk",
-      "title": "Leals Talk",
+      "id": "still-us",
+      "title": "Still Us",
       "artist": "Brhn Nysa",
-      "releaseDate": "",
-      "artwork": "https://i.audiomack.com/brhnnysa/104ef0971d.webp?width=208",
+      "releaseDate": "2026-09-11",
+      "artwork": "https://i.audiomack.com/brhn_nysa/32eeeb1068.webp?width=1200",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa",
+        "audiomack": "https://audiomack.com/brhnnysa/song/still-us",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
@@ -60,13 +32,13 @@
       }
     },
     {
-      "id": "khadija",
-      "title": "Khadija",
+      "id": "in-love",
+      "title": "In love",
       "artist": "Brhn Nysa",
-      "releaseDate": "",
-      "artwork": "https://i.audiomack.com/brhnnysa/1e77f42581.webp?width=208",
+      "releaseDate": "2026-07-13",
+      "artwork": "https://i.audiomack.com/brhn_nysa/0f97bf2c32.webp?width=1200",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa",
+        "audiomack": "https://audiomack.com/brhnnysa/song/in-love",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
@@ -74,13 +46,13 @@
       }
     },
     {
-      "id": "right-now-remix",
-      "title": "Right Now ReMix",
+      "id": "chidindu",
+      "title": "Chidindu",
       "artist": "Brhn Nysa",
-      "releaseDate": "",
-      "artwork": "https://i.audiomack.com/brhnnysa/35a5697ace.webp?width=208",
+      "releaseDate": "2026-03-02",
+      "artwork": "https://i.audiomack.com/brhn-nysa/a27abf576a.webp?width=1200",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa",
+        "audiomack": "https://audiomack.com/brhnnysa/song/chidindu",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
