@@ -1665,7 +1665,14 @@ body {
     const timeLine = document.createElement("div");
     timeLine.className = "brhn-event-detail";
     timeLine.textContent = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-    details.append(dateLine, timeLine);
+
+    const venue = event.venue || {};
+    const locationParts = [venue.name, venue.city, venue.region, venue.country]
+      .filter((value, index, values) => value && values.indexOf(value) === index);
+    const locationLine = document.createElement("div");
+    locationLine.className = "brhn-event-detail brhn-event-location";
+    locationLine.textContent = locationParts.length ? "⌖ " + locationParts.join(", ") : "⌖ Location to be announced";
+    details.append(dateLine, timeLine, locationLine);
 
     const countdownLabel = document.createElement("div");
     countdownLabel.className = "brhn-event-count-label";
@@ -2685,8 +2692,9 @@ document.addEventListener('keydown', function(event) {
 #events-container .brhn-event-ticket { flex:0 0 calc((100% - 36px)/3) !important; min-width:250px; max-width:360px; padding:0 !important; background:linear-gradient(155deg,#191919,#0d0d0d 72%); border:1px solid rgba(214,181,109,.42); border-radius:14px; overflow:hidden; scroll-snap-align:start; box-shadow:0 12px 30px rgba(0,0,0,.28); }
 #events-container .brhn-event-body { display:flex; flex-direction:column; gap:0; min-height:250px; padding:22px 20px 20px; }
 #events-container .brhn-event-title { color:#fff; font-size:clamp(1.2rem,2vw,1.55rem); line-height:1.25; margin:0 0 18px; }
-#events-container .brhn-event-details { display:grid; gap:9px; padding:13px 0; border-top:1px solid #333; border-bottom:1px solid #333; }
-#events-container .brhn-event-detail { color:#ddd; font-size:.82rem; line-height:1.45; }
+#events-container .brhn-event-details { display:grid; gap:5px; padding:11px 0; border-top:1px solid #333; border-bottom:1px solid #333; }
+#events-container .brhn-event-detail { color:#ddd; font-size:.78rem; line-height:1.35; }
+#events-container .brhn-event-location { color:#c9b17f; font-size:.72rem; overflow-wrap:anywhere; }
 #events-container .brhn-event-count-label { color:#d6b56d; font-size:.62rem; font-weight:800; letter-spacing:.15em; margin:17px 0 9px; }
 #events-container .brhn-event-countdown { display:flex; gap:6px; margin-bottom:18px; }
 #events-container .brhn-event-timebox { flex:1; min-width:0; text-align:center; background:#211d16; border:1px solid rgba(214,181,109,.2); border-radius:6px; padding:9px 3px; }
