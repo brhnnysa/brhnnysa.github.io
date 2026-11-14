@@ -2560,5 +2560,119 @@ document.addEventListener('keydown', function(event) {
 }
 </style>
 
+
+<style id="brhn-social-see-more">
+/* Compact first row, with the rest revealed on request */
+.social-area {
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px 9px !important;
+  width:calc(100% - 28px) !important;
+  max-width:760px !important;
+  margin:0 auto !important;
+  padding:24px 0 !important;
+}
+.social-area .social-links-container { display:contents !important; }
+.social-area .social-icon {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 34px !important;
+  width:34px !important;
+  height:34px !important;
+  min-width:34px !important;
+  margin:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+}
+.social-area .social-icon svg {
+  display:block !important;
+  width:25px !important;
+  height:25px !important;
+  max-width:25px !important;
+  max-height:25px !important;
+}
+.social-area .social-icon.social-extra-hidden { display:none !important; }
+.social-area .social-see-more {
+  appearance:none;
+  border:1px solid #b8944e;
+  border-radius:18px;
+  background:transparent;
+  color:#d6b56d;
+  padding:7px 12px;
+  min-height:30px;
+  font:600 11px/1.2 Arial,sans-serif;
+  letter-spacing:.3px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.social-area .social-see-more:hover { background:rgba(214,181,109,.12); }
+@media(max-width:700px) {
+  .social-area {
+    flex-wrap:nowrap !important;
+    gap:5px !important;
+    width:calc(100% - 18px) !important;
+    max-width:420px !important;
+    padding:20px 0 !important;
+  }
+  .social-area .social-icon {
+    flex:0 0 31px !important;
+    width:31px !important;
+    height:34px !important;
+    min-width:31px !important;
+  }
+  .social-area .social-icon svg {
+    width:23px !important;
+    height:23px !important;
+    max-width:23px !important;
+    max-height:23px !important;
+  }
+  .social-area .social-see-more {
+    padding:6px 9px;
+    font-size:10px;
+  }
+  .social-area.social-expanded {
+    flex-wrap:wrap !important;
+  }
+}
+</style>
+<script id="brhn-social-see-more-script">
+(function () {
+  function setupSocialToggle() {
+    var area = document.querySelector('.social-area');
+    if (!area || area.dataset.seeMoreReady === 'true') return;
+    var icons = Array.from(area.querySelectorAll('a.social-icon'));
+    if (icons.length <= 7) return;
+    area.dataset.seeMoreReady = 'true';
+    icons.forEach(function(icon, index) {
+      if (index >= 7) icon.classList.add('social-extra-hidden');
+    });
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'social-see-more';
+    toggle.textContent = 'See more';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.addEventListener('click', function() {
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
+      icons.forEach(function(icon, index) {
+        if (index >= 7) icon.classList.toggle('social-extra-hidden', expanded);
+      });
+      area.classList.toggle('social-expanded', !expanded);
+      toggle.textContent = expanded ? 'See more' : 'See less';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+    });
+    area.appendChild(toggle);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSocialToggle);
+  } else {
+    setupSocialToggle();
+  }
+})();
+</script>
+
 </body>
 </html>
