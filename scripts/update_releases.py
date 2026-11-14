@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Refresh the public BRHN NYSA music feed from Audiomack.
 
-This uses only publicly accessible artist/song pages. It does not upload music
-or require API credentials. If Audiomack changes its page markup, the updater
-fails safely and leaves the existing releases.json untouched.
+Uses public artist/song pages only; no API credentials are required.
+If Audiomack changes its markup or blocks the request, the script fails safely
+and leaves the previous releases.json untouched.
 """
 from __future__ import annotations
 
@@ -29,22 +29,19 @@ PROFILE_LINKS = {
     "genius": "https://genius.com/Brhn-nysa",
 }
 
+
 class PageParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.links = set()
         self.meta = {}
-        self.jsonld = []
         self._script = False
-        self._script_type = ""
         self._script_data = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        if tag == "a":
-            href = attrs.get("href", "")
-            if href:
-                self.links.add(href)
+        if tag == "a" and attrs.get("href"):
+            self.links.add(attrs["href"])
         if tag == "meta":
             key = attrs.get("property") or attrs.get("name") or attrs.get("itemprop")
             value = attrs.get("content")
@@ -60,12 +57,6 @@ class PageParser(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == "script" and self._script:
-            raw = "".join(self._script_data).strip()
-            if raw:
-                try:
-                    self.jsonld.append(json.loads(raw))
-                except json.JSONDecodeError:
-                    pass
             self._script = False
 
 
@@ -81,10 +72,9 @@ def find_song_urls(html: str) -> list[str]:
     found = set()
     for href in parser.links:
         absolute = urljoin(ARTIST + "/", href).split("?")[0].rstrip("/")
-        if re.search(r"audiomack\\.com/brhnnysa/song/[^/]+$", absolute, re.I):
+        if re.search(r"audiomack\.com/brhnnysa/song/[^/]+$", absolute, re.I):
             found.add(absolute)
-    # Some server-rendered pages expose links only in embedded JSON/text.
-    for match in re.findall(r'(?:https?:)?//?audiomack\\.com/brhnnysa/song/[A-Za-z0-9_-]+', html, re.I):
+    for match in re.findall(r'(?:https?:)?//?audiomack\.com/brhnnysa/song/[A-Za-z0-9_-]+', html, re.I):
         found.add(match if match.startswith("http") else "https://" + match.lstrip("/"))
     return sorted(found)
 
@@ -95,12 +85,11 @@ def song_record(url: str) -> dict | None:
     parser.feed(html)
     meta = parser.meta
     title = (meta.get("og:title") or meta.get("twitter:title") or "").strip()
-    title = re.sub(r"\\s+by\\s+Brhn\\s+Nysa.*$", "", title, flags=re.I).strip()
+    title = re.sub(r"\s+by\s+Brhn\s+Nysa.*$", "", title, flags=re.I).strip()
     artwork = meta.get("og:image") or meta.get("twitter:image") or ""
-    release_date = meta.get("music:release_date") or meta.get("article:published_time") or meta.get("datePublished") or ""
-    # Search the visible HTML for Audiomack's published Release Date field.
+    release_date = meta.get("music:release_date") or meta.get("article:published_time") or meta.get("datepublished") or ""
     if not release_date:
-        match = re.search(r"Release Date:\\s*([A-Za-z]+\\s+\\d{1,2},\\s+\\d{4})", html, re.I)
+        match = re.search(r"Release Date:\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})", html, re.I)
         if match:
             try:
                 release_date = datetime.strptime(match.group(1), "%B %d, %Y").date().isoformat()
@@ -109,14 +98,13 @@ def song_record(url: str) -> dict | None:
     if not title:
         return None
     slug = url.rstrip("/").split("/")[-1]
-    links = {"audiomack": url, **PROFILE_LINKS}
     return {
         "id": slug,
         "title": title,
         "artist": "Brhn Nysa",
         "releaseDate": release_date,
         "artwork": artwork,
-        "links": links,
+        "links": {"audiomack": url, **PROFILE_LINKS},
     }
 
 
@@ -124,9 +112,9 @@ def main():
     existing = json.loads(FEED.read_text(encoding="utf-8")) if FEED.exists() else {"releases": []}
     existing_by_url = {}
     for item in existing.get("releases", []):
-        audiomack = item.get("links", {}).get("audiomack")
-        if audiomack:
-            existing_by_url[audiomack.rstrip("/")] = item
+        link = item.get("links", {}).get("audiomack")
+        if link:
+            existing_by_url[link.rstrip("/")] = item
 
     errors = []
     song_urls = []
@@ -139,7 +127,7 @@ def main():
             errors.append(f"{page}: {exc}")
 
     if not song_urls:
-        raise RuntimeError("No song links were found. Existing feed was not changed. " + " | ".join(errors))
+        raise RuntimeError("No song links found; keeping the existing feed. " + " | ".join(errors))
 
     discovered = []
     for url in song_urls[:60]:
@@ -147,7 +135,6 @@ def main():
             record = song_record(url)
             if record:
                 old = existing_by_url.get(url.rstrip("/"), {})
-                # Keep previously known metadata if the page omits a field today.
                 for key in ("releaseDate", "artwork"):
                     if not record.get(key) and old.get(key):
                         record[key] = old[key]
@@ -157,7 +144,7 @@ def main():
             print(f"Skipping {url}: {exc}")
 
     if not discovered:
-        raise RuntimeError("Song URLs were found, but no song metadata could be read. Existing feed was not changed.")
+        raise RuntimeError("Song pages were found but metadata could not be read; keeping the existing feed.")
 
     discovered.sort(key=lambda item: item.get("releaseDate") or "", reverse=True)
     payload = {
@@ -167,7 +154,7 @@ def main():
         "releases": discovered,
     }
     FEED.parent.mkdir(parents=True, exist_ok=True)
-    FEED.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    FEED.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Updated release feed with {len(discovered)} Audiomack songs.")
 
 
