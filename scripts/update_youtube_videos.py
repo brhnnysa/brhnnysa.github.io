@@ -42,20 +42,69 @@ def main() -> None:
     videos_page_url = f"https://www.youtube.com/channel/{channel_id}/videos"
     videos_page_response = requests.get(videos_page_url, headers=HEADERS, timeout=30)
     videos_page_response.raise_for_status()
-    # YouTube changes renderer field order and nesting. Inspect each regular
-    # video renderer separately rather than assuming videoId is its first field.
+    # YouTube now uses lockupViewModel for many channel video cards instead
+    # of the older videoRenderer structure. Extract each JSON object safely.
     regular_video_ids: set[str] = set()
-    renderer_pattern = re.compile(r'"(?:videoRenderer|gridVideoRenderer)"\s*:\s*\{')
-    renderer_matches = list(renderer_pattern.finditer(videos_page_response.text))
-    for index, renderer_match in enumerate(renderer_matches):
-        section_end = renderer_matches[index + 1].start() if index + 1 < len(renderer_matches) else renderer_match.end() + 10000
-        renderer_section = videos_page_response.text[renderer_match.end():min(section_end, renderer_match.end() + 10000)]
-        video_match = re.search(r'"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"', renderer_section)
-        if video_match:
-            regular_video_ids.add(video_match.group(1))
-    print(f"Found {len(regular_video_ids)} regular video IDs on Videos tab.")
+    content_types: set[str] = set()
+
+    def extract_json_object(source: str, opening_brace: int) -> str | None:
+        depth = 0
+        in_string = False
+        escaped = False
+        for pos in range(opening_brace, len(source)):
+            char = source[pos]
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    in_string = False
+                continue
+            if char == '"':
+                in_string = True
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth == 0:
+                    return source[opening_brace:pos + 1]
+        return None
+
+    for match in re.finditer(r'"lockupViewModel"\s*:\s*\{', videos_page_response.text):
+        opening = videos_page_response.text.find("{", match.start())
+        raw_object = extract_json_object(videos_page_response.text, opening)
+        if not raw_object:
+            continue
+        try:
+            model = json.loads(raw_object)
+        except json.JSONDecodeError:
+            continue
+        video_id = model.get("contentId")
+        content_type = str(model.get("contentType") or "")
+        if content_type:
+            content_types.add(content_type)
+        if isinstance(video_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) and "VIDEO" in content_type.upper():
+            regular_video_ids.add(video_id)
+
+    # Keep compatibility with older YouTube pages that still expose videoRenderer.
+    renderer_pattern = re.compile(r'"videoRenderer"\s*:\s*\{')
+    for match in renderer_pattern.finditer(videos_page_response.text):
+        opening = videos_page_response.text.find("{", match.start())
+        raw_object = extract_json_object(videos_page_response.text, opening)
+        if not raw_object:
+            continue
+        try:
+            model = json.loads(raw_object)
+        except json.JSONDecodeError:
+            continue
+        video_id = model.get("videoId")
+        if isinstance(video_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id):
+            regular_video_ids.add(video_id)
+
+    print(f"Found {len(regular_video_ids)} regular video IDs on Videos tab; content types={sorted(content_types)}")
     if not regular_video_ids:
-        markers = [marker for marker in ('videoRenderer', 'gridVideoRenderer', 'lockupViewModel', 'ytInitialData') if marker in videos_page_response.text]
+        markers = [marker for marker in ("videoRenderer", "gridVideoRenderer", "lockupViewModel", "ytInitialData") if marker in videos_page_response.text]
         print(f"YouTube page diagnostics: HTTP {videos_page_response.status_code}, {len(videos_page_response.text)} characters, markers={markers}")
         raise RuntimeError("Could not identify regular uploads on the channel Videos tab; leaving the existing feed unchanged.")
 
