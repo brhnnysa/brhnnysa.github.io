@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -11,7 +10,6 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 import requests
-from requests_oauthlib import OAuth1
 
 ROOT = Path(__file__).resolve().parents[1]
 FEED = ROOT / "data" / "releases.json"
@@ -95,59 +93,6 @@ def soundcloud_releases() -> list[dict]:
     return releases
 
 
-def update_top_plays():
-    """Write Audiomack's artist top-10 plays from its documented 60-minute metrics."""
-    consumer_key = os.getenv("AUDIOMACK_CONSUMER_KEY")
-    consumer_secret = os.getenv("AUDIOMACK_CONSUMER_SECRET")
-    if not consumer_key or not consumer_secret:
-        print("Audiomack API credentials are not configured; top plays feed remains pending.")
-        return
-
-    api = "https://api.audiomack.com/v1"
-    auth = OAuth1(consumer_key, client_secret=consumer_secret)
-    response = requests.get(f"{api}/artist/brhnnysa", auth=auth, timeout=30)
-    response.raise_for_status()
-    artist = response.json().get("results", {})
-    artist_id = artist.get("id")
-    if not artist_id:
-        raise RuntimeError("Audiomack artist lookup did not return an artist ID.")
-
-    response = requests.get(f"{api}/artist/{artist_id}/metrics", auth=auth, timeout=30)
-    response.raise_for_status()
-    metrics = response.json().get("results", {})
-    top_items = metrics.get("music_top10", [])
-    top_plays = []
-    for entry in top_items:
-        music = entry.get("music") or {}
-        uploader = music.get("uploader") or {}
-        # Only include songs uploaded by BRHN NYSA, not reposted tracks.
-        if str(uploader.get("url_slug", "")).lower() != "brhn-nysa":
-            continue
-        slug = music.get("url_slug")
-        top_plays.append({
-            "id": str(music.get("id") or slug or ""),
-            "title": music.get("title") or "Untitled",
-            "artist": music.get("artist") or "Brhn Nysa",
-            "artwork": music.get("image") or "",
-            "plays": int(entry.get("play_counter") or 0),
-            "url": f"https://audiomack.com/brhnnysa/song/{slug}" if slug else ARTIST,
-        })
-
-    payload = {
-        "artist": "BRHN NYSA",
-        "period": "last_60_minutes",
-        "updatedAt": datetime.now(timezone.utc).isoformat(),
-        "totalPlaysLast60Minutes": (metrics.get("event_counters") or {}).get("play", 0),
-        "topPlays": top_plays[:10],
-        "source": "Audiomack artist metrics API",
-    }
-    (ROOT / "data" / "top-plays.json").write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    print(f"Updated Audiomack top plays with {len(top_plays[:10])} tracks.")
-
-
-
 
 def main():
     releases = soundcloud_releases()
@@ -161,11 +106,6 @@ def main():
     FEED.parent.mkdir(parents=True, exist_ok=True)
     FEED.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Updated release feed with {len(releases)} SoundCloud tracks.")
-    # Keep the existing Audiomack top-plays updater separate from release discovery.
-    try:
-        update_top_plays()
-    except Exception as exc:
-        print(f"Audiomack top plays could not be refreshed: {exc}")
 
 
 if __name__ == "__main__":
