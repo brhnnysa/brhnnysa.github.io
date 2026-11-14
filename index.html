@@ -1405,7 +1405,8 @@ track.addEventListener("click", event => {
         if (!Array.isArray(feed.videos) || !feed.videos.length) return;
 
         const fragment = document.createDocumentFragment();
-        feed.videos.forEach(video => {
+        // Show the five newest uploads from the BRHN NYSA YouTube channel.
+        feed.videos.slice(0, 5).forEach(video => {
             if (!video.id || !video.title) return;
             const card = document.createElement("article");
             card.className = "video-card";
