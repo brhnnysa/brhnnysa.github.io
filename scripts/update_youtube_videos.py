@@ -144,9 +144,9 @@ def main() -> None:
                 )
                 title_response.raise_for_status()
                 title = str(title_response.json().get("title") or "").strip()
-                date_match = re.search(r'<meta[^>]+itemprop=["\\']datePublished["\\'][^>]+content=["\\']([^"\\']+)', page, re.I)
+                date_match = re.search(r"<meta[^>]+itemprop=['\"]datePublished['\"][^>]+content=['\"]([^'\"]+)", page, re.I)
                 if not date_match:
-                    date_match = re.search(r'"publishDate"\\s*:\\s*"([^"]+)"', page)
+                    date_match = re.search(r'"publishDate"\s*:\s*"([^"]+)"', page)
                 published = date_match.group(1) if date_match else ""
                 if title:
                     videos.append({
