@@ -1,6 +1,11 @@
 name: Update BRHN NYSA music releases
 
 on:
+  push:
+    paths:
+      - '.github/workflows/update-music.yml'
+      - 'scripts/update_social_posts.py'
+      - 'data/social-posts.json'
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
