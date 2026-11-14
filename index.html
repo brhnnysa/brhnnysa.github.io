@@ -808,13 +808,18 @@ Stream & download anywhere.    </p>
 }
 @media screen and (max-width: 600px) {
   .snapwidget-container {
-    height: 390px;
+    height: 488px;
     margin-bottom: 24px;
+    border: 1px solid #8e713c;
+    border-radius: 12px;
+    background: #101010;
   }
   .snapwidget-container iframe {
+    display: block;
     width: 100% !important;
     height: 390px !important;
-    transform: none;
+    transform: scale(1.25);
+    transform-origin: top left;
   }
 }
 .brhn-post-feature {
