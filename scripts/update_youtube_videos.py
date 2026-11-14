@@ -37,6 +37,18 @@ def main() -> None:
     if not channel_id:
         raise RuntimeError("Could not resolve the @brhnnysa YouTube channel ID from its public channel page.")
 
+    # The channel's Videos tab separates regular uploads from Shorts.
+    # Use its videoRenderer IDs as an allow-list, then retain RSS ordering/dates.
+    videos_page_url = f"https://www.youtube.com/channel/{channel_id}/videos"
+    videos_page_response = requests.get(videos_page_url, headers=HEADERS, timeout=30)
+    videos_page_response.raise_for_status()
+    regular_video_ids = set(re.findall(
+        r'"videoRenderer"\s*:\s*\{\s*"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"',
+        videos_page_response.text,
+    ))
+    if not regular_video_ids:
+        raise RuntimeError("Could not identify regular uploads on the channel Videos tab; leaving the existing feed unchanged.")
+
     feed_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
     feed_response = requests.get(feed_url, headers=HEADERS, timeout=30)
     feed_response.raise_for_status()
@@ -47,7 +59,7 @@ def main() -> None:
         video_id = (entry.findtext(f"{YT}videoId") or "").strip()
         title = (entry.findtext(f"{ATOM}title") or "").strip()
         published = (entry.findtext(f"{ATOM}published") or "").strip()
-        if not video_id or not title:
+        if not video_id or not title or video_id not in regular_video_ids:
             continue
         videos.append({
             "id": video_id,
@@ -67,7 +79,7 @@ def main() -> None:
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Updated BRHN NYSA YouTube feed with {len(payload['videos'])} uploads.")
+    print(f"Updated BRHN NYSA regular-video feed with {len(payload['videos'])} videos (Shorts excluded).")
 
 
 if __name__ == "__main__":
