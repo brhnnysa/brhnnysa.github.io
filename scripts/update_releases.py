@@ -1,221 +1,97 @@
 #!/usr/bin/env python3
-"""Refresh the public BRHN NYSA music feed from Audiomack.
-
-Uses public artist/song pages only; no API credentials are required.
-If Audiomack changes its markup or blocks the request, the script fails safely
-and leaves the previous releases.json untouched.
-"""
+"""Refresh BRHN NYSA's latest releases from the artist's public SoundCloud RSS feed."""
 from __future__ import annotations
 
 import json
 import os
 import re
-import time
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
-from html.parser import HTMLParser
+from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import urljoin
 
 import requests
 from requests_oauthlib import OAuth1
 
 ROOT = Path(__file__).resolve().parents[1]
 FEED = ROOT / "data" / "releases.json"
-ARTIST = "https://audiomack.com/brhnnysa"
-SONGS_PAGE = ARTIST + "/songs"
+SOUNDCLOUD_RSS = "https://feeds.soundcloud.com/users/soundcloud:users:1559781363/sounds.rss"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; BRHNNYSAReleaseBot/1.0; +https://brhnnysa.github.io/)"}
 PROFILE_LINKS = {
+    "audiomack": "https://audiomack.com/brhnnysa",
     "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-    "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
     "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
     "genius": "https://genius.com/Brhn-nysa",
 }
 
 
-class PageParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        # Preserve Audiomack's newest-first page order.
-        self.links = []
-        self.meta = {}
-        self._script = False
-        self._script_data = []
-        self.jsonld = []
-
-    def handle_starttag(self, tag, attrs):
-        attrs = dict(attrs)
-        if tag == "a" and attrs.get("href"):
-            self.links.append(attrs["href"])
-        if tag == "meta":
-            key = attrs.get("property") or attrs.get("name") or attrs.get("itemprop")
-            value = attrs.get("content")
-            if key and value:
-                self.meta[key.lower()] = value
-        if tag == "script" and attrs.get("type") == "application/ld+json":
-            self._script = True
-            self._script_data = []
-
-    def handle_data(self, data):
-        if self._script:
-            self._script_data.append(data)
-
-    def handle_endtag(self, tag):
-        if tag == "script" and self._script:
-            raw = "".join(self._script_data).strip()
-            if raw:
-                try:
-                    self.jsonld.append(json.loads(raw))
-                except json.JSONDecodeError:
-                    pass
-            self._script = False
+def child_text(element: ET.Element, name: str) -> str:
+    for child in element:
+        if child.tag.rsplit("}", 1)[-1].lower() == name.lower():
+            return (child.text or "").strip()
+    return ""
 
 
-def get(url: str) -> str:
-    response = requests.get(url, headers=HEADERS, timeout=30)
+def soundcloud_releases() -> list[dict]:
+    """Read every public track currently exposed by the artist's SoundCloud RSS feed."""
+    response = requests.get(SOUNDCLOUD_RSS, headers=HEADERS, timeout=30)
     response.raise_for_status()
-    return response.text
-
-
-def find_song_urls(html: str) -> list[str]:
-    parser = PageParser()
-    parser.feed(html)
-    # Ordered de-duplication: never alphabetize song URLs.
-    found = []
-    seen = set()
-    candidates = list(parser.links) + re.findall(
-        r'(?:https?:)?//?audiomack\.com/brhnnysa/song/[A-Za-z0-9_-]+', html, re.I
-    )
-    for href in candidates:
-        absolute = urljoin(ARTIST + "/", href).split("?")[0].rstrip("/")
-        if re.search(r"audiomack\.com/brhnnysa/song/[^/]+$", absolute, re.I) and absolute not in seen:
-            seen.add(absolute)
-            found.append(absolute)
-    return found
-
-
-def song_record(url: str) -> dict | None:
-    html = get(url)
-    parser = PageParser()
-    parser.feed(html)
-    meta = parser.meta
-    title = (meta.get("og:title") or meta.get("twitter:title") or "").strip()
-    title = re.sub(r"\s+by\s+Brhn\s+Nysa.*$", "", title, flags=re.I).strip()
-    artwork = meta.get("og:image") or meta.get("twitter:image") or ""
-    release_date = meta.get("music:release_date") or meta.get("article:published_time") or meta.get("datepublished") or ""
-    if not release_date:
-        def find_date(value):
-            if isinstance(value, dict):
-                for key in ("datePublished", "uploadDate", "dateCreated"):
-                    if value.get(key):
-                        return str(value[key])
-                for nested in value.values():
-                    found = find_date(nested)
-                    if found:
-                        return found
-            elif isinstance(value, list):
-                for nested in value:
-                    found = find_date(nested)
-                    if found:
-                        return found
-            return ""
-        for structured in parser.jsonld:
-            release_date = find_date(structured)
-            if release_date:
-                break
-    if not release_date:
-        match = re.search(r"Release Date:\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})", html, re.I)
-        if match:
-            try:
-                release_date = datetime.strptime(match.group(1), "%B %d, %Y").date().isoformat()
-            except ValueError:
-                release_date = match.group(1)
-    if not title:
-        return None
-
-    # Normalize common Audiomack date formats for reliable chronological sorting.
-    if release_date:
-        raw_date = str(release_date).strip()
-        parsed_date = None
-        try:
-            parsed_date = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
-        except ValueError:
-            for date_format in ("%B %d, %Y", "%b %d, %Y", "%Y-%m-%d"):
-                try:
-                    parsed_date = datetime.strptime(raw_date, date_format)
-                    break
-                except ValueError:
-                    continue
-        if parsed_date:
-            release_date = parsed_date.date().isoformat()
-
-    slug = url.rstrip("/").split("/")[-1]
-    return {
-        "id": slug,
-        "title": title,
-        "artist": "Brhn Nysa",
-        "releaseDate": release_date,
-        "artwork": artwork,
-        "links": {"audiomack": url, **PROFILE_LINKS},
-    }
-
-
-
-
-def audiomack_api_releases() -> list[dict] | None:
-    """Read the artist's complete uploads list from Audiomack's documented API."""
-    consumer_key = os.getenv("AUDIOMACK_CONSUMER_KEY")
-    consumer_secret = os.getenv("AUDIOMACK_CONSUMER_SECRET")
-    if not consumer_key or not consumer_secret:
-        print("Audiomack API credentials are not configured; using public-page fallback.")
-        return None
-
-    api = "https://api.audiomack.com/v1"
-    auth = OAuth1(consumer_key, client_secret=consumer_secret)
-    response = requests.get(
-        f"{api}/artist/brhnnysa/uploads",
-        params={"limit": 0},
-        auth=auth,
-        headers=HEADERS,
-        timeout=30,
-    )
-    response.raise_for_status()
-    payload = response.json()
-    items = payload.get("results", [])
-    if isinstance(items, dict):
-        items = items.get("results", [])
-
+    root = ET.fromstring(response.content)
+    channel = next((node for node in root.iter() if node.tag.rsplit("}", 1)[-1].lower() == "channel"), root)
+    items = [node for node in channel if node.tag.rsplit("}", 1)[-1].lower() == "item"]
     releases = []
-    for music in items:
-        if music.get("repost"):
+    seen = set()
+
+    for item in items:
+        title = child_text(item, "title")
+        link = child_text(item, "link")
+        guid = child_text(item, "guid")
+        if not title or not link:
             continue
-        uploader = music.get("uploader") or {}
-        uploader_slug = str(uploader.get("url_slug") or "").lower()
-        if uploader_slug and uploader_slug not in {"brhnnysa", "brhn-nysa"}:
+        link = link.strip()
+        if link in seen:
             continue
-        slug = music.get("url_slug")
-        if not slug:
-            continue
-        # Audiomack supplies Unix timestamps for both release and upload dates.
-        raw_date = music.get("released") or music.get("uploaded")
+        seen.add(link)
+
+        published = child_text(item, "pubDate")
         release_date = ""
-        if raw_date:
+        if published:
             try:
-                release_date = datetime.fromtimestamp(int(raw_date), timezone.utc).date().isoformat()
-            except (TypeError, ValueError, OSError):
-                release_date = str(raw_date)
+                parsed = parsedate_to_datetime(published)
+                if parsed.tzinfo is None:
+                    parsed = parsed.replace(tzinfo=timezone.utc)
+                release_date = parsed.date().isoformat()
+            except (TypeError, ValueError, OverflowError):
+                release_date = ""
+
+        artwork = ""
+        for node in item.iter():
+            local = node.tag.rsplit("}", 1)[-1].lower()
+            if local in {"image", "thumbnail"}:
+                artwork = node.attrib.get("href") or node.attrib.get("url") or ""
+                if artwork:
+                    break
+        if not artwork:
+            description = child_text(item, "description")
+            match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', description, re.I)
+            if match:
+                artwork = match.group(1)
+
+        clean_title = re.sub(r"\s+by\s+BRHN\s+NYSA\s*$", "", title, flags=re.I).strip()
         releases.append({
-            "id": str(music.get("id") or slug),
-            "title": music.get("title") or "Untitled",
-            "artist": music.get("artist") or "Brhn Nysa",
+            "id": guid or link.rstrip("/").split("/")[-1],
+            "title": clean_title or title,
+            "artist": "BRHN NYSA",
             "releaseDate": release_date,
-            "artwork": music.get("image") or "",
-            "links": {"audiomack": f"https://audiomack.com/brhnnysa/song/{slug}", **PROFILE_LINKS},
+            "artwork": artwork,
+            "links": {"soundcloud": link, **PROFILE_LINKS},
         })
 
     if not releases:
-        raise RuntimeError("Audiomack API returned no original artist uploads.")
-    releases.sort(key=lambda item: item.get("releaseDate") or "", reverse=True)
-    print(f"Audiomack API returned {len(releases)} original artist uploads.")
+        raise RuntimeError("SoundCloud RSS returned no public tracks; keeping the existing releases feed.")
+    # Sort by the actual RSS publication timestamp's calendar date, newest first.
+    releases.sort(key=lambda song: song.get("releaseDate") or "", reverse=True)
+    print(f"SoundCloud RSS returned {len(releases)} public tracks.")
     return releases
 
 
@@ -271,63 +147,21 @@ def update_top_plays():
     print(f"Updated Audiomack top plays with {len(top_plays[:10])} tracks.")
 
 
+
+
 def main():
-    existing = json.loads(FEED.read_text(encoding="utf-8")) if FEED.exists() else {"releases": []}
-    existing_by_url = {}
-    for item in existing.get("releases", []):
-        link = item.get("links", {}).get("audiomack")
-        if link:
-            existing_by_url[link.rstrip("/")] = item
-
-    discovered = None
-    try:
-        # Preferred source: Audiomack's artist uploads endpoint (not Top Songs).
-        discovered = audiomack_api_releases()
-    except Exception as exc:
-        print(f"Audiomack uploads API unavailable; trying public-page fallback: {exc}")
-
-    if discovered is None:
-        errors = []
-        song_urls = []
-        for page in (SONGS_PAGE, ARTIST):
-            try:
-                song_urls = find_song_urls(get(page))
-                if song_urls:
-                    break
-            except Exception as exc:
-                errors.append(f"{page}: {exc}")
-
-        if not song_urls:
-            raise RuntimeError("No song links found; keeping the existing feed. " + " | ".join(errors))
-
-        discovered = []
-        # Fallback only: inspect all song URLs exposed in Audiomack's public HTML.
-        for url in song_urls:
-            try:
-                record = song_record(url)
-                if record:
-                    old = existing_by_url.get(url.rstrip("/"), {})
-                    for key in ("releaseDate", "artwork"):
-                        if not record.get(key) and old.get(key):
-                            record[key] = old[key]
-                    discovered.append(record)
-                time.sleep(0.25)
-            except Exception as exc:
-                print(f"Skipping {url}: {exc}")
-
-    if not discovered:
-        raise RuntimeError("Audiomack returned no releases; keeping the existing feed.")
-
-    discovered.sort(key=lambda item: item.get("releaseDate") or "", reverse=True)
+    releases = soundcloud_releases()
     payload = {
         "artist": "BRHN NYSA",
-        "source": "Audiomack public artist profile",
+        "source": "SoundCloud artist RSS",
+        "sourceUrl": SOUNDCLOUD_RSS,
         "updatedAt": datetime.now(timezone.utc).isoformat(),
-        "releases": discovered,
+        "releases": releases,
     }
     FEED.parent.mkdir(parents=True, exist_ok=True)
     FEED.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Updated release feed with {len(discovered)} Audiomack songs.")
+    print(f"Updated release feed with {len(releases)} SoundCloud tracks.")
+    # Keep the existing Audiomack top-plays updater separate from release discovery.
     try:
         update_top_plays()
     except Exception as exc:
