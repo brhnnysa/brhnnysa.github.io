@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/update-music.yml'
       - 'scripts/update_social_posts.py'
+      - 'scripts/update_telegram_posts.py'
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -51,10 +52,16 @@ jobs:
         env:
           SOCIALFETCH_BIN: /tmp/socialfetch/socialfetch
           INSTAGRAM_HANDLE: heisbrhn
+      - name: Refresh public Telegram channel posts
+        continue-on-error: true
+        run: python scripts/update_telegram_posts.py
+        env:
+          SOCIALFETCH_BIN: /tmp/socialfetch/socialfetch
+          TELEGRAM_CHANNEL: brhnnysa
 
       - name: Commit feed when it changes
         run: |
-          if git diff --quiet -- data/releases.json data/top-plays.json data/youtube-videos.json data/social-posts.json; then
+          if git diff --quiet -- data/releases.json data/top-plays.json data/youtube-videos.json data/social-posts.json data/telegram-posts.json; then
             echo "No new release metadata."
             exit 0
           fi
