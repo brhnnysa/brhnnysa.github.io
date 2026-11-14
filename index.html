@@ -724,7 +724,9 @@ Stream & download anywhere.    </p>
       allowtransparency="true"
       frameborder="0"
       scrolling="no"
-      title="Brhn Nysa Latest Instagram Posts">
+      style="border:none; overflow:hidden; width:900px; height:300px"
+      title="Brhn Nysa Latest Instagram Posts"
+      loading="lazy">
     </iframe>
   </div>
   <button type="button" class="brhn-post-feature" id="brhn-open-post-options" aria-haspopup="dialog">
@@ -783,24 +785,27 @@ Stream & download anywhere.    </p>
 }
 .snapwidget-container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 900px;
+  height: 300px;
   margin: 0 auto 30px;
   overflow: hidden;
+  border-radius: 12px;
 }
 .snapwidget-container iframe {
   display: block;
-  width: 100%;
-  height: 420px;
+  width: 100% !important;
+  height: 300px !important;
   border: none;
 }
 @media screen and (max-width: 600px) {
-  .snapwidget-container { height: 520px; }
+  .snapwidget-container {
+    height: 300px;
+    margin-bottom: 24px;
+  }
   .snapwidget-container iframe {
-    width: 100%;
-    height: 650px;
-    transform: scale(2);
-    transform-origin: top center;
-    margin: 0;
+    width: 100% !important;
+    height: 300px !important;
+    transform: none;
   }
 }
 .brhn-post-feature {
