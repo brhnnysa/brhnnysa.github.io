@@ -1998,7 +1998,7 @@ setInterval(loadEvents, 5 * 60 * 1000);
       if(!links[key])return;
       const a=document.createElement('a');a.className='brhn-platform-link';a.href=links[key];a.target='_blank';a.rel='noopener noreferrer';
       const name=document.createElement('span');name.textContent=label;
-      const hint=document.createElement('small');hint.textContent='Open this release on '+label;name.appendChild(hint);
+      const hint=document.createElement('small');hint.textContent='Open the BRHN NYSA artist page on '+label;name.appendChild(hint);
       const arrow=document.createElement('span');arrow.textContent='↗';a.append(name,arrow);platforms.appendChild(a);
     });
     if(!platforms.children.length){
