@@ -39,6 +39,7 @@ class PageParser(HTMLParser):
         self.meta = {}
         self._script = False
         self._script_data = []
+        self.jsonld = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -59,6 +60,12 @@ class PageParser(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == "script" and self._script:
+            raw = "".join(self._script_data).strip()
+            if raw:
+                try:
+                    self.jsonld.append(json.loads(raw))
+                except json.JSONDecodeError:
+                    pass
             self._script = False
 
 
@@ -90,6 +97,26 @@ def song_record(url: str) -> dict | None:
     title = re.sub(r"\s+by\s+Brhn\s+Nysa.*$", "", title, flags=re.I).strip()
     artwork = meta.get("og:image") or meta.get("twitter:image") or ""
     release_date = meta.get("music:release_date") or meta.get("article:published_time") or meta.get("datepublished") or ""
+    if not release_date:
+        def find_date(value):
+            if isinstance(value, dict):
+                for key in ("datePublished", "uploadDate", "dateCreated"):
+                    if value.get(key):
+                        return str(value[key])
+                for nested in value.values():
+                    found = find_date(nested)
+                    if found:
+                        return found
+            elif isinstance(value, list):
+                for nested in value:
+                    found = find_date(nested)
+                    if found:
+                        return found
+            return ""
+        for structured in parser.jsonld:
+            release_date = find_date(structured)
+            if release_date:
+                break
     if not release_date:
         match = re.search(r"Release Date:\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})", html, re.I)
         if match:
