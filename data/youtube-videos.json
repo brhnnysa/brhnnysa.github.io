@@ -2,29 +2,53 @@
   "artist": "BRHN NYSA",
   "channel": "https://www.youtube.com/@brhnnysa",
   "source": "YouTube public channel RSS feed",
-  "updatedAt": "2026-11-14T22:45:16.288330+00:00",
+  "updatedAt": "2026-11-14T23:08:48.593047+00:00",
   "videos": [
-    {
-      "id": "GEZyJIzUrkQ",
-      "title": "Brhn Nysa - Still Us (Official Music Video)",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-11-14T22:30:11+00:00",
-      "artwork": "https://i.ytimg.com/vi/GEZyJIzUrkQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=GEZyJIzUrkQ"
-    },
     {
       "id": "465VfZYWfVw",
       "title": "Brhn Nysa - Khadija (Official Music Video)",
       "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-29T01:57:22+00:00",
+      "publishedAt": "",
       "artwork": "https://i.ytimg.com/vi/465VfZYWfVw/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=465VfZYWfVw"
+    },
+    {
+      "id": "DkK0u7JRDY8",
+      "title": "Brhn Nysa - My Darling",
+      "artist": "BRHN NYSA",
+      "publishedAt": "",
+      "artwork": "https://i.ytimg.com/vi/DkK0u7JRDY8/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=DkK0u7JRDY8"
+    },
+    {
+      "id": "GEZyJIzUrkQ",
+      "title": "Brhn Nysa - Still Us (Official Music Video)",
+      "artist": "BRHN NYSA",
+      "publishedAt": "",
+      "artwork": "https://i.ytimg.com/vi/GEZyJIzUrkQ/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=GEZyJIzUrkQ"
+    },
+    {
+      "id": "L1t48VnwiWQ",
+      "title": "Tuned 🎵 🏆 My Darling - Brhn Nysa Pick a released date? #brhnnysa @MavinRecords  @Nextafrobeatstar",
+      "artist": "BRHN NYSA",
+      "publishedAt": "",
+      "artwork": "https://i.ytimg.com/vi/L1t48VnwiWQ/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=L1t48VnwiWQ"
+    },
+    {
+      "id": "UQvVGZL7NnM",
+      "title": "Cry ' recent freestyle by Brhn Nysa. Leals, does that sound like a song anyway 😂",
+      "artist": "BRHN NYSA",
+      "publishedAt": "",
+      "artwork": "https://i.ytimg.com/vi/UQvVGZL7NnM/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=UQvVGZL7NnM"
     },
     {
       "id": "a8BxcF1fSis",
       "title": "Brhn Nysa - My Darling (Official Music Video)",
       "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-25T23:15:25+00:00",
+      "publishedAt": "",
       "artwork": "https://i.ytimg.com/vi/a8BxcF1fSis/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=a8BxcF1fSis"
     },
@@ -32,25 +56,25 @@
       "id": "jYTbbGbHQYs",
       "title": "My Darling - Brhn Nysa",
       "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-22T04:18:30+00:00",
+      "publishedAt": "",
       "artwork": "https://i.ytimg.com/vi/jYTbbGbHQYs/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=jYTbbGbHQYs"
     },
     {
-      "id": "DkK0u7JRDY8",
-      "title": "Brhn Nysa - My Darling",
+      "id": "nbYWVn5-wVk",
+      "title": "Brhn Nysa-My Kind' Unreleased🔥30th!",
       "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-21T17:33:57+00:00",
-      "artwork": "https://i.ytimg.com/vi/DkK0u7JRDY8/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=DkK0u7JRDY8"
+      "publishedAt": "",
+      "artwork": "https://i.ytimg.com/vi/nbYWVn5-wVk/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=nbYWVn5-wVk"
     },
     {
-      "id": "L1t48VnwiWQ",
-      "title": "Tuned 🎵 🏆 My Darling - Brhn Nysa Pick a released date? #brhnnysa @MavinRecords  @Nextafrobeatstar",
+      "id": "rxOamoQx-qk",
+      "title": "Ass Niggas music video 📸 New song by Brhn Nysa 🦁#brhnnysa #brhn",
       "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-21T02:45:05+00:00",
-      "artwork": "https://i.ytimg.com/vi/L1t48VnwiWQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=L1t48VnwiWQ"
+      "publishedAt": "",
+      "artwork": "https://i.ytimg.com/vi/rxOamoQx-qk/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=rxOamoQx-qk"
     }
   ]
 }
