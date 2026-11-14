@@ -1,0 +1,48 @@
+name: Update BRHN NYSA YouTube uploads
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-youtube.yml'
+      - 'scripts/update_youtube_videos.py'
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-brhn-nysa-youtube
+  cancel-in-progress: false
+
+jobs:
+  refresh-youtube:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install feed dependency
+        run: python -m pip install requests
+
+      - name: Refresh latest YouTube uploads
+        run: python scripts/update_youtube_videos.py
+
+      - name: Commit YouTube feed when it changes
+        run: |
+          if git diff --quiet -- data/youtube-videos.json; then
+            echo "No new YouTube uploads."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/youtube-videos.json
+          git commit -m "chore: refresh BRHN NYSA YouTube uploads"
+          git pull --rebase origin main
+          git push
