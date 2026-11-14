@@ -35,7 +35,8 @@ PROFILE_LINKS = {
 class PageParser(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.links = set()
+        # Preserve Audiomack's newest-first page order.
+        self.links = []
         self.meta = {}
         self._script = False
         self._script_data = []
@@ -44,7 +45,7 @@ class PageParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if tag == "a" and attrs.get("href"):
-            self.links.add(attrs["href"])
+            self.links.append(attrs["href"])
         if tag == "meta":
             key = attrs.get("property") or attrs.get("name") or attrs.get("itemprop")
             value = attrs.get("content")
@@ -78,14 +79,18 @@ def get(url: str) -> str:
 def find_song_urls(html: str) -> list[str]:
     parser = PageParser()
     parser.feed(html)
-    found = set()
-    for href in parser.links:
+    # Ordered de-duplication: never alphabetize song URLs.
+    found = []
+    seen = set()
+    candidates = list(parser.links) + re.findall(
+        r'(?:https?:)?//?audiomack\.com/brhnnysa/song/[A-Za-z0-9_-]+', html, re.I
+    )
+    for href in candidates:
         absolute = urljoin(ARTIST + "/", href).split("?")[0].rstrip("/")
-        if re.search(r"audiomack\.com/brhnnysa/song/[^/]+$", absolute, re.I):
-            found.add(absolute)
-    for match in re.findall(r'(?:https?:)?//?audiomack\.com/brhnnysa/song/[A-Za-z0-9_-]+', html, re.I):
-        found.add(match if match.startswith("http") else "https://" + match.lstrip("/"))
-    return sorted(found)
+        if re.search(r"audiomack\.com/brhnnysa/song/[^/]+$", absolute, re.I) and absolute not in seen:
+            seen.add(absolute)
+            found.append(absolute)
+    return found
 
 
 def song_record(url: str) -> dict | None:
@@ -126,6 +131,23 @@ def song_record(url: str) -> dict | None:
                 release_date = match.group(1)
     if not title:
         return None
+
+    # Normalize common Audiomack date formats for reliable chronological sorting.
+    if release_date:
+        raw_date = str(release_date).strip()
+        parsed_date = None
+        try:
+            parsed_date = datetime.fromisoformat(raw_date.replace("Z", "+00:00"))
+        except ValueError:
+            for date_format in ("%B %d, %Y", "%b %d, %Y", "%Y-%m-%d"):
+                try:
+                    parsed_date = datetime.strptime(raw_date, date_format)
+                    break
+                except ValueError:
+                    continue
+        if parsed_date:
+            release_date = parsed_date.date().isoformat()
+
     slug = url.rstrip("/").split("/")[-1]
     return {
         "id": slug,
@@ -212,7 +234,8 @@ def main():
         raise RuntimeError("No song links found; keeping the existing feed. " + " | ".join(errors))
 
     discovered = []
-    for url in song_urls[:60]:
+    # Check every song on the newest-first Songs page before sorting by release date.
+    for url in song_urls:
         try:
             record = song_record(url)
             if record:
