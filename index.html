@@ -2841,5 +2841,59 @@ document.addEventListener('keydown', function(event) {
 }
 </style>
 
+<style id="brhn-mobile-full-width-layout-fix">
+/* Mobile: keep every website section aligned to the full screen width.
+   Horizontal scrolling remains limited to the individual carousels. */
+@media (max-width:700px) {
+  html, body {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow-x:clip !important;
+    background-color:#0a0a0a !important;
+  }
+  #main-site {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow-x:clip !important;
+    background-color:#0a0a0a !important;
+  }
+  #main-site > header,
+  #main-site > main,
+  #main-site > footer,
+  #main-site .site-section,
+  #main-site .latest-releases,
+  #main-site .video-section,
+  #main-site .events-section,
+  #main-site .brhn-news-section {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+  #main-site > header,
+  #main-site > main {
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+  #main-site .events-section,
+  #main-site .brhn-news-section {
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+  /* Avoid viewport-width breakout offsets on mobile video section. */
+  #main-site .video-section {
+    width:100% !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+}
+</style>
+
 </body>
 </html>
