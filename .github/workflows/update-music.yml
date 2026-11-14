@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/update-music.yml'
       - 'scripts/update_releases.py'
+      - 'scripts/update_news.py'
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
@@ -40,15 +41,18 @@ jobs:
       - name: Refresh YouTube uploads
         run: python scripts/update_youtube_videos.py
 
+      - name: Refresh BRHN NYSA news from Blogger
+        run: python scripts/update_news.py
+
       - name: Commit feed when it changes
         run: |
-          if git diff --quiet -- data/releases.json data/top-plays.json data/youtube-videos.json; then
+          if git diff --quiet -- data/releases.json data/top-plays.json data/youtube-videos.json data/news.json; then
             echo "No new release metadata."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/releases.json data/top-plays.json data/youtube-videos.json
+          git add data/releases.json data/top-plays.json data/youtube-videos.json data/news.json
           git commit -m "chore: refresh BRHN NYSA music releases"
           git pull --rebase origin main
           git push
