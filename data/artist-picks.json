@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Featured Track 1",
+    "platform": "Boomplay",
+    "type": "MUSIC",
+    "src": "https://www.boomplay.com/embed/EQuT2MAcXxIeiEt_svNCMMVF/MUSIC",
+    "height": 420
+  },
+  {
+    "title": "Featured Track 2",
+    "platform": "Boomplay",
+    "type": "MUSIC",
+    "src": "https://www.boomplay.com/embed/EQuoJwgoWrQJ2wgFfn33MX1o/MUSIC",
+    "height": 420
+  },
+  {
+    "title": "Featured Track 3",
+    "platform": "Boomplay",
+    "type": "MUSIC",
+    "src": "https://www.boomplay.com/embed/EQs2Ef9a33qRfbkx0iTjZBma/MUSIC",
+    "height": 420
+  },
+  {
+    "title": "Featured Playlist",
+    "platform": "Boomplay",
+    "type": "PLAYLIST",
+    "src": "https://www.boomplay.com/embed/EQF1grGR6V3WCbeAyatoRcQa/PLAYLIST",
+    "height": 600
+  },
+  {
+    "title": "Current Artist Pick",
+    "platform": "Boomplay",
+    "type": "MUSIC",
+    "src": "https://www.boomplay.com/embed/EQu27kYzR96vQA5pC7oxvEqW/MUSIC",
+    "height": 420
+  }
+]
