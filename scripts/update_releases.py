@@ -160,6 +160,65 @@ def song_record(url: str) -> dict | None:
 
 
 
+
+def audiomack_api_releases() -> list[dict] | None:
+    """Read the artist's complete uploads list from Audiomack's documented API."""
+    consumer_key = os.getenv("AUDIOMACK_CONSUMER_KEY")
+    consumer_secret = os.getenv("AUDIOMACK_CONSUMER_SECRET")
+    if not consumer_key or not consumer_secret:
+        print("Audiomack API credentials are not configured; using public-page fallback.")
+        return None
+
+    api = "https://api.audiomack.com/v1"
+    auth = OAuth1(consumer_key, client_secret=consumer_secret)
+    response = requests.get(
+        f"{api}/artist/brhnnysa/uploads",
+        params={"limit": 0},
+        auth=auth,
+        headers=HEADERS,
+        timeout=30,
+    )
+    response.raise_for_status()
+    payload = response.json()
+    items = payload.get("results", [])
+    if isinstance(items, dict):
+        items = items.get("results", [])
+
+    releases = []
+    for music in items:
+        if music.get("repost"):
+            continue
+        uploader = music.get("uploader") or {}
+        uploader_slug = str(uploader.get("url_slug") or "").lower()
+        if uploader_slug and uploader_slug not in {"brhnnysa", "brhn-nysa"}:
+            continue
+        slug = music.get("url_slug")
+        if not slug:
+            continue
+        # Audiomack supplies Unix timestamps for both release and upload dates.
+        raw_date = music.get("released") or music.get("uploaded")
+        release_date = ""
+        if raw_date:
+            try:
+                release_date = datetime.fromtimestamp(int(raw_date), timezone.utc).date().isoformat()
+            except (TypeError, ValueError, OSError):
+                release_date = str(raw_date)
+        releases.append({
+            "id": str(music.get("id") or slug),
+            "title": music.get("title") or "Untitled",
+            "artist": music.get("artist") or "Brhn Nysa",
+            "releaseDate": release_date,
+            "artwork": music.get("image") or "",
+            "links": {"audiomack": f"https://audiomack.com/brhnnysa/song/{slug}", **PROFILE_LINKS},
+        })
+
+    if not releases:
+        raise RuntimeError("Audiomack API returned no original artist uploads.")
+    releases.sort(key=lambda item: item.get("releaseDate") or "", reverse=True)
+    print(f"Audiomack API returned {len(releases)} original artist uploads.")
+    return releases
+
+
 def update_top_plays():
     """Write Audiomack's artist top-10 plays from its documented 60-minute metrics."""
     consumer_key = os.getenv("AUDIOMACK_CONSUMER_KEY")
@@ -220,36 +279,44 @@ def main():
         if link:
             existing_by_url[link.rstrip("/")] = item
 
-    errors = []
-    song_urls = []
-    for page in (SONGS_PAGE, ARTIST):
-        try:
-            song_urls = find_song_urls(get(page))
-            if song_urls:
-                break
-        except Exception as exc:
-            errors.append(f"{page}: {exc}")
+    discovered = None
+    try:
+        # Preferred source: Audiomack's artist uploads endpoint (not Top Songs).
+        discovered = audiomack_api_releases()
+    except Exception as exc:
+        print(f"Audiomack uploads API unavailable; trying public-page fallback: {exc}")
 
-    if not song_urls:
-        raise RuntimeError("No song links found; keeping the existing feed. " + " | ".join(errors))
+    if discovered is None:
+        errors = []
+        song_urls = []
+        for page in (SONGS_PAGE, ARTIST):
+            try:
+                song_urls = find_song_urls(get(page))
+                if song_urls:
+                    break
+            except Exception as exc:
+                errors.append(f"{page}: {exc}")
 
-    discovered = []
-    # Check every song on the newest-first Songs page before sorting by release date.
-    for url in song_urls:
-        try:
-            record = song_record(url)
-            if record:
-                old = existing_by_url.get(url.rstrip("/"), {})
-                for key in ("releaseDate", "artwork"):
-                    if not record.get(key) and old.get(key):
-                        record[key] = old[key]
-                discovered.append(record)
-            time.sleep(0.25)
-        except Exception as exc:
-            print(f"Skipping {url}: {exc}")
+        if not song_urls:
+            raise RuntimeError("No song links found; keeping the existing feed. " + " | ".join(errors))
+
+        discovered = []
+        # Fallback only: inspect all song URLs exposed in Audiomack's public HTML.
+        for url in song_urls:
+            try:
+                record = song_record(url)
+                if record:
+                    old = existing_by_url.get(url.rstrip("/"), {})
+                    for key in ("releaseDate", "artwork"):
+                        if not record.get(key) and old.get(key):
+                            record[key] = old[key]
+                    discovered.append(record)
+                time.sleep(0.25)
+            except Exception as exc:
+                print(f"Skipping {url}: {exc}")
 
     if not discovered:
-        raise RuntimeError("Song pages were found but metadata could not be read; keeping the existing feed.")
+        raise RuntimeError("Audiomack returned no releases; keeping the existing feed.")
 
     discovered.sort(key=lambda item: item.get("releaseDate") or "", reverse=True)
     payload = {
