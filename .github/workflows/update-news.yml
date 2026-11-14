@@ -1,0 +1,45 @@
+name: Update BRHN NYSA news
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-news.yml'
+      - 'scripts/update_news.py'
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-brhn-nysa-news
+  cancel-in-progress: false
+
+jobs:
+  refresh-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh Blogger news feed
+        run: python scripts/update_news.py
+
+      - name: Commit news when it changes
+        run: |
+          if git diff --quiet -- data/news.json; then
+            echo "No new Blogger posts."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/news.json
+          git commit -m "chore: refresh BRHN NYSA news"
+          git pull --rebase origin main
+          git push
