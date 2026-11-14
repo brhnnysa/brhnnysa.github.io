@@ -86,12 +86,12 @@ def main() -> None:
         if content_type:
             content_types.add(content_type)
         if isinstance(video_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) and "VIDEO" in content_type.upper():
+        if isinstance(video_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) and "VIDEO" in content_type.upper():
             if video_id not in regular_video_ids:
-                if video_id not in regular_video_ids:
                 regular_video_ids.add(video_id)
                 regular_video_order.append(video_id)
-                regular_video_order.append(video_id)
 
+    # Keep compatibility with older YouTube pages that still expose videoRenderer.
     # Keep compatibility with older YouTube pages that still expose videoRenderer.
     renderer_pattern = re.compile(r'"videoRenderer"\s*:\s*\{')
     for match in renderer_pattern.finditer(videos_page_response.text):
@@ -104,8 +104,9 @@ def main() -> None:
         except json.JSONDecodeError:
             continue
         video_id = model.get("videoId")
-        if isinstance(video_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id):
-            regular_video_ids.add(video_id)
+            if video_id not in regular_video_ids:
+                regular_video_ids.add(video_id)
+                regular_video_order.append(video_id)
 
     print(f"Found {len(regular_video_ids)} regular video IDs on Videos tab; content types={sorted(content_types)}")
     if not regular_video_ids:
