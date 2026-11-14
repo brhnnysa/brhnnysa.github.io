@@ -158,7 +158,7 @@ def update_top_plays():
         "source": "Audiomack artist metrics API",
     }
     (ROOT / "data" / "top-plays.json").write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8"
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     print(f"Updated Audiomack top plays with {len(top_plays[:10])} tracks.")
 
