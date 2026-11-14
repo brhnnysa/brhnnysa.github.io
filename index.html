@@ -714,53 +714,130 @@ Stream & download anywhere.    </p>
 </script>
 <!-- END BRHN NYSA AUTOMATIC MUSIC RELEASES -->
 
-<section class="site-section latest-post-feed">
-    <h2 class="section-heading">LATEST POSTS</h2>
-
-    <div class="snapwidget-container">
-        <iframe
-            src="https://snapwidget.com/embed/03da6bb3-a7c3-4e58-95f9-50b2a18386fa"
-            class="snapwidget-widget"
-            allowtransparency="true"
-            frameborder="0"
-            scrolling="no"
-            title="Brhn Nysa Latest Instagram Posts">
-        </iframe>
-    </div>
+<section class="brhn-latest-posts" aria-labelledby="brhn-latest-posts-title">
+  <div class="brhn-post-divider" aria-hidden="true"></div>
+  <h2 id="brhn-latest-posts-title">LATEST POSTS</h2>
+  <button type="button" class="brhn-post-feature" id="brhn-open-post-options" aria-haspopup="dialog">
+    <span class="brhn-post-play" aria-hidden="true">▶</span>
+    <span class="brhn-post-copy">
+      <strong>BRHN NYSA — VIDEO & SOCIAL POSTS</strong>
+      <small>Tap to choose where you want to watch and view posts</small>
+    </span>
+    <span class="brhn-post-arrow" aria-hidden="true">↗</span>
+  </button>
 </section>
 
+<dialog id="brhn-post-options" class="brhn-post-dialog" aria-labelledby="brhn-post-dialog-title">
+  <div class="brhn-post-dialog-inner">
+    <div class="brhn-post-dialog-head">
+      <div>
+        <h3 id="brhn-post-dialog-title">CHOOSE A PLATFORM</h3>
+        <p>Find BRHN NYSA's posts here</p>
+      </div>
+      <button type="button" id="brhn-close-post-options" aria-label="Close">×</button>
+    </div>
+    <div class="brhn-post-platforms">
+      <a href="https://www.instagram.com/heisbrhn/" target="_blank" rel="noopener noreferrer">Instagram <span>↗</span></a>
+      <a href="https://web.facebook.com/brhnnysa/" target="_blank" rel="noopener noreferrer">Facebook <span>↗</span></a>
+      <a href="https://www.threads.com/@heisbrhn" target="_blank" rel="noopener noreferrer">Threads <span>↗</span></a>
+      <a href="https://whatsapp.com/channel/0029VbDAm1B7YSd2nFegew16" target="_blank" rel="noopener noreferrer">WhatsApp Channel <span>↗</span></a>
+    </div>
+  </div>
+</dialog>
+
 <style>
-.snapwidget-container {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    overflow: hidden;
+.brhn-auto-releases.latest-releases {
+  border-bottom: 1px solid #b8944e;
+  margin-bottom: 0 !important;
+  padding-bottom: 48px !important;
 }
-
-.snapwidget-container iframe {
-    display: block;
-    width: 100%;
-    height: 420px;
-    border: none;
+.brhn-latest-posts {
+  width: min(100% - 40px, 1100px);
+  margin: 0 auto;
+  padding: 42px 0 52px;
+  color: #fff;
 }
-
-@media screen and (max-width: 600px) {
-    .snapwidget-container {
-        overflow: hidden;
-        height: 520px;
-    }
-
-    .snapwidget-container iframe {
-        display: block;
-        width: 100%;
-        height: 650px;
-        border: none;
-        transform: scale(2);
-        transform-origin: top center;
-        margin: 0;
-    }
+.brhn-post-divider {
+  width: 54px;
+  height: 3px;
+  margin: 0 auto 30px;
+  background: #d6b56d;
+}
+.brhn-latest-posts h2 {
+  margin: 0 0 24px;
+  text-align: center;
+  color: #d6b56d;
+  font-size: clamp(21px, 3vw, 27px);
+  letter-spacing: 4px;
+  font-weight: 800;
+}
+.brhn-post-feature {
+  width: min(100%, 760px);
+  min-height: 112px;
+  margin: 0 auto;
+  padding: 22px 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-align: left;
+  color: #fff;
+  background: linear-gradient(120deg, #151515, #0d0d0d);
+  border: 1px solid #8e713c;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.brhn-post-feature:hover { border-color: #d6b56d; background: #181818; }
+.brhn-post-play {
+  width: 54px; height: 54px; flex: 0 0 54px;
+  display: grid; place-items: center;
+  border: 1px solid #d6b56d; border-radius: 50%;
+  color: #d6b56d; font-size: 19px; padding-left: 3px;
+}
+.brhn-post-copy { display: grid; gap: 7px; flex: 1; }
+.brhn-post-copy strong { color: #d6b56d; font-size: 14px; letter-spacing: 1.2px; }
+.brhn-post-copy small { color: #aaa; font-size: 13px; line-height: 1.5; }
+.brhn-post-arrow { color: #d6b56d; font-size: 23px; }
+.brhn-post-dialog {
+  width: min(430px, calc(100% - 28px));
+  padding: 0; border: 1px solid #b8944e; border-radius: 12px;
+  background: #101010; color: #fff; box-shadow: 0 25px 80px #000b;
+}
+.brhn-post-dialog::backdrop { background: #000b; backdrop-filter: blur(4px); }
+.brhn-post-dialog-inner { padding: 22px; }
+.brhn-post-dialog-head { display:flex; justify-content:space-between; align-items:start; gap:14px; margin-bottom:18px; }
+.brhn-post-dialog-head h3 { margin:0; color:#d6b56d; font-size:16px; letter-spacing:1.4px; }
+.brhn-post-dialog-head p { margin:6px 0 0; color:#999; font-size:13px; }
+#brhn-close-post-options { border:1px solid #b8944e; border-radius:50%; width:32px; height:32px; background:#080808; color:#d6b56d; font-size:21px; cursor:pointer; }
+.brhn-post-platforms { display:grid; gap:9px; }
+.brhn-post-platforms a {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:13px 14px; border:1px solid #38312a; border-radius:8px;
+  background:#171717; color:#fff; text-decoration:none; font-weight:700;
+}
+.brhn-post-platforms a:hover { border-color:#d6b56d; color:#d6b56d; }
+.brhn-post-platforms a span { color:#d6b56d; }
+@media(max-width:600px) {
+  .brhn-latest-posts { padding:34px 0 42px; }
+  .brhn-post-feature { padding:17px; gap:13px; }
+  .brhn-post-play { width:45px; height:45px; flex-basis:45px; }
+  .brhn-post-copy strong { font-size:12px; }
+  .brhn-post-copy small { font-size:12px; }
 }
 </style>
+
+<script>
+(function () {
+  const dialog = document.getElementById('brhn-post-options');
+  const open = document.getElementById('brhn-open-post-options');
+  const close = document.getElementById('brhn-close-post-options');
+  if (!dialog || !open || !close) return;
+  open.addEventListener('click', () => dialog.showModal());
+  close.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {
+    if (event.target === dialog) dialog.close();
+  });
+})();
+</script>
     
 <section class="video-section">
     <h2 class="video-heading">LATEST VIDEOS</h2>
