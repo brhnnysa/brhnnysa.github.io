@@ -859,6 +859,85 @@ Stream & download anywhere.    </p>
   </button>
 </section>
 
+<section class="brhn-tiktok-feed" aria-labelledby="brhn-tiktok-title">
+  <div class="brhn-tiktok-divider" aria-hidden="true"></div>
+  <h2 id="brhn-tiktok-title">LATEST ON TIKTOK</h2>
+  <p class="brhn-tiktok-intro">Watch BRHN NYSA's latest videos</p>
+  <div class="brhn-tiktok-embed-wrap">
+    <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@brhnnysa" data-unique-id="brhnnysa" data-embed-type="creator" style="max-width:720px; min-width:288px;">
+      <section>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.tiktok.com/@brhnnysa?refer=creator_embed">@brhnnysa</a>
+      </section>
+    </blockquote>
+  </div>
+  <p class="brhn-tiktok-follow"><a href="https://www.tiktok.com/@brhnnysa" target="_blank" rel="noopener noreferrer">FOLLOW @BRHNNYSA ON TIKTOK ↗</a></p>
+</section>
+<style>
+.brhn-tiktok-feed {
+  width: min(100% - 40px, 1100px);
+  margin: 0 auto;
+  padding: 38px 0 52px;
+  color: #fff;
+  text-align: center;
+}
+.brhn-tiktok-divider {
+  width: 54px;
+  height: 3px;
+  margin: 0 auto 24px;
+  background: #d6b56d;
+}
+.brhn-tiktok-feed h2 {
+  margin: 0 0 10px;
+  color: #d6b56d;
+  font-size: clamp(21px, 3vw, 27px);
+  letter-spacing: 4px;
+  font-weight: 800;
+}
+.brhn-tiktok-intro {
+  margin: 0 0 22px;
+  color: #c8c1b3;
+  font-size: 14px;
+}
+.brhn-tiktok-embed-wrap {
+  width: 100%;
+  max-width: 720px;
+  min-width: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.brhn-tiktok-embed-wrap .tiktok-embed {
+  width: 100%;
+  max-width: 720px !important;
+  min-width: 288px !important;
+  margin: 0 auto !important;
+}
+.brhn-tiktok-follow {
+  margin: 18px 0 0;
+}
+.brhn-tiktok-follow a {
+  color: #d6b56d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+}
+.brhn-tiktok-follow a:hover {
+  color: #fff;
+}
+@media (max-width: 480px) {
+  .brhn-tiktok-feed {
+    width: min(100% - 24px, 1100px);
+    padding: 30px 0 40px;
+  }
+  .brhn-tiktok-embed-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+</style>
+<script async src="https://www.tiktok.com/embed.js"></script>
+
 <dialog id="brhn-post-options" class="brhn-post-dialog" aria-labelledby="brhn-post-dialog-title">
   <div class="brhn-post-dialog-inner">
     <div class="brhn-post-dialog-head">
