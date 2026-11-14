@@ -707,18 +707,41 @@ document.addEventListener('DOMContentLoaded', function () {
         </p>
     </div>
 
-    <div class="audio-frame">
-        <iframe
-            title="Brhn Nysa featured music player"
-            loading="lazy"
-            frameborder="0"
-            height="420"
-            src="https://www.boomplay.com/embed/EQu27kYzR96vQA5pC7oxvEqW/MUSIC"
-            width="100%"
-            allow="autoplay; encrypted-media; clipboard-write; picture-in-picture"
-            allowfullscreen>
-        </iframe>
+    <style id="brhn-artist-picks-style">
+      .brhn-artist-picks-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:1100px;margin:28px auto 34px}
+      .brhn-artist-pick-card{min-width:0;overflow:hidden;border:1px solid #b8944e;border-radius:12px;background:#0b0b0b;box-shadow:0 8px 24px #0005}
+      .brhn-artist-pick-card h3{margin:0;padding:13px 15px;color:#d6b56d;font-size:14px;letter-spacing:1px;text-align:center}
+      .brhn-artist-pick-card iframe{display:block;width:100%;border:0;background:#080808}
+      @media(max-width:700px){.brhn-artist-picks-grid{grid-template-columns:minmax(0,1fr);gap:16px;margin:20px auto 28px}.brhn-artist-pick-card iframe{max-height:600px}}
+    </style>
+    <div id="brhn-artist-picks-grid" class="brhn-artist-picks-grid" aria-live="polite">
+      <p class="brhn-release-status">Loading Artist Picks…</p>
     </div>
+    <script id="brhn-artist-picks-loader">
+    (function(){
+      var grid=document.getElementById('brhn-artist-picks-grid');
+      if(!grid)return;
+      fetch('data/artist-picks.json?refresh='+Date.now(),{cache:'no-store'})
+        .then(function(response){if(!response.ok)throw new Error('Artist Picks data unavailable');return response.json();})
+        .then(function(items){
+          if(!Array.isArray(items))throw new Error('Invalid Artist Picks data');
+          grid.replaceChildren();
+          items.forEach(function(item,index){
+            if(!item||!/^https:\/\/www\.boomplay\.com\/embed\/[A-Za-z0-9_-]+\/(MUSIC|PLAYLIST)$/.test(item.src||''))return;
+            var card=document.createElement('article');card.className='brhn-artist-pick-card';
+            var heading=document.createElement('h3');heading.textContent=item.title||('ARTIST PICK '+(index+1));
+            var frame=document.createElement('iframe');
+            frame.title=(item.title||'Brhn Nysa Artist Pick')+' — '+(item.platform||'Music player');
+            frame.loading='lazy';frame.src=item.src;frame.width='100%';frame.height=String(item.height===600?600:420);
+            frame.setAttribute('allow','autoplay; encrypted-media; clipboard-write; picture-in-picture');
+            frame.setAttribute('allowfullscreen','');
+            card.append(heading,frame);grid.appendChild(card);
+          });
+          if(!grid.children.length)throw new Error('No valid Artist Picks found');
+        })
+        .catch(function(error){console.error('Artist Picks could not load:',error);grid.innerHTML='<p class="brhn-release-status">Artist Picks are temporarily unavailable. Please check back shortly.</p>';});
+    })();
+    </script>
 
     <div class="artist-pick-platforms"
          aria-label="Listen to Brhn Nysa on music platforms">
