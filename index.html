@@ -1140,20 +1140,71 @@ document.querySelector(".video-arrow.next").addEventListener("click", () => {
     });
 });
 
-document.querySelectorAll(".video-card").forEach(card => {
-    card.addEventListener("click", () => {
-        const videoId = card.dataset.video;
-        const thumb = card.querySelector(".video-thumb");
+track.addEventListener("click", event => {
+    const card = event.target.closest(".video-card");
+    if (!card || card.dataset.playing === "true") return;
+    const videoId = card.dataset.video;
+    const thumb = card.querySelector(".video-thumb");
+    if (!videoId || !thumb) return;
 
-        const iframe = document.createElement("iframe");
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-        iframe.title = "YouTube video player";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        iframe.allowFullscreen = true;
-
-        thumb.replaceChildren(iframe);
-    }, { once: true });
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    iframe.title = "BRHN NYSA YouTube video";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    card.dataset.playing = "true";
+    thumb.replaceChildren(iframe);
 });
+
+// Replace the starter cards with the latest uploads supplied by the scheduled YouTube RSS updater.
+(async function loadAutomaticYouTubeUploads() {
+    try {
+        const response = await fetch("data/youtube-videos.json?updated=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) return;
+        const feed = await response.json();
+        if (!Array.isArray(feed.videos) || !feed.videos.length) return;
+
+        const fragment = document.createDocumentFragment();
+        feed.videos.forEach(video => {
+            if (!video.id || !video.title) return;
+            const card = document.createElement("article");
+            card.className = "video-card";
+            card.dataset.video = video.id;
+
+            const thumb = document.createElement("div");
+            thumb.className = "video-thumb";
+            const img = document.createElement("img");
+            img.src = video.artwork || `https://i.ytimg.com/vi/${encodeURIComponent(video.id)}/hqdefault.jpg`;
+            img.alt = video.title;
+            img.loading = "lazy";
+            const play = document.createElement("span");
+            play.className = "play-button";
+            play.setAttribute("aria-hidden", "true");
+            play.textContent = "▶";
+            thumb.append(img, play);
+
+            const info = document.createElement("div");
+            info.className = "video-info";
+            const title = document.createElement("h3");
+            title.textContent = video.title;
+            const date = document.createElement("p");
+            if (video.publishedAt) {
+                const published = new Date(video.publishedAt);
+                date.textContent = Number.isNaN(published.getTime())
+                    ? video.publishedAt
+                    : "Uploaded " + published.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+            } else {
+                date.textContent = "BRHN NYSA";
+            }
+            info.append(title, date);
+            card.append(thumb, info);
+            fragment.append(card);
+        });
+        if (fragment.childNodes.length) track.replaceChildren(fragment);
+    } catch (error) {
+        console.warn("Could not load the automatic YouTube uploads feed; showing the saved video cards.", error);
+    }
+})();
 </script>
 <style>
 * {
