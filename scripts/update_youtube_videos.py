@@ -42,11 +42,21 @@ def main() -> None:
     videos_page_url = f"https://www.youtube.com/channel/{channel_id}/videos"
     videos_page_response = requests.get(videos_page_url, headers=HEADERS, timeout=30)
     videos_page_response.raise_for_status()
-    regular_video_ids = set(re.findall(
-        r'"videoRenderer"\s*:\s*\{\s*"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"',
-        videos_page_response.text,
-    ))
+    # YouTube changes renderer field order and nesting. Inspect each regular
+    # video renderer separately rather than assuming videoId is its first field.
+    regular_video_ids: set[str] = set()
+    renderer_pattern = re.compile(r'"(?:videoRenderer|gridVideoRenderer)"\s*:\s*\{')
+    renderer_matches = list(renderer_pattern.finditer(videos_page_response.text))
+    for index, renderer_match in enumerate(renderer_matches):
+        section_end = renderer_matches[index + 1].start() if index + 1 < len(renderer_matches) else renderer_match.end() + 10000
+        renderer_section = videos_page_response.text[renderer_match.end():min(section_end, renderer_match.end() + 10000)]
+        video_match = re.search(r'"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"', renderer_section)
+        if video_match:
+            regular_video_ids.add(video_match.group(1))
+    print(f"Found {len(regular_video_ids)} regular video IDs on Videos tab.")
     if not regular_video_ids:
+        markers = [marker for marker in ('videoRenderer', 'gridVideoRenderer', 'lockupViewModel', 'ytInitialData') if marker in videos_page_response.text]
+        print(f"YouTube page diagnostics: HTTP {videos_page_response.status_code}, {len(videos_page_response.text)} characters, markers={markers}")
         raise RuntimeError("Could not identify regular uploads on the channel Videos tab; leaving the existing feed unchanged.")
 
     feed_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
