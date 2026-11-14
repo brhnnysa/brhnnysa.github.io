@@ -1,16 +1,16 @@
 {
   "artist": "BRHN NYSA",
-  "source": "Audiomack public artist profile",
-  "updatedAt": "2026-11-14T13:38:16.231Z",
+  "source": "Existing official website release artwork; automatic Audiomack updates enabled",
+  "updatedAt": null,
   "releases": [
     {
-      "id": "still-us",
-      "title": "Still Us",
+      "id": "my-darling-speed-up",
+      "title": "MY DARLING (SPEED UP)",
       "artist": "Brhn Nysa",
-      "releaseDate": "2026-09-11",
-      "artwork": "",
+      "releaseDate": "",
+      "artwork": "https://i.audiomack.com/brhnnysa/ef5a06a736.webp?width=208",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/still-us",
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
@@ -18,13 +18,13 @@
       }
     },
     {
-      "id": "in-love",
-      "title": "In love",
+      "id": "my-darling",
+      "title": "My Darling",
       "artist": "Brhn Nysa",
-      "releaseDate": "2026-07-13",
-      "artwork": "",
+      "releaseDate": "",
+      "artwork": "https://i.audiomack.com/brhnnysa/7d0b0aa13c.webp?width=208",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/in-love",
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
@@ -32,13 +32,55 @@
       }
     },
     {
-      "id": "my-last-apology",
-      "title": "My Last Apology",
+      "id": "my-kind",
+      "title": "My Kind",
       "artist": "Brhn Nysa",
-      "releaseDate": "2026-06-29",
-      "artwork": "",
+      "releaseDate": "",
+      "artwork": "https://i.audiomack.com/brhnnysa/4160b7e7fa.webp?width=208",
       "links": {
-        "audiomack": "https://audiomack.com/brhnnysa/song/my-last-apology",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "leals-talk",
+      "title": "Leals Talk",
+      "artist": "Brhn Nysa",
+      "releaseDate": "",
+      "artwork": "https://i.audiomack.com/brhnnysa/104ef0971d.webp?width=208",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "khadija",
+      "title": "Khadija",
+      "artist": "Brhn Nysa",
+      "releaseDate": "",
+      "artwork": "https://i.audiomack.com/brhnnysa/1e77f42581.webp?width=208",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "right-now-remix",
+      "title": "Right Now ReMix",
+      "artist": "Brhn Nysa",
+      "releaseDate": "",
+      "artwork": "https://i.audiomack.com/brhnnysa/35a5697ace.webp?width=208",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
