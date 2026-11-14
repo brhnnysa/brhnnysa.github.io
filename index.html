@@ -692,56 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .brhn-news-empty a{color:#d6b56d;text-decoration:none;font-weight:700}
 @media(max-width:700px){.brhn-news-section{width:calc(100% - 28px);padding:30px 0 34px}.brhn-news-heading{align-items:center;margin-bottom:16px}.brhn-news-heading h2{font-size:1.35rem;letter-spacing:.14em}.brhn-news-heading p{font-size:.62rem}.brhn-news-track{gap:13px;padding-bottom:13px}.brhn-news-card{flex:0 0 84%;min-width:0}.brhn-news-image{height:165px}.brhn-news-card-body{padding:15px}.brhn-news-card h3{font-size:1rem}}
 </style>
-<section class="brhn-news-section" id="brhn-news" aria-labelledby="brhn-news-title">
-  <div class="brhn-news-heading">
-    <div><h2 id="brhn-news-title">NEWS</h2><p>MUSIC · ARTIST UPDATES · PRESS</p></div>
-    <a class="brhn-news-blog-link" href="https://lealsnews.blogspot.com/" target="_blank" rel="noopener noreferrer">ALL NEWS ↗</a>
-  </div>
-  <div class="brhn-news-track" id="brhn-news-track" aria-live="polite">
-    <div class="brhn-news-empty">News updates will appear here when you publish your first post on Blogger.</div>
-  </div>
-</section>
-<script id="brhn-news-feed-script">
-(function(){
-  var track=document.getElementById('brhn-news-track');
-  if(!track)return;
-  function make(tag,className,text){
-    var el=document.createElement(tag);
-    if(className)el.className=className;
-    if(text)el.textContent=text;
-    return el;
-  }
-  function render(posts){
-    track.replaceChildren();
-    if(!Array.isArray(posts)||!posts.length){
-      var empty=make('div','brhn-news-empty','Your news section is connected. Publish a post on Blogger and it will appear here automatically.');
-      var link=make('a','',' Open Blogger');
-      link.href='https://lealsnews.blogspot.com/';
-      link.target='_blank';link.rel='noopener noreferrer';
-      empty.appendChild(link);track.appendChild(empty);return;
-    }
-    posts.slice(0,12).forEach(function(post){
-      var card=make('article','brhn-news-card');
-      if(post.image){
-        var img=make('img','brhn-news-image');
-        img.src=post.image;img.alt='';img.loading='lazy';card.appendChild(img);
-      }
-      var body=make('div','brhn-news-card-body');
-      body.appendChild(make('div','brhn-news-date',post.published||'BRHN NYSA NEWS'));
-      body.appendChild(make('h3','',post.title||'BRHN NYSA update'));
-      if(post.summary)body.appendChild(make('p','brhn-news-summary',post.summary));
-      var a=make('a','brhn-news-read','READ STORY ↗');
-      a.href=post.url||'https://lealsnews.blogspot.com/';
-      a.target='_blank';a.rel='noopener noreferrer';
-      body.appendChild(a);card.appendChild(body);track.appendChild(card);
-    });
-  }
-  fetch('data/news.json?refresh='+Date.now(),{cache:'no-store'})
-    .then(function(response){if(!response.ok)throw new Error('News feed is not ready');return response.json();})
-    .then(function(data){render(data.posts||[]);})
-    .catch(function(){render([]);});
-})();
-</script>
+
 
 <section aria-label="Artist's Pick" class="audio-section site-section artist-pick">
 
@@ -1762,6 +1713,57 @@ body {
   loadEvents();
   window.setInterval(loadEvents, 60 * 1000);
   window.setInterval(updateCountdowns, 1000);
+})();
+</script>
+
+<section class="brhn-news-section" id="brhn-news" aria-labelledby="brhn-news-title">
+  <div class="brhn-news-heading">
+    <div><h2 id="brhn-news-title">NEWS</h2><p>MUSIC · ARTIST UPDATES · PRESS</p></div>
+    <a class="brhn-news-blog-link" href="https://lealsnews.blogspot.com/" target="_blank" rel="noopener noreferrer">ALL NEWS ↗</a>
+  </div>
+  <div class="brhn-news-track" id="brhn-news-track" aria-live="polite">
+    <div class="brhn-news-empty">News updates will appear here when you publish your first post on Blogger.</div>
+  </div>
+</section>
+<script id="brhn-news-feed-script">
+(function(){
+  var track=document.getElementById('brhn-news-track');
+  if(!track)return;
+  function make(tag,className,text){
+    var el=document.createElement(tag);
+    if(className)el.className=className;
+    if(text)el.textContent=text;
+    return el;
+  }
+  function render(posts){
+    track.replaceChildren();
+    if(!Array.isArray(posts)||!posts.length){
+      var empty=make('div','brhn-news-empty','Your news section is connected. Publish a post on Blogger and it will appear here automatically.');
+      var link=make('a','',' Open Blogger');
+      link.href='https://lealsnews.blogspot.com/';
+      link.target='_blank';link.rel='noopener noreferrer';
+      empty.appendChild(link);track.appendChild(empty);return;
+    }
+    posts.slice(0,12).forEach(function(post){
+      var card=make('article','brhn-news-card');
+      if(post.image){
+        var img=make('img','brhn-news-image');
+        img.src=post.image;img.alt='';img.loading='lazy';card.appendChild(img);
+      }
+      var body=make('div','brhn-news-card-body');
+      body.appendChild(make('div','brhn-news-date',post.published||'BRHN NYSA NEWS'));
+      body.appendChild(make('h3','',post.title||'BRHN NYSA update'));
+      if(post.summary)body.appendChild(make('p','brhn-news-summary',post.summary));
+      var a=make('a','brhn-news-read','READ STORY ↗');
+      a.href=post.url||'https://lealsnews.blogspot.com/';
+      a.target='_blank';a.rel='noopener noreferrer';
+      body.appendChild(a);card.appendChild(body);track.appendChild(card);
+    });
+  }
+  fetch('data/news.json?refresh='+Date.now(),{cache:'no-store'})
+    .then(function(response){if(!response.ok)throw new Error('News feed is not ready');return response.json();})
+    .then(function(data){render(data.posts||[]);})
+    .catch(function(){render([]);});
 })();
 </script>
 
