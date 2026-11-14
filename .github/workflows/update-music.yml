@@ -7,7 +7,7 @@ on:
       - 'scripts/update_social_posts.py'
       - 'scripts/update_releases.py'
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
