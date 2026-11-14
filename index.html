@@ -845,7 +845,7 @@ Stream & download anywhere.    </p>
 <section class="brhn-latest-posts" aria-labelledby="brhn-latest-posts-title">
   <div class="brhn-post-divider" aria-hidden="true"></div>
   <h2 id="brhn-latest-posts-title">LATEST POSTS</h2>
-  <p class="brhn-social-posts-intro">Latest public posts from Instagram</p>
+  <p class="brhn-social-posts-intro">Latest public posts from Instagram and Telegram</p>
   <div class="brhn-social-posts-shell">
     <button type="button" class="brhn-social-post-arrow prev" id="brhn-social-post-prev" aria-label="Previous posts">‹</button>
     <div class="brhn-social-posts-track" id="brhn-social-post-track" aria-live="polite">
@@ -880,17 +880,27 @@ Stream & download anywhere.    </p>
   if (prev) prev.addEventListener('click', () => scroll(-1));
   if (next) next.addEventListener('click', () => scroll(1));
 
-  fetch('./data/social-posts.json?updated=' + Date.now(), {cache: 'no-store'})
-    .then(response => {
-      if (!response.ok) throw new Error('Feed unavailable');
-      return response.json();
-    })
-    .then(data => {
-      const posts = Array.isArray(data.posts) ? data.posts.slice(0, 5) : [];
-      if (!posts.length) throw new Error('No posts are available yet');
+  Promise.all([
+    fetch('./data/social-posts.json?updated=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : {posts: []}).catch(() => ({posts: []})),
+    fetch('./data/telegram-posts.json?updated=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : {posts: []}).catch(() => ({posts: []}))
+  ])
+    .then(([instagram, telegram]) => {
+      const posts = [...(Array.isArray(instagram.posts) ? instagram.posts : []), ...(Array.isArray(telegram.posts) ? telegram.posts : [])]
+        .sort((a, b) => {
+          const time = value => {
+            if (!value) return 0;
+            if (typeof value === 'number') return value < 1000000000000 ? value * 1000 : value;
+            const parsed = Date.parse(value);
+            return Number.isNaN(parsed) ? 0 : parsed;
+          };
+          return time(b.published_at) - time(a.published_at);
+        }).slice(0, 5);
+      if (!posts.length) throw new Error('No public posts are available yet');
       const cards = posts.map(post => {
+        const platform = post.platform || 'Instagram';
+        const fallback = platform === 'Telegram' ? 'https://t.me/brhnnysa' : 'https://www.instagram.com/heisbrhn/';
         const link = make('a', 'brhn-social-post-card');
-        link.href = post.url || 'https://www.instagram.com/heisbrhn/';
+        link.href = post.url || fallback;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         const media = make('div', 'brhn-social-post-media');
@@ -905,7 +915,7 @@ Stream & download anywhere.    </p>
         } else if (post.media_url) {
           const img = make('img');
           img.src = post.media_url;
-          img.alt = 'BRHN NYSA Instagram post';
+          img.alt = 'BRHN NYSA ' + platform + ' post';
           img.loading = 'lazy';
           img.referrerPolicy = 'no-referrer';
           media.appendChild(img);
@@ -913,27 +923,27 @@ Stream & download anywhere.    </p>
           media.appendChild(make('span', 'brhn-social-post-no-media', 'BRHN NYSA'));
         }
         const body = make('div', 'brhn-social-post-body');
-        body.appendChild(make('span', 'brhn-social-post-platform', 'INSTAGRAM'));
+        body.appendChild(make('span', 'brhn-social-post-platform', platform.toUpperCase()));
         body.appendChild(make('p', 'brhn-social-post-caption', post.caption || 'View BRHN NYSA’s latest post'));
         const meta = [];
         if (post.published_at) {
-          const date = new Date(Number(post.published_at) * 1000);
+          const raw = post.published_at;
+          const date = typeof raw === 'number' ? new Date(raw < 1000000000000 ? raw * 1000 : raw) : new Date(raw);
           if (!Number.isNaN(date.getTime())) meta.push(date.toLocaleDateString());
         }
         if (post.likes != null) meta.push(Number(post.likes).toLocaleString() + ' likes');
+        if (post.views != null) meta.push(Number(post.views).toLocaleString() + ' views');
         if (meta.length) body.appendChild(make('small', 'brhn-social-post-meta', meta.join(' · ')));
         body.appendChild(make('span', 'brhn-social-post-link', 'VIEW POST ↗'));
         link.append(media, body);
         return link;
       });
       track.replaceChildren(...cards);
-      if (status && data.updated_at) {
-        const date = new Date(data.updated_at);
-        status.textContent = 'Automatically refreshed · ' + date.toLocaleString();
-      }
+      const times = [instagram.updated_at, telegram.updated_at].filter(Boolean).map(value => new Date(value)).filter(date => !Number.isNaN(date.getTime()));
+      if (status) status.textContent = times.length ? 'Automatically refreshed · ' + new Date(Math.max(...times.map(date => date.getTime()))).toLocaleString() : 'Posts refresh automatically.';
     })
     .catch(() => {
-      track.replaceChildren(make('p', 'brhn-social-post-status', 'The latest posts are temporarily unavailable. Please visit Instagram to view them.'));
+      track.replaceChildren(make('p', 'brhn-social-post-status', 'The latest public posts are temporarily unavailable. Please visit Instagram or Telegram to view them.'));
       if (status) status.textContent = 'The feed will try again on the next automatic refresh.';
     });
 })();
