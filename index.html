@@ -2501,5 +2501,64 @@ document.addEventListener('keydown', function(event) {
 }
 </style>
 
+
+<style id="brhn-social-icon-grid-fix">
+/* Keep every platform icon in one clean, evenly spaced grid */
+.social-area {
+  display:grid !important;
+  grid-template-columns:repeat(8,minmax(0,1fr)) !important;
+  gap:18px 14px !important;
+  width:min(100% - 32px,680px) !important;
+  margin:0 auto !important;
+  padding:30px 0 !important;
+  justify-items:center !important;
+  align-items:center !important;
+}
+.social-area .social-links-container {
+  display:contents !important;
+}
+.social-area .social-icon {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:44px !important;
+  height:44px !important;
+  min-width:44px !important;
+  flex:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  line-height:1 !important;
+  box-sizing:border-box !important;
+}
+.social-area .social-icon svg {
+  display:block !important;
+  width:27px !important;
+  height:27px !important;
+  max-width:27px !important;
+  max-height:27px !important;
+  flex:none !important;
+}
+@media(max-width:700px) {
+  .social-area {
+    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+    gap:16px 8px !important;
+    width:calc(100% - 28px) !important;
+    max-width:390px !important;
+    padding:25px 0 !important;
+  }
+  .social-area .social-icon {
+    width:42px !important;
+    height:42px !important;
+    min-width:42px !important;
+  }
+  .social-area .social-icon svg {
+    width:26px !important;
+    height:26px !important;
+    max-width:26px !important;
+    max-height:26px !important;
+  }
+}
+</style>
+
 </body>
 </html>
