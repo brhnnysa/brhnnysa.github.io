@@ -108,26 +108,58 @@ def main() -> None:
         print(f"YouTube page diagnostics: HTTP {videos_page_response.status_code}, {len(videos_page_response.text)} characters, markers={markers}")
         raise RuntimeError("Could not identify regular uploads on the channel Videos tab; leaving the existing feed unchanged.")
 
+    # YouTube's legacy channel RSS endpoint can return HTTP 404 even when
+    # the channel Videos tab is available. Try RSS first, then safely fall
+    # back to each regular-video page (the allow-list still excludes Shorts).
+    videos = []
     feed_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
     feed_response = requests.get(feed_url, headers=HEADERS, timeout=30)
-    feed_response.raise_for_status()
-    root = ET.fromstring(feed_response.content)
-
-    videos = []
-    for entry in root.findall(f"{ATOM}entry"):
-        video_id = (entry.findtext(f"{YT}videoId") or "").strip()
-        title = (entry.findtext(f"{ATOM}title") or "").strip()
-        published = (entry.findtext(f"{ATOM}published") or "").strip()
-        if not video_id or not title or video_id not in regular_video_ids:
-            continue
-        videos.append({
-            "id": video_id,
-            "title": title,
-            "artist": "BRHN NYSA",
-            "publishedAt": published,
-            "artwork": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
-            "url": f"https://www.youtube.com/watch?v={video_id}",
-        })
+    if feed_response.ok:
+        root = ET.fromstring(feed_response.content)
+        for entry in root.findall(f"{ATOM}entry"):
+            video_id = (entry.findtext(f"{YT}videoId") or "").strip()
+            title = (entry.findtext(f"{ATOM}title") or "").strip()
+            published = (entry.findtext(f"{ATOM}published") or "").strip()
+            if not video_id or not title or video_id not in regular_video_ids:
+                continue
+            videos.append({
+                "id": video_id, "title": title, "artist": "BRHN NYSA",
+                "publishedAt": published,
+                "artwork": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+                "url": f"https://www.youtube.com/watch?v={video_id}",
+            })
+    else:
+        print(f"YouTube RSS returned HTTP {feed_response.status_code}; using regular-video page fallback.")
+    if not videos:
+        for video_id in sorted(regular_video_ids):
+            watch_url = f"https://www.youtube.com/watch?v={video_id}"
+            try:
+                page_response = requests.get(watch_url, headers=HEADERS, timeout=20)
+                page_response.raise_for_status()
+                page = page_response.text
+                title_response = requests.get(
+                    "https://www.youtube.com/oembed",
+                    params={"url": watch_url, "format": "json"},
+                    headers=HEADERS, timeout=20,
+                )
+                title_response.raise_for_status()
+                title = str(title_response.json().get("title") or "").strip()
+                date_match = re.search(r'<meta[^>]+itemprop=["\\']datePublished["\\'][^>]+content=["\\']([^"\\']+)', page, re.I)
+                if not date_match:
+                    date_match = re.search(r'"publishDate"\\s*:\\s*"([^"]+)"', page)
+                published = date_match.group(1) if date_match else ""
+                if title:
+                    videos.append({
+                        "id": video_id, "title": title, "artist": "BRHN NYSA",
+                        "publishedAt": published,
+                        "artwork": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
+                        "url": watch_url,
+                    })
+            except requests.RequestException as exc:
+                print(f"Could not fetch video {video_id}: {exc}")
+    if not videos:
+        raise RuntimeError("Could not retrieve regular YouTube video details; keeping the existing feed unchanged.")
+    videos.sort(key=lambda item: item.get("publishedAt") or "", reverse=True)
 
     payload = {
         "artist": "BRHN NYSA",
