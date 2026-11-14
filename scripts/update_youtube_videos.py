@@ -45,6 +45,7 @@ def main() -> None:
     # YouTube now uses lockupViewModel for many channel video cards instead
     # of the older videoRenderer structure. Extract each JSON object safely.
     regular_video_ids: set[str] = set()
+    regular_video_order: list[str] = []
     content_types: set[str] = set()
 
     def extract_json_object(source: str, opening_brace: int) -> str | None:
@@ -85,7 +86,11 @@ def main() -> None:
         if content_type:
             content_types.add(content_type)
         if isinstance(video_id, str) and re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) and "VIDEO" in content_type.upper():
-            regular_video_ids.add(video_id)
+            if video_id not in regular_video_ids:
+                if video_id not in regular_video_ids:
+                regular_video_ids.add(video_id)
+                regular_video_order.append(video_id)
+                regular_video_order.append(video_id)
 
     # Keep compatibility with older YouTube pages that still expose videoRenderer.
     renderer_pattern = re.compile(r'"videoRenderer"\s*:\s*\{')
@@ -131,7 +136,7 @@ def main() -> None:
     else:
         print(f"YouTube RSS returned HTTP {feed_response.status_code}; using regular-video page fallback.")
     if not videos:
-        for video_id in sorted(regular_video_ids):
+        for video_id in regular_video_order:
             watch_url = f"https://www.youtube.com/watch?v={video_id}"
             try:
                 page_response = requests.get(watch_url, headers=HEADERS, timeout=20)
@@ -159,7 +164,10 @@ def main() -> None:
                 print(f"Could not fetch video {video_id}: {exc}")
     if not videos:
         raise RuntimeError("Could not retrieve regular YouTube video details; keeping the existing feed unchanged.")
-    videos.sort(key=lambda item: item.get("publishedAt") or "", reverse=True)
+    if all(not item.get("publishedAt") for item in videos):
+        print("Video publish timestamps were unavailable; preserving newest-first channel Videos tab order.")
+    else:
+        videos.sort(key=lambda item: item.get("publishedAt") or "", reverse=True)
 
     payload = {
         "artist": "BRHN NYSA",
