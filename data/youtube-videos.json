@@ -2,23 +2,15 @@
   "artist": "BRHN NYSA",
   "channel": "https://www.youtube.com/@brhnnysa",
   "source": "YouTube public channel RSS feed",
-  "updatedAt": "2026-11-14T22:23:23.289210+00:00",
+  "updatedAt": "2026-11-14T22:45:16.288330+00:00",
   "videos": [
     {
-      "id": "YfmV3IGrJcc",
-      "title": "Right Now - Brhn Nysa",
+      "id": "GEZyJIzUrkQ",
+      "title": "Brhn Nysa - Still Us (Official Music Video)",
       "artist": "BRHN NYSA",
-      "publishedAt": "2026-11-09T01:34:00+00:00",
-      "artwork": "https://i.ytimg.com/vi/YfmV3IGrJcc/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=YfmV3IGrJcc"
-    },
-    {
-      "id": "tPTgSzrOve8",
-      "title": "No Time (cover) Ft Khaid",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-11-05T23:42:27+00:00",
-      "artwork": "https://i.ytimg.com/vi/tPTgSzrOve8/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=tPTgSzrOve8"
+      "publishedAt": "2026-11-14T22:30:11+00:00",
+      "artwork": "https://i.ytimg.com/vi/GEZyJIzUrkQ/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=GEZyJIzUrkQ"
     },
     {
       "id": "465VfZYWfVw",
@@ -35,30 +27,6 @@
       "publishedAt": "2026-10-25T23:15:25+00:00",
       "artwork": "https://i.ytimg.com/vi/a8BxcF1fSis/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=a8BxcF1fSis"
-    },
-    {
-      "id": "2foATKDtq_k",
-      "title": "Brhn Nysa - Right Now",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-25T16:59:21+00:00",
-      "artwork": "https://i.ytimg.com/vi/2foATKDtq_k/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=2foATKDtq_k"
-    },
-    {
-      "id": "ozniJv2eA64",
-      "title": "2024 was really hot 🥵 #brhnnysa #music",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-23T01:22:55+00:00",
-      "artwork": "https://i.ytimg.com/vi/ozniJv2eA64/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=ozniJv2eA64"
-    },
-    {
-      "id": "DWyX7Nb96SM",
-      "title": "My Darling - Brhn Nysa out ²6th",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-23T01:16:30+00:00",
-      "artwork": "https://i.ytimg.com/vi/DWyX7Nb96SM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=DWyX7Nb96SM"
     },
     {
       "id": "jYTbbGbHQYs",
@@ -83,46 +51,6 @@
       "publishedAt": "2026-10-21T02:45:05+00:00",
       "artwork": "https://i.ytimg.com/vi/L1t48VnwiWQ/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=L1t48VnwiWQ"
-    },
-    {
-      "id": "EDU3aIUEk14",
-      "title": "my kind brhn nysa",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-19T17:33:24+00:00",
-      "artwork": "https://i.ytimg.com/vi/EDU3aIUEk14/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=EDU3aIUEk14"
-    },
-    {
-      "id": "fnyGhsMUWmI",
-      "title": "My Kind by Brhn Nysa Trending Audiomack #brhn #brhnnysa",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-14T22:00:33+00:00",
-      "artwork": "https://i.ytimg.com/vi/fnyGhsMUWmI/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=fnyGhsMUWmI"
-    },
-    {
-      "id": "E32f9vVB7ik",
-      "title": "Right now now playing on Audiomac 🔥 #newmusic @DONJAZZY @MavinRecords",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-03T20:05:41+00:00",
-      "artwork": "https://i.ytimg.com/vi/E32f9vVB7ik/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=E32f9vVB7ik"
-    },
-    {
-      "id": "Sd2YcXBwyIE",
-      "title": "Right now now playing",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-10-03T09:29:01+00:00",
-      "artwork": "https://i.ytimg.com/vi/Sd2YcXBwyIE/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=Sd2YcXBwyIE"
-    },
-    {
-      "id": "nbYWVn5-wVk",
-      "title": "Brhn Nysa-My Kind' Unreleased🔥30th!",
-      "artist": "BRHN NYSA",
-      "publishedAt": "2026-09-28T23:02:48+00:00",
-      "artwork": "https://i.ytimg.com/vi/nbYWVn5-wVk/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=nbYWVn5-wVk"
     }
   ]
 }
