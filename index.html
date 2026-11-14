@@ -318,7 +318,7 @@ img, iframe, video { max-width:100%; }
   </div>
 </div>
 <script>
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   const overlay = document.getElementById('intro-overlay');
   const percent = document.getElementById('intro-percent');
   const message = document.getElementById('intro-message');
@@ -351,7 +351,7 @@ img, iframe, video { max-width:100%; }
       }
     }, step.delay);
   });
-})();
+});
 </script>
 <!-- Main Black Theme Site Container -->
 <div id="main-site">
