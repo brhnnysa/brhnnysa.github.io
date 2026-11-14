@@ -295,7 +295,16 @@ img, iframe, video { max-width:100%; }
   #main-site > header { flex-direction:column; gap:12px; text-align:center; }
   #main-site > main { margin-top:32px !important; margin-bottom:32px !important; }
   .release-card { flex:0 0 78% !important; }
-  .video-card { flex:0 0 88% !important; }
+  .video-card {
+    flex: 0 0 96% !important;
+    width: 96% !important;
+  }
+  .video-thumb {
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+  }
+  .video-info h3 { font-size: 1.12rem !important; }
+  .video-info p { font-size: .95rem !important; }
   .release-arrow, .video-arrow { display:none !important; }
   .release-heading, .video-heading { font-size:clamp(1.25rem,5vw,1.65rem) !important; letter-spacing:3px !important; }
   .event-card { padding:20px !important; }
@@ -799,12 +808,12 @@ Stream & download anywhere.    </p>
 }
 @media screen and (max-width: 600px) {
   .snapwidget-container {
-    height: 300px;
+    height: 390px;
     margin-bottom: 24px;
   }
   .snapwidget-container iframe {
     width: 100% !important;
-    height: 300px !important;
+    height: 390px !important;
     transform: none;
   }
 }
