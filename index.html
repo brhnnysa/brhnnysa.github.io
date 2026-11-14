@@ -322,7 +322,7 @@ img, iframe, video { max-width:100%; }
   <div class="intro-content">
     <div class="intro-brand">BRHN NYSA</div>
     <div class="intro-percent" id="intro-percent">10%</div>
-    <p class="intro-message" id="intro-message">Please wait, slowly no rush eheh.</p>
+    <p class="intro-message" id="intro-message">Please wait...</p>
     <div class="intro-progress" aria-hidden="true"><div class="intro-progress-fill" id="intro-progress-fill"></div></div>
   </div>
 </div>
@@ -1711,7 +1711,260 @@ loadEvents();
 // Check for newly published events every 5 minutes.
 setInterval(loadEvents, 5 * 60 * 1000);
 
+
+<!-- BRHN NYSA AUDIOMACK TOP PLAYS -->
+<section id="brhn-top-plays" class="brhn-top-plays" aria-labelledby="brhn-top-title">
+  <div class="brhn-top-heading">
+    <div>
+      <p class="brhn-releases-kicker">LIVE AUDIOMACK STATS</p>
+      <h2 id="brhn-top-title">Most Played Right Now</h2>
+      <p>Your most-played tracks, ranked by recent Audiomack activity.</p>
+    </div>
+    <span class="brhn-top-period">LAST 60 MINUTES</span>
+  </div>
+  <div id="brhn-top-summary" class="brhn-top-summary">Connecting Audiomack stats…</div>
+  <div id="brhn-top-grid" class="brhn-top-grid" aria-live="polite">
+    <p class="brhn-release-status">Top plays will appear here when Audiomack API access is connected.</p>
+  </div>
+  <p class="brhn-top-note">Play counts show activity during the previous 60 minutes, not lifetime streams.</p>
+</section>
+<style>
+.brhn-top-plays{max-width:1120px;margin:38px auto;padding:26px 18px;color:#f5f5f5;background:linear-gradient(145deg,#17130e,#0b0d12);border:1px solid rgba(214,181,109,.28);border-radius:18px}
+.brhn-top-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:18px}
+.brhn-top-heading h2{margin:0;color:#fff;font-size:clamp(24px,4vw,32px);letter-spacing:-.035em}
+.brhn-top-heading p:not(.brhn-releases-kicker){margin:6px 0 0;color:#aab2c0;font-size:13px}
+.brhn-top-period{padding:7px 10px;border:1px solid #806c43;border-radius:20px;color:#e7c77e;font-size:10px;font-weight:900;letter-spacing:.12em;white-space:nowrap}
+.brhn-top-summary{margin:0 0 14px;color:#e7c77e;font-size:13px;font-weight:700}
+.brhn-top-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.brhn-top-card{min-width:0;overflow:hidden;border:1px solid #34302a;border-radius:13px;background:#171a20}
+.brhn-top-cover{position:relative;display:grid;place-items:center;aspect-ratio:1;background:radial-gradient(circle at 70% 25%,#d6b56d,#653c4c 42%,#171b2a 80%)}
+.brhn-top-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.brhn-top-rank{position:absolute;top:8px;left:8px;z-index:1;padding:5px 8px;border-radius:7px;background:#090b10e8;color:#e7c77e;font-size:12px;font-weight:900}
+.brhn-top-info{padding:11px}
+.brhn-top-track{margin:0 0 5px;color:#fff;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brhn-top-plays-count{margin:0;color:#e7c77e;font-size:12px;font-weight:800}
+.brhn-top-open{display:inline-block;margin-top:9px;color:#aab2c0;font-size:11px;text-decoration:none}
+.brhn-top-open:hover{color:#e7c77e}
+.brhn-top-note{margin:14px 0 0;color:#8993a3;font-size:11px}
+@media(max-width:850px){.brhn-top-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:520px){.brhn-top-plays{margin:25px 10px;padding:20px 12px}.brhn-top-heading{align-items:start;flex-direction:column}.brhn-top-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script>
+(function(){
+  const grid=document.getElementById('brhn-top-grid');
+  const summary=document.getElementById('brhn-top-summary');
+  const fmt=n=>Number(n||0).toLocaleString();
+  fetch('./data/top-plays.json?updated='+Date.now(),{cache:'no-store'})
+    .then(r=>{if(!r.ok)throw new Error('Top plays feed not ready');return r.json();})
+    .then(data=>{
+      const tracks=Array.isArray(data.topPlays)?data.topPlays:[];
+      if(data.updatedAt){
+        const d=new Date(data.updatedAt);
+        summary.textContent='Total plays in the last hour: '+fmt(data.totalPlaysLast60Minutes)+' • Updated '+(Number.isNaN(d.getTime())?'recently':d.toLocaleTimeString());
+      }
+      grid.replaceChildren();
+      if(!tracks.length){
+        const p=document.createElement('p');p.className='brhn-release-status';p.textContent='Top plays are waiting for Audiomack API credentials. Add the two secure repository secrets to activate live rankings.';grid.appendChild(p);return;
+      }
+      tracks.forEach((track,index)=>{
+        const card=document.createElement('article');card.className='brhn-top-card';
+        const cover=document.createElement('div');cover.className='brhn-top-cover';
+        const rank=document.createElement('span');rank.className='brhn-top-rank';rank.textContent='#'+(index+1);cover.appendChild(rank);
+        if(track.artwork){const img=document.createElement('img');img.src=track.artwork;img.alt=(track.title||'Track')+' cover artwork';img.loading='lazy';cover.appendChild(img);}
+        const info=document.createElement('div');info.className='brhn-top-info';
+        const title=document.createElement('h3');title.className='brhn-top-track';title.textContent=track.title||'Untitled';
+        const plays=document.createElement('p');plays.className='brhn-top-plays-count';plays.textContent=fmt(track.plays)+' plays';
+        info.append(title,plays);
+        if(track.url){const a=document.createElement('a');a.className='brhn-top-open';a.href=track.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Listen on Audiomack ↗';info.appendChild(a);}
+        card.append(cover,info);grid.appendChild(card);
+      });
+    })
+    .catch(()=>{summary.textContent='Audiomack stats are not connected yet.';});
+})();
 </script>
+<!-- END BRHN NYSA AUDIOMACK TOP PLAYS -->
+
+
+
+<!-- BOTTOM NEWSLETTER AND BOOKING BUTTONS -->
+<div class="bottom-actions">
+    <button type="button" onclick="openPopup('newsletter-modal')">
+        Sign Up for a Newsletter
+    </button>
+
+    <button type="button" onclick="openPopup('booking-modal')">
+        Booking
+    </button>
+</div>
+
+<!-- NEWSLETTER POPUP -->
+<div id="newsletter-modal" class="bottom-popup">
+    <div class="popup-box">
+        <button class="popup-close" onclick="closePopup('newsletter-modal')" type="button">&times;</button>
+
+        <h2>NEWSLETTER SIGN UP</h2>
+        <p>Sign up to receive updates, music news and announcements from Brhn Nysa.</p>
+
+        <form action="https://formspree.io/f/mgakokab" method="POST">
+            <input type="email" name="email" placeholder="Your Email Address" required>
+            <button type="submit" class="popup-submit">Sign Up</button>
+        </form>
+    </div>
+</div>
+
+<!-- BOOKING POPUP -->
+<div id="booking-modal" class="bottom-popup">
+    <div class="popup-box">
+        <button class="popup-close" onclick="closePopup('booking-modal')" type="button">&times;</button>
+
+        <h2>BOOKING ENQUIRY</h2>
+        <p>For bookings, appearances and enquiries, please fill out the form below.</p>
+
+        <form action="https://formspree.io/f/xjywgwwg" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email Address" required>
+            <input type="text" name="subject" placeholder="Subject" required>
+            <textarea name="message" placeholder="Write your message here..." rows="5" required></textarea>
+            <button type="submit" class="popup-submit">Send Enquiry</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.bottom-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 22px 12px 30px;
+}
+
+.bottom-actions button {
+    background: transparent;
+    border: 1px solid #d6b56d;
+    color: #d6b56d;
+    padding: 9px 19px;
+    border-radius: 25px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.bottom-actions button:hover {
+    background: #d6b56d;
+    color: #000;
+}
+
+.bottom-popup {
+    display: none !important;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,.85);
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+    overflow-y: auto;
+}
+
+.bottom-popup.is-open {
+    display: flex !important;
+}
+
+.popup-box {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #111;
+    color: #fff;
+    border: 1px solid #d6b56d;
+    border-radius: 10px;
+    padding: 30px 22px;
+    text-align: center;
+}
+
+.popup-box h2 {
+    color: #d6b56d;
+    font-size: 20px;
+    margin: 8px 0 14px;
+}
+
+.popup-box p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.popup-close {
+    position: absolute;
+    top: 8px;
+    right: 13px;
+    border: none;
+    background: none;
+    color: #d6b56d;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.popup-box input,
+.popup-box textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 13px;
+    padding: 12px;
+    background: #1c1c1c;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.popup-submit {
+    background: #d6b56d;
+    color: #000;
+    border: none;
+    border-radius: 25px;
+    padding: 11px 24px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+@media(max-width:480px) {
+    .popup-box {
+        padding: 28px 17px;
+    }
+}
+</style>
+
+<script>
+function openPopup(id) {
+    document.getElementById(id).classList.add('is-open');
+}
+
+function closePopup(id) {
+    document.getElementById(id).classList.remove('is-open');
+}
+
+document.querySelectorAll('.bottom-popup').forEach(function(popup) {
+    popup.addEventListener('click', function(event) {
+        if (event.target === popup) {
+            popup.classList.remove('is-open');
+        }
+    });
+});
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.bottom-popup').forEach(function(popup) {
+            popup.classList.remove('is-open');
+        });
+    }
+});
+</script>
+    </script>
 <section aria-label="Social media and music platforms" class="social-area">
 <div class="social-links-container">
 <!-- X/Twitter Icon Link -->
@@ -2022,264 +2275,10 @@ setInterval(loadEvents, 5 * 60 * 1000);
 </svg>
 </a>
 </section>
-
-<!-- BRHN NYSA AUDIOMACK TOP PLAYS -->
-<section id="brhn-top-plays" class="brhn-top-plays" aria-labelledby="brhn-top-title">
-  <div class="brhn-top-heading">
-    <div>
-      <p class="brhn-releases-kicker">LIVE AUDIOMACK STATS</p>
-      <h2 id="brhn-top-title">Most Played Right Now</h2>
-      <p>Your most-played tracks, ranked by recent Audiomack activity.</p>
-    </div>
-    <span class="brhn-top-period">LAST 60 MINUTES</span>
-  </div>
-  <div id="brhn-top-summary" class="brhn-top-summary">Connecting Audiomack stats…</div>
-  <div id="brhn-top-grid" class="brhn-top-grid" aria-live="polite">
-    <p class="brhn-release-status">Top plays will appear here when Audiomack API access is connected.</p>
-  </div>
-  <p class="brhn-top-note">Play counts show activity during the previous 60 minutes, not lifetime streams.</p>
-</section>
-<style>
-.brhn-top-plays{max-width:1120px;margin:38px auto;padding:26px 18px;color:#f5f5f5;background:linear-gradient(145deg,#17130e,#0b0d12);border:1px solid rgba(214,181,109,.28);border-radius:18px}
-.brhn-top-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:18px}
-.brhn-top-heading h2{margin:0;color:#fff;font-size:clamp(24px,4vw,32px);letter-spacing:-.035em}
-.brhn-top-heading p:not(.brhn-releases-kicker){margin:6px 0 0;color:#aab2c0;font-size:13px}
-.brhn-top-period{padding:7px 10px;border:1px solid #806c43;border-radius:20px;color:#e7c77e;font-size:10px;font-weight:900;letter-spacing:.12em;white-space:nowrap}
-.brhn-top-summary{margin:0 0 14px;color:#e7c77e;font-size:13px;font-weight:700}
-.brhn-top-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-.brhn-top-card{min-width:0;overflow:hidden;border:1px solid #34302a;border-radius:13px;background:#171a20}
-.brhn-top-cover{position:relative;display:grid;place-items:center;aspect-ratio:1;background:radial-gradient(circle at 70% 25%,#d6b56d,#653c4c 42%,#171b2a 80%)}
-.brhn-top-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.brhn-top-rank{position:absolute;top:8px;left:8px;z-index:1;padding:5px 8px;border-radius:7px;background:#090b10e8;color:#e7c77e;font-size:12px;font-weight:900}
-.brhn-top-info{padding:11px}
-.brhn-top-track{margin:0 0 5px;color:#fff;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brhn-top-plays-count{margin:0;color:#e7c77e;font-size:12px;font-weight:800}
-.brhn-top-open{display:inline-block;margin-top:9px;color:#aab2c0;font-size:11px;text-decoration:none}
-.brhn-top-open:hover{color:#e7c77e}
-.brhn-top-note{margin:14px 0 0;color:#8993a3;font-size:11px}
-@media(max-width:850px){.brhn-top-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:520px){.brhn-top-plays{margin:25px 10px;padding:20px 12px}.brhn-top-heading{align-items:start;flex-direction:column}.brhn-top-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style>
-<script>
-(function(){
-  const grid=document.getElementById('brhn-top-grid');
-  const summary=document.getElementById('brhn-top-summary');
-  const fmt=n=>Number(n||0).toLocaleString();
-  fetch('./data/top-plays.json?updated='+Date.now(),{cache:'no-store'})
-    .then(r=>{if(!r.ok)throw new Error('Top plays feed not ready');return r.json();})
-    .then(data=>{
-      const tracks=Array.isArray(data.topPlays)?data.topPlays:[];
-      if(data.updatedAt){
-        const d=new Date(data.updatedAt);
-        summary.textContent='Total plays in the last hour: '+fmt(data.totalPlaysLast60Minutes)+' • Updated '+(Number.isNaN(d.getTime())?'recently':d.toLocaleTimeString());
-      }
-      grid.replaceChildren();
-      if(!tracks.length){
-        const p=document.createElement('p');p.className='brhn-release-status';p.textContent='Top plays are waiting for Audiomack API credentials. Add the two secure repository secrets to activate live rankings.';grid.appendChild(p);return;
-      }
-      tracks.forEach((track,index)=>{
-        const card=document.createElement('article');card.className='brhn-top-card';
-        const cover=document.createElement('div');cover.className='brhn-top-cover';
-        const rank=document.createElement('span');rank.className='brhn-top-rank';rank.textContent='#'+(index+1);cover.appendChild(rank);
-        if(track.artwork){const img=document.createElement('img');img.src=track.artwork;img.alt=(track.title||'Track')+' cover artwork';img.loading='lazy';cover.appendChild(img);}
-        const info=document.createElement('div');info.className='brhn-top-info';
-        const title=document.createElement('h3');title.className='brhn-top-track';title.textContent=track.title||'Untitled';
-        const plays=document.createElement('p');plays.className='brhn-top-plays-count';plays.textContent=fmt(track.plays)+' plays';
-        info.append(title,plays);
-        if(track.url){const a=document.createElement('a');a.className='brhn-top-open';a.href=track.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Listen on Audiomack ↗';info.appendChild(a);}
-        card.append(cover,info);grid.appendChild(card);
-      });
-    })
-    .catch(()=>{summary.textContent='Audiomack stats are not connected yet.';});
-})();
-</script>
-<!-- END BRHN NYSA AUDIOMACK TOP PLAYS -->
-
-
-
-<!-- BOTTOM NEWSLETTER AND BOOKING BUTTONS -->
-<div class="bottom-actions">
-    <button type="button" onclick="openPopup('newsletter-modal')">
-        Sign Up for a Newsletter
-    </button>
-
-    <button type="button" onclick="openPopup('booking-modal')">
-        Booking
-    </button>
-</div>
-
-<!-- NEWSLETTER POPUP -->
-<div id="newsletter-modal" class="bottom-popup">
-    <div class="popup-box">
-        <button class="popup-close" onclick="closePopup('newsletter-modal')" type="button">&times;</button>
-
-        <h2>NEWSLETTER SIGN UP</h2>
-        <p>Sign up to receive updates, music news and announcements from Brhn Nysa.</p>
-
-        <form action="https://formspree.io/f/mgakokab" method="POST">
-            <input type="email" name="email" placeholder="Your Email Address" required>
-            <button type="submit" class="popup-submit">Sign Up</button>
-        </form>
-    </div>
-</div>
-
-<!-- BOOKING POPUP -->
-<div id="booking-modal" class="bottom-popup">
-    <div class="popup-box">
-        <button class="popup-close" onclick="closePopup('booking-modal')" type="button">&times;</button>
-
-        <h2>BOOKING ENQUIRY</h2>
-        <p>For bookings, appearances and enquiries, please fill out the form below.</p>
-
-        <form action="https://formspree.io/f/xjywgwwg" method="POST">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email Address" required>
-            <input type="text" name="subject" placeholder="Subject" required>
-            <textarea name="message" placeholder="Write your message here..." rows="5" required></textarea>
-            <button type="submit" class="popup-submit">Send Enquiry</button>
-        </form>
-    </div>
-</div>
-
-<style>
-.bottom-actions {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 22px 12px 30px;
-}
-
-.bottom-actions button {
-    background: transparent;
-    border: 1px solid #d6b56d;
-    color: #d6b56d;
-    padding: 9px 19px;
-    border-radius: 25px;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.bottom-actions button:hover {
-    background: #d6b56d;
-    color: #000;
-}
-
-.bottom-popup {
-    display: none !important;
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0,0,0,.85);
-    justify-content: center;
-    align-items: center;
-    padding: 18px;
-    overflow-y: auto;
-}
-
-.bottom-popup.is-open {
-    display: flex !important;
-}
-
-.popup-box {
-    position: relative;
-    width: 100%;
-    max-width: 460px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #111;
-    color: #fff;
-    border: 1px solid #d6b56d;
-    border-radius: 10px;
-    padding: 30px 22px;
-    text-align: center;
-}
-
-.popup-box h2 {
-    color: #d6b56d;
-    font-size: 20px;
-    margin: 8px 0 14px;
-}
-
-.popup-box p {
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 18px;
-}
-
-.popup-close {
-    position: absolute;
-    top: 8px;
-    right: 13px;
-    border: none;
-    background: none;
-    color: #d6b56d;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-.popup-box input,
-.popup-box textarea {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 13px;
-    padding: 12px;
-    background: #1c1c1c;
-    border: 1px solid #555;
-    border-radius: 5px;
-    color: #fff;
-    font-size: 14px;
-    font-family: inherit;
-}
-
-.popup-submit {
-    background: #d6b56d;
-    color: #000;
-    border: none;
-    border-radius: 25px;
-    padding: 11px 24px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-@media(max-width:480px) {
-    .popup-box {
-        padding: 28px 17px;
-    }
-}
-</style>
-
-<script>
-function openPopup(id) {
-    document.getElementById(id).classList.add('is-open');
-}
-
-function closePopup(id) {
-    document.getElementById(id).classList.remove('is-open');
-}
-
-document.querySelectorAll('.bottom-popup').forEach(function(popup) {
-    popup.addEventListener('click', function(event) {
-        if (event.target === popup) {
-            popup.classList.remove('is-open');
-        }
-    });
-});
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        document.querySelectorAll('.bottom-popup').forEach(function(popup) {
-            popup.classList.remove('is-open');
-        });
-    }
-});
-</script>
 <footer>
     <p>© 2026 Brhn Nysa. All Rights Reserved.</p>
 </footer>
 
 </div>
-
 </body>
 </html>
