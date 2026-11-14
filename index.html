@@ -708,11 +708,11 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 
     <style id="brhn-artist-picks-style">
-      .brhn-artist-picks-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;max-width:1100px;margin:28px auto 34px}
-      .brhn-artist-pick-card{min-width:0;overflow:hidden;border:1px solid #b8944e;border-radius:12px;background:#0b0b0b;box-shadow:0 8px 24px #0005}
+      .brhn-artist-picks-grid{display:flex;flex-wrap:nowrap;gap:16px;max-width:1100px;margin:28px auto 34px;padding:4px 2px 16px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#80612d #171717}
+      .brhn-artist-pick-card{flex:0 0 calc((100% - 64px)/5);min-width:190px;overflow:hidden;scroll-snap-align:start;border:1px solid #b8944e;border-radius:12px;background:#0b0b0b;box-shadow:0 8px 24px #0005}
       .brhn-artist-pick-card h3{margin:0;padding:13px 15px;color:#d6b56d;font-size:14px;letter-spacing:1px;text-align:center}
       .brhn-artist-pick-card iframe{display:block;width:100%;border:0;background:#080808}
-      @media(max-width:700px){.brhn-artist-picks-grid{grid-template-columns:minmax(0,1fr);gap:16px;margin:20px auto 28px}.brhn-artist-pick-card iframe{max-height:600px}}
+      @media(max-width:700px){.brhn-artist-picks-grid{gap:13px;margin:20px 14px 28px}.brhn-artist-pick-card{flex:0 0 82%;min-width:0}.brhn-artist-pick-card iframe{max-height:600px}}
     </style>
     <div id="brhn-artist-picks-grid" class="brhn-artist-picks-grid" aria-live="polite">
       <p class="brhn-release-status">Loading Artist Picks…</p>
