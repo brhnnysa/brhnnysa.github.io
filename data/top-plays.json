@@ -1,0 +1,9 @@
+{
+  "artist": "BRHN NYSA",
+  "period": "last_60_minutes",
+  "updatedAt": null,
+  "totalPlaysLast60Minutes": 0,
+  "topPlays": [],
+  "source": "Audiomack artist metrics API",
+  "status": "awaiting_api_credentials"
+}
