@@ -1,0 +1,49 @@
+{
+  "artist": "BRHN NYSA",
+  "source": "Audiomack public artist profile",
+  "updatedAt": "2026-11-14T13:38:16.231Z",
+  "releases": [
+    {
+      "id": "still-us",
+      "title": "Still Us",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-09-11",
+      "artwork": "",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa/song/still-us",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "in-love",
+      "title": "In love",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-07-13",
+      "artwork": "",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa/song/in-love",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
+    {
+      "id": "my-last-apology",
+      "title": "My Last Apology",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-06-29",
+      "artwork": "",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa/song/my-last-apology",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    }
+  ]
+}
