@@ -121,7 +121,7 @@ def update_top_plays():
 
     api = "https://api.audiomack.com/v1"
     auth = OAuth1(consumer_key, client_secret=consumer_secret)
-    response = requests.get(f"{api}/artist/brhn-nysa", auth=auth, timeout=30)
+    response = requests.get(f"{api}/artist/brhnnysa", auth=auth, timeout=30)
     response.raise_for_status()
     artist = response.json().get("results", {})
     artist_id = artist.get("id")
