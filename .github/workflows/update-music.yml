@@ -25,10 +25,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install scraper dependency
-        run: python -m pip install requests
+        run: python -m pip install requests requests-oauthlib
 
       - name: Refresh public Audiomack releases
         run: python scripts/update_releases.py
+        env:
+          AUDIOMACK_CONSUMER_KEY: ${{ secrets.AUDIOMACK_CONSUMER_KEY }}
+          AUDIOMACK_CONSUMER_SECRET: ${{ secrets.AUDIOMACK_CONSUMER_SECRET }}
 
       - name: Commit feed when it changes
         run: |
