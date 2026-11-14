@@ -2396,5 +2396,110 @@ document.addEventListener('keydown', function(event) {
 }
 </style>
 
+
+<style id="brhn-youtube-card-boxes">
+/* Give every YouTube upload its own distinct release-style card */
+.video-section {
+  background:#080808 !important;
+  color:#d6b56d !important;
+  padding:55px 5% !important;
+  overflow:hidden;
+}
+.video-section .video-heading {
+  text-align:center;
+  color:#d6b56d;
+  font-size:28px;
+  letter-spacing:5px;
+  margin:0 0 35px;
+  font-weight:800;
+}
+.video-section .video-carousel {
+  position:relative;
+  max-width:1200px;
+  margin:0 auto;
+}
+.video-section .video-track {
+  display:flex;
+  gap:22px !important;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  padding:8px 2px 18px !important;
+}
+.video-section .video-track::-webkit-scrollbar { display:none; }
+.video-section .video-card {
+  flex:0 0 calc(33.333% - 15px) !important;
+  width:auto !important;
+  min-width:0 !important;
+  padding:12px !important;
+  scroll-snap-align:start;
+  background:linear-gradient(145deg,#151515,#0d0d0d) !important;
+  border:1px solid #8e713c !important;
+  border-radius:10px !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.28);
+  overflow:hidden;
+}
+.video-section .video-thumb {
+  width:100%;
+  aspect-ratio:16 / 9 !important;
+  height:auto;
+  border:1px solid #b8944e !important;
+  border-radius:7px !important;
+  overflow:hidden;
+  background:#000;
+}
+.video-section .video-thumb img,
+.video-section .video-thumb iframe {
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover;
+  border:0;
+}
+.video-section .video-info { padding:13px 3px 4px !important; }
+.video-section .video-info h3 {
+  color:#d6b56d;
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.4px;
+  line-height:1.45;
+  margin:0 0 6px;
+}
+.video-section .video-info p { color:#999; font-size:12px; margin:0; }
+@media(max-width:700px) {
+  .video-section {
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 !important;
+    padding:36px 5% 38px !important;
+  }
+  .video-section .video-heading {
+    font-size:23px;
+    letter-spacing:4px;
+    margin-bottom:22px;
+  }
+  .video-section .video-track {
+    gap:16px !important;
+    padding:5px 1px 16px !important;
+  }
+  .video-section .video-card {
+    flex:0 0 82% !important;
+    width:82% !important;
+    min-width:82% !important;
+    padding:10px !important;
+    border-radius:10px !important;
+  }
+  .video-section .video-thumb {
+    aspect-ratio:16 / 9 !important;
+    border-radius:6px !important;
+  }
+  .video-section .video-info { padding:11px 2px 3px !important; }
+  .video-section .video-info h3 { font-size:14px; }
+  .video-section .video-info p { font-size:11px; }
+  .video-section .video-arrow { display:none !important; }
+}
+</style>
+
 </body>
 </html>
