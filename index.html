@@ -845,7 +845,7 @@ Stream & download anywhere.    </p>
 <section class="brhn-latest-posts" aria-labelledby="brhn-latest-posts-title">
   <div class="brhn-post-divider" aria-hidden="true"></div>
   <h2 id="brhn-latest-posts-title">LATEST POSTS</h2>
-  <p class="brhn-social-posts-intro">Latest public posts from Instagram and Telegram</p>
+  <p class="brhn-social-posts-intro">Latest public posts from Instagram</p>
   <div class="brhn-social-posts-shell">
     <button type="button" class="brhn-social-post-arrow prev" id="brhn-social-post-prev" aria-label="Previous posts">‹</button>
     <div class="brhn-social-posts-track" id="brhn-social-post-track" aria-live="polite">
@@ -880,12 +880,10 @@ Stream & download anywhere.    </p>
   if (prev) prev.addEventListener('click', () => scroll(-1));
   if (next) next.addEventListener('click', () => scroll(1));
 
-  Promise.all([
-    fetch('./data/social-posts.json?updated=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : {posts: []}).catch(() => ({posts: []})),
-    fetch('./data/telegram-posts.json?updated=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : {posts: []}).catch(() => ({posts: []}))
-  ])
-    .then(([instagram, telegram]) => {
-      const posts = [...(Array.isArray(instagram.posts) ? instagram.posts : []), ...(Array.isArray(telegram.posts) ? telegram.posts : [])]
+  fetch('./data/social-posts.json?updated=' + Date.now(), {cache: 'no-store'})
+    .then(r => r.ok ? r.json() : {posts: []})
+    .then(instagram => {
+      const posts = Array.isArray(instagram.posts) ? instagram.posts : []
         .sort((a, b) => {
           const time = value => {
             if (!value) return 0;
@@ -897,8 +895,8 @@ Stream & download anywhere.    </p>
         }).slice(0, 5);
       if (!posts.length) throw new Error('No public posts are available yet');
       const cards = posts.map(post => {
-        const platform = post.platform || 'Instagram';
-        const fallback = platform === 'Telegram' ? 'https://t.me/brhnnysa' : 'https://www.instagram.com/heisbrhn/';
+        const platform = 'Instagram';
+        const fallback = 'https://www.instagram.com/heisbrhn/';
         const link = make('a', 'brhn-social-post-card');
         link.href = post.url || fallback;
         link.target = '_blank';
@@ -939,11 +937,11 @@ Stream & download anywhere.    </p>
         return link;
       });
       track.replaceChildren(...cards);
-      const times = [instagram.updated_at, telegram.updated_at].filter(Boolean).map(value => new Date(value)).filter(date => !Number.isNaN(date.getTime()));
+      const times = [instagram.updated_at].filter(Boolean).map(value => new Date(value)).filter(date => !Number.isNaN(date.getTime()));
       if (status) status.textContent = times.length ? 'Automatically refreshed · ' + new Date(Math.max(...times.map(date => date.getTime()))).toLocaleString() : 'Posts refresh automatically.';
     })
     .catch(() => {
-      track.replaceChildren(make('p', 'brhn-social-post-status', 'The latest public posts are temporarily unavailable. Please visit Instagram or Telegram to view them.'));
+      track.replaceChildren(make('p', 'brhn-social-post-status', 'The latest public Instagram posts are temporarily unavailable. Please visit Instagram to view them.'));
       if (status) status.textContent = 'The feed will try again on the next automatic refresh.';
     });
 })();
