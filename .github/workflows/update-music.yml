@@ -6,7 +6,7 @@ on:
       - '.github/workflows/update-music.yml'
       - 'scripts/update_releases.py'
   schedule:
-    - cron: "17 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
