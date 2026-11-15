@@ -2,8 +2,16 @@
   "artist": "Brhn Nysa",
   "channel": "https://www.youtube.com/@brhnnysa",
   "source": "YouTube public channel RSS feed",
-  "updatedAt": "2026-11-15T15:08:08.222048+00:00",
+  "updatedAt": "2026-11-15T15:44:51.708956+00:00",
   "videos": [
+    {
+      "id": "l8R17JN-_LA",
+      "title": "Biko' Sound The Alarm 🚨",
+      "artist": "Brhn Nysa",
+      "publishedAt": "2026-11-15T15:09:07+00:00",
+      "artwork": "https://i.ytimg.com/vi/l8R17JN-_LA/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=l8R17JN-_LA"
+    },
     {
       "id": "GEZyJIzUrkQ",
       "title": "Brhn Nysa - Still Us (Official Music Video)",
