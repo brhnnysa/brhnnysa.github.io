@@ -1671,7 +1671,7 @@ body {
     });
   }
 
-  function makeCard(event) {
+  function makeCard(event, eventPageUrl) {
     const date = new Date(event.datetime);
     if (Number.isNaN(date.getTime()) || date.getTime() <= Date.now()) return null;
 
@@ -1716,7 +1716,15 @@ body {
     ticket.rel = "noopener noreferrer";
     ticket.textContent = "GET TICKETS NOW";
 
-    body.append(title, details, countdownLabel, countdown, ticket);
+    if (eventPageUrl) {
+      const eventDetails = document.createElement("a");
+      eventDetails.className = "brhn-event-details-link";
+      eventDetails.href = eventPageUrl;
+      eventDetails.textContent = "VIEW EVENT DETAILS ↗";
+      body.append(title, details, countdownLabel, countdown, eventDetails, ticket);
+    } else {
+      body.append(title, details, countdownLabel, countdown, ticket);
+    }
     card.appendChild(body);
     return card;
   }
@@ -1809,10 +1817,21 @@ body {
         "@graph": eventSchema
       });
 
+      let eventPageById = new Map();
+      try {
+        const pageResponse = await fetch("data/events.json?refresh=" + Date.now(), { cache: "no-store" });
+        if (pageResponse.ok) {
+          const pageData = await pageResponse.json();
+          eventPageById = new Map((pageData.events || []).map(item => [String(item.id), item.url]));
+        }
+      } catch (pageError) {
+        console.warn("Brhn Nysa event detail pages are not ready yet:", pageError);
+      }
+
       const key = upcoming.map(event => [event.id, event.title, event.datetime].join("|")).join(";");
       if (key !== lastEventKey) {
         lastEventKey = key;
-        const cards = upcoming.map(makeCard).filter(Boolean);
+        const cards = upcoming.map(event => makeCard(event, eventPageById.get(String(event.id)))).filter(Boolean);
         if (cards.length) container.replaceChildren(...cards);
         else showMessage("No upcoming events are listed on Bandsintown right now. Add your next show to your Bandsintown artist page and it will appear here automatically.");
       }
@@ -2814,6 +2833,8 @@ document.addEventListener('keydown', function(event) {
 .brhn-event-timebox span { display:block; color:#999; font-size:.49rem; letter-spacing:.08em; margin-top:3px; }
 #events-container .brhn-event-ticket-button { display:flex; justify-content:center; align-items:center; gap:9px; width:100%; margin-top:auto; padding:13px 12px; border-radius:6px; background:#d6b56d; color:#111; font-size:.7rem; letter-spacing:.13em; font-weight:900; }
 #events-container .brhn-event-ticket-button:hover { background:#f4dfae; }
+#events-container .brhn-event-details-link { display:block; margin:0 0 12px; padding:10px 8px; border:1px solid rgba(214,181,109,.55); border-radius:6px; color:#e2bd72; text-align:center; text-decoration:none; font-size:.64rem; font-weight:800; letter-spacing:.12em; }
+#events-container .brhn-event-details-link:hover { background:rgba(214,181,109,.1); }
 .brhn-event-source { color:#666; font-size:.57rem; margin-top:10px; text-align:center; }
 .events-section .artist-link { margin-top:15px; }
 @media(max-width:700px) {
