@@ -177,7 +177,7 @@ def event_page_metadata(event: dict) -> dict:
         # Bandsintown may embed the event payload in page scripts rather than JSON-LD.
         # Read only explicit end-date fields; never estimate an event duration.
         end_match = re.search(
-            r"""["'](?:endDate|endDateTime|end_datetime|datetime_end|end_date|event_end_datetime)["']\\s*:\\s*["']([^"']+)["']""",
+            r"""["'](?:endDate|endDateTime|end_datetime|datetime_end|end_date|event_end_datetime)["']\s*:\s*["']([^"']+)["']""",
             page,
             flags=re.IGNORECASE,
         )
@@ -494,14 +494,24 @@ def main() -> None:
         page_path.write_text(build_page(event, page_url), encoding="utf-8")
         new_pages.append(relative)
         sitemap_urls.add(page_url)
+        page_metadata = event_page_metadata(event)
+        end_value = first_value(event, (
+            "endDate", "end_date", "end_datetime", "datetime_end",
+            "endDateTime", "event_end_datetime", "ends_at"
+        )) or page_metadata.get("endDate")
+        if isinstance(end_value, dict):
+            end_value = end_value.get("@value") or end_value.get("dateTime")
         manifest_events.append({
             "id": text(event.get("id")),
             "title": display_title(event),
             "url": page_url,
             "bandsintown_url": text(event.get("url")),
             "datetime": text(event.get("datetime")),
+            "end_datetime": text(end_value),
+            "image": event_image_url(event, IMAGE_OVERRIDES, page_metadata),
             "venue": event.get("venue") if isinstance(event.get("venue"), dict) else {},
             "description": text(event.get("description")),
+            "lineup": event.get("lineup") if isinstance(event.get("lineup"), list) else [],
         })
 
     # Remove only pages previously created by this generator that are no longer upcoming.
