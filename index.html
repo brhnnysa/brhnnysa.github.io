@@ -1723,7 +1723,8 @@ body {
   const APP_ID = "84610745a9c36219ffda7dc902864730";
   const ARTIST_ID = "15666367";
   const EVENTS_URL = "data/events.json";
-  const TICKET_URL = "https://techmore.ng/event/brhnnysa/profile";
+  const TICKET_URL = "https://www.techmore.ng/event/brhnnysa/profile?utm_source=chatgpt.com";
+  const ARTIST_PROFILE_URL = "https://www.bandsintown.com/a/15666367-brhn-nysa?utm_source=chatgpt.com";
   const container = document.getElementById("events-container");
   let lastEventKey = "";
   let requestInProgress = false;
@@ -1818,14 +1819,14 @@ body {
 
     const ticket = document.createElement("a");
     ticket.className = "ticket-button brhn-event-ticket-button";
-    ticket.href = event.ticket_url || event.bandsintown_url || TICKET_URL;
+    ticket.href = TICKET_URL;
     ticket.target = "_blank";
     ticket.rel = "noopener noreferrer";
     ticket.textContent = "GET TICKETS";
 
     const eventDetails = document.createElement("a");
     eventDetails.className = "brhn-event-details-link";
-    eventDetails.href = (eventPage && eventPage.url) || event.url || event.bandsintown_url || "#";
+    eventDetails.href = ARTIST_PROFILE_URL;
     eventDetails.target = "_blank";
     eventDetails.rel = "noopener noreferrer";
     eventDetails.textContent = "VIEW DETAILS ↗";
