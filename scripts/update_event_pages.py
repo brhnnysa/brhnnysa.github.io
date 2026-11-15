@@ -327,9 +327,11 @@ def build_page(event: dict, page_url: str) -> str:
     if image_url:
         schema["image"] = [image_url]
 
-    # Show the full event date range when Bandsintown supplies a genuine end date.
-    # Keep the start time visible; do not infer or fabricate an end time.
+    # Display only dates and times explicitly supplied by Bandsintown.
+    # Never estimate an end time or event duration.
     parsed_end_for_display = parse_datetime(end_date) if end_date else None
+    if parsed_end_for_display and parsed_end_for_display.tzinfo is None and date and date.tzinfo:
+        parsed_end_for_display = parsed_end_for_display.replace(tzinfo=date.tzinfo)
     if date:
         if parsed_end_for_display and parsed_end_for_display.date() != date.date():
             if parsed_end_for_display.year == date.year:
@@ -344,8 +346,23 @@ def build_page(event: dict, page_url: str) -> str:
                 )
         else:
             date_range = date.strftime("%a, %b %d, %Y")
-        start_time = date.strftime("%H:%M %Z") if date.tzinfo else date.strftime("%H:%M")
-        display_date = f"{date_range} · {start_time}"
+
+        if parsed_end_for_display:
+            start_clock = date.strftime("%H:%M")
+            end_clock = parsed_end_for_display.strftime("%H:%M")
+            start_zone = date.strftime("%Z") if date.tzinfo else ""
+            end_zone = parsed_end_for_display.strftime("%Z") if parsed_end_for_display.tzinfo else ""
+            if start_zone == end_zone:
+                time_range = f"{start_clock}–{end_clock}"
+                if start_zone:
+                    time_range += f" {start_zone}"
+            else:
+                start_time = f"{start_clock} {start_zone}".strip()
+                end_time = f"{end_clock} {end_zone}".strip()
+                time_range = f"{start_time}–{end_time}"
+        else:
+            time_range = date.strftime("%H:%M %Z") if date.tzinfo else date.strftime("%H:%M")
+        display_date = f"{date_range} · {time_range}"
     else:
         display_date = date_value
     address_text = ", ".join(
