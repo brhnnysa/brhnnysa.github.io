@@ -43,7 +43,8 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- events data/events.json data/generated-event-pages.json sitemap.xml
+          git add -A -- data/events.json data/generated-event-pages.json sitemap.xml
+          if [ -d events ]; then git add -A -- events; fi
           git commit -m "chore: refresh Brhn Nysa event pages"
           git pull --rebase origin main
           git push
