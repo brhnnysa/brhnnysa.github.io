@@ -479,6 +479,15 @@ def main() -> None:
             upcoming.append((parsed, event))
     upcoming.sort(key=lambda item: item[0])
 
+    image_overrides = {}
+    if IMAGE_MAP_PATH.exists():
+        try:
+            image_overrides = json.loads(IMAGE_MAP_PATH.read_text(encoding="utf-8"))
+            if not isinstance(image_overrides, dict):
+                image_overrides = {}
+        except (OSError, json.JSONDecodeError):
+            image_overrides = {}
+
     old_state = json.loads(STATE_PATH.read_text(encoding="utf-8")) if STATE_PATH.exists() else {"pages": []}
     old_pages = set(old_state.get("pages", []))
     new_pages: list[str] = []
@@ -508,7 +517,7 @@ def main() -> None:
             "bandsintown_url": text(event.get("url")),
             "datetime": text(event.get("datetime")),
             "end_datetime": text(end_value),
-            "image": event_image_url(event, IMAGE_OVERRIDES, page_metadata),
+            "image": event_image_url(event, image_overrides, page_metadata),
             "venue": event.get("venue") if isinstance(event.get("venue"), dict) else {},
             "description": text(event.get("description")),
             "lineup": event.get("lineup") if isinstance(event.get("lineup"), list) else [],
