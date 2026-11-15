@@ -301,6 +301,29 @@ def build_page(event: dict, page_url: str) -> str:
             offer["availability"] = "https://schema.org/SoldOut"
         schema_offers.append(offer)
     ticket_url = schema_offers[0]["url"] if schema_offers else event_url
+
+    # Bandsintown event payloads may expose additional billed artists under
+    # lineup/artists/performers. Use only names actually present in the feed.
+    artist_names = []
+    for field in ("lineup", "artists", "performers"):
+        raw_artists = event.get(field)
+        if isinstance(raw_artists, list):
+            for artist in raw_artists:
+                name = text(artist.get("name")) if isinstance(artist, dict) else text(artist)
+                if name and name.casefold() not in {n.casefold() for n in artist_names}:
+                    artist_names.append(name)
+        elif isinstance(raw_artists, str) and raw_artists.strip():
+            for name in raw_artists.split(","):
+                name = name.strip()
+                if name and name.casefold() not in {n.casefold() for n in artist_names}:
+                    artist_names.append(name)
+    if "Brhn Nysa" not in artist_names:
+        artist_names.insert(0, "Brhn Nysa")
+    organizer_entities = [
+        {"@type": "Person", "name": name,
+         **({"@id": BASE_URL + "/#artist", "url": ARTIST_URL} if name.casefold() == "brhn nysa" else {})}
+        for name in artist_names
+    ]
     schema = {
         "@context": "https://schema.org",
         "@type": "MusicEvent",
@@ -308,16 +331,11 @@ def build_page(event: dict, page_url: str) -> str:
         "name": title,
         "url": page_url,
         "startDate": start_date,
-        "organizer": {
-            "@type": "Person",
-            "@id": BASE_URL + "/#artist",
-            "name": "Brhn Nysa",
-            "url": ARTIST_URL,
-        },
+        "organizer": organizer_entities,
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "location": location,
-        "performer": {"@type": "Person", "@id": BASE_URL + "/#artist", "name": "Brhn Nysa"},
+        "performer": organizer_entities,
         "description": description,
     }
     if end_date:
@@ -327,44 +345,22 @@ def build_page(event: dict, page_url: str) -> str:
     if image_url:
         schema["image"] = [image_url]
 
-    # Display only dates and times explicitly supplied by Bandsintown.
+    # Display source-provided start and end separately in the venue's local timezone.
     # Never estimate an end time or event duration.
     parsed_end_for_display = parse_datetime(end_date) if end_date else None
-    if parsed_end_for_display and parsed_end_for_display.tzinfo is None and date and date.tzinfo:
-        parsed_end_for_display = parsed_end_for_display.replace(tzinfo=date.tzinfo)
-    if date:
-        if parsed_end_for_display and parsed_end_for_display.date() != date.date():
-            if parsed_end_for_display.year == date.year:
-                date_range = (
-                    f"{date.strftime('%a, %b %d')} – "
-                    f"{parsed_end_for_display.strftime('%a, %b %d, %Y')}"
-                )
-            else:
-                date_range = (
-                    f"{date.strftime('%a, %b %d, %Y')} – "
-                    f"{parsed_end_for_display.strftime('%a, %b %d, %Y')}"
-                )
+    if parsed_end_for_display and date and date.tzinfo:
+        if parsed_end_for_display.tzinfo is None:
+            parsed_end_for_display = parsed_end_for_display.replace(tzinfo=date.tzinfo)
         else:
-            date_range = date.strftime("%a, %b %d, %Y")
-
-        if parsed_end_for_display:
-            start_clock = date.strftime("%H:%M")
-            end_clock = parsed_end_for_display.strftime("%H:%M")
-            start_zone = date.strftime("%Z") if date.tzinfo else ""
-            end_zone = parsed_end_for_display.strftime("%Z") if parsed_end_for_display.tzinfo else ""
-            if start_zone == end_zone:
-                time_range = f"{start_clock}–{end_clock}"
-                if start_zone:
-                    time_range += f" {start_zone}"
-            else:
-                start_time = f"{start_clock} {start_zone}".strip()
-                end_time = f"{end_clock} {end_zone}".strip()
-                time_range = f"{start_time}–{end_time}"
-        else:
-            time_range = date.strftime("%H:%M %Z") if date.tzinfo else date.strftime("%H:%M")
-        display_date = f"{date_range} · {time_range}"
-    else:
-        display_date = date_value
+            parsed_end_for_display = parsed_end_for_display.astimezone(date.tzinfo)
+    def format_event_datetime(value):
+        if not value:
+            return "Not provided by Bandsintown"
+        local_value = value.strftime("%a, %b %d, %Y · %H:%M")
+        zone = value.strftime("%Z") if value.tzinfo else ""
+        return f"{local_value} {zone}".strip()
+    display_start = format_event_datetime(date)
+    display_end = format_event_datetime(parsed_end_for_display)
     address_text = ", ".join(
         value for value in [
             address.get("streetAddress"), address.get("addressLocality"),
@@ -376,17 +372,24 @@ def build_page(event: dict, page_url: str) -> str:
     safe_title = html.escape(title)
     safe_description = html.escape(description)
     safe_location = html.escape(location_text or "Venue details to be announced")
-    safe_date = html.escape(display_date or "Date to be announced")
+    safe_start = html.escape(display_start)
+    safe_end = html.escape(display_end)
+    organizers_html = ", ".join(html.escape(name) for name in artist_names)
     image_html = (
-        f'<img class="event-image" src="{html.escape(image_url, quote=True)}" alt="{safe_title}" />'
+        f'<figure class="event-poster"><img class="event-image" src="{html.escape(image_url, quote=True)}" alt="{safe_title} poster" loading="lazy" /></figure>'
         if image_url else ""
     )
     schema_text = safe_json(schema)
+    details_html = (
+        f'<a class="action secondary" href="{html.escape(event_url, quote=True)}" target="_blank" rel="noopener noreferrer">VIEW DETAILS ↗</a>'
+        if event_url else ""
+    )
     ticket_html = (
-        f'<a class="ticket" href="{html.escape(ticket_url, quote=True)}" target="_blank" '
-        'rel="noopener noreferrer">TICKETS / EVENT INFO ↗</a>'
+        f'<a class="action primary" href="{html.escape(ticket_url, quote=True)}" target="_blank" rel="noopener noreferrer">GET TICKETS ↗</a>'
         if ticket_url else ""
     )
+    countdown_target = date.isoformat() if date else ""
+    safe_countdown_target = html.escape(countdown_target, quote=True)
 
     return f'''<!doctype html>
 <html lang="en">
@@ -410,22 +413,46 @@ main{{width:min(760px,calc(100% - 32px));margin:54px auto;padding:30px;backgroun
 h1{{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:16px 0;color:#fff}}
 .label{{color:#d6b56d;font-size:11px;font-weight:800;letter-spacing:.16em;margin-top:24px}}
 .value{{margin-top:4px;color:#ddd;overflow-wrap:anywhere}}
-.event-image{{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;border-radius:9px;margin:22px 0}}
-.ticket{{display:inline-block;margin-top:28px;padding:12px 18px;border-radius:6px;background:#d6b56d;color:#111;text-decoration:none;font-size:12px;font-weight:900;letter-spacing:.1em}}
+.event-poster{{margin:14px 0 20px;max-width:190px;padding:6px;border:1px solid #3b3325;border-radius:9px;background:#111}}
+.event-image{{display:block;width:100%;height:auto;max-height:125px;object-fit:contain;border-radius:5px;margin:0}}
+.action{{display:inline-block;margin:12px 8px 0 0;padding:11px 15px;border-radius:6px;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.08em}}
+.action.primary{{background:#d6b56d;color:#111}}.action.secondary{{border:1px solid #80683e;color:#e6d5b4}}
+.countdown{{margin-top:22px;padding:14px;border:1px solid #3b3325;border-radius:8px;background:#111;color:#d6b56d;font-weight:800}}
 .back{{display:block;margin-top:24px;color:#d6b56d;text-decoration:none;font-size:13px}}
-@media(max-width:600px){{main{{width:calc(100% - 20px);margin:18px auto;padding:18px}}.event-image{{max-height:240px;margin:16px 0}}h1{{font-size:clamp(25px,8vw,34px)}}}}\nfooter{{color:#777;text-align:center;padding:24px;font-size:12px}}
+@media(max-width:600px){{main{{width:calc(100% - 20px);margin:18px auto;padding:18px}}.event-poster{{max-width:150px}}.event-image{{max-height:100px}}h1{{font-size:clamp(25px,8vw,34px)}}}}\nfooter{{color:#777;text-align:center;padding:24px;font-size:12px}}
 </style>
 </head>
 <body>
 <main>
 <div class="brand">Brhn Nysa · Official Event</div>
 <h1>{safe_title}</h1>
+<p class="event-description">{safe_description}</p>
 {image_html}
-<div class="label">DATE &amp; TIME</div><div class="value">{safe_date}</div>
+<div class="label">DATA</div><div class="value">{safe_start}</div>
+<div class="label">END</div><div class="value">{safe_end}</div>
+<div class="label">ORGANIZERS</div><div class="value">{organizers_html}</div>
+<div class="countdown" id="event-countdown" data-start="{safe_countdown_target}">Countdown loading…</div>
 <div class="label">VENUE &amp; LOCATION</div><div class="value">{safe_location}</div>
-<p>{safe_description}</p>
-{ticket_html}
+<div class="actions">{details_html}{ticket_html}</div>
 <a class="back" href="{ARTIST_URL}">← Back to Brhn Nysa's official website</a>
+<script>
+(function(){{
+ const box=document.getElementById('event-countdown');
+ const raw=box&&box.getAttribute('data-start');
+ if(!box||!raw){{if(box)box.textContent='Event date not available';return;}}
+ const target=new Date(raw).getTime();
+ function update(){{
+  const remaining=target-Date.now();
+  if(remaining<=0){{box.textContent='The event has started';return;}}
+  const days=Math.floor(remaining/86400000);
+  const hours=Math.floor((remaining%86400000)/3600000);
+  const minutes=Math.floor((remaining%3600000)/60000);
+  const seconds=Math.floor((remaining%60000)/1000);
+  box.textContent='COUNTDOWN · '+days+'d '+hours+'h '+minutes+'m '+seconds+'s';
+ }}
+ update();setInterval(update,1000);
+}})();
+</script>
 </main>
 <footer>Official website of Brhn Nysa</footer>
 </body>
