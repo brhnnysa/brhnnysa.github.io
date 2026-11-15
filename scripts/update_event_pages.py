@@ -109,67 +109,136 @@ def safe_json(value: object) -> str:
 
 
 class EventImageParser(HTMLParser):
-    """Read share-image metadata from a public Bandsintown event details page."""
+    """Extract the public poster and Event JSON-LD from a Bandsintown event page."""
     def __init__(self) -> None:
         super().__init__()
         self.image_url = ""
+        self.jsonld: list[dict] = []
+        self._in_jsonld = False
+        self._script_parts: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag.lower() != "meta":
-            return
         values = {key.lower(): value or "" for key, value in attrs}
-        key = (values.get("property") or values.get("name") or "").lower()
-        candidate = values.get("content", "").strip()
-        if key in {"og:image", "og:image:url", "twitter:image", "twitter:image:src"} and candidate.startswith(("https://", "http://")):
-            self.image_url = candidate
+        if tag.lower() == "meta":
+            key = (values.get("property") or values.get("name") or "").lower()
+            candidate = values.get("content", "").strip()
+            if key in {"og:image", "og:image:url", "twitter:image", "twitter:image:src"} and candidate.startswith(("https://", "http://")):
+                self.image_url = candidate
+        elif tag.lower() == "script" and "ld+json" in values.get("type", "").lower():
+            self._in_jsonld = True
+            self._script_parts = []
+
+    def handle_data(self, data: str) -> None:
+        if self._in_jsonld:
+            self._script_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "script" and self._in_jsonld:
+            raw = "".join(self._script_parts).strip()
+            try:
+                parsed = json.loads(raw)
+                self.jsonld.append(parsed)
+            except (json.JSONDecodeError, TypeError):
+                pass
+            self._in_jsonld = False
+            self._script_parts = []
 
 
-def event_image_url(event: dict, image_overrides: dict) -> str:
-    """Prefer explicit feed/override images, then inspect the public event details page."""
+def _walk_jsonld(value: object):
+    """Yield JSON-LD objects, including objects nested in @graph and arrays."""
+    if isinstance(value, dict):
+        yield value
+        for child in value.values():
+            yield from _walk_jsonld(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _walk_jsonld(child)
+
+
+def event_page_metadata(event: dict) -> dict:
+    """Read authoritative event fields from the public Bandsintown event page."""
     event_id = text(event.get("id"))
-    candidate = (
-        text(image_overrides.get(event_id)) or
-        text(event.get("image")) or text(event.get("image_url"))
-    )
-    if candidate.startswith(("https://", "http://")):
-        return candidate
-
     event_url = text(event.get("url"))
+    metadata: dict = {}
     if not event_url.startswith("https://www.bandsintown.com/e/"):
-        return ""
+        return metadata
     try:
         request = urllib.request.Request(
             event_url,
             headers={"User-Agent": "Mozilla/5.0 (compatible; BrhnNysaEventPages/1.0)",
                      "Accept": "text/html,application/xhtml+xml"},
         )
-        with urllib.request.urlopen(request, timeout=12) as response:
-            page = response.read(2_000_000).decode("utf-8", errors="replace")
+        with urllib.request.urlopen(request, timeout=15) as response:
+            page = response.read(3_000_000).decode("utf-8", errors="replace")
         parser = EventImageParser()
         parser.feed(page)
-        return parser.image_url
+        if parser.image_url:
+            metadata["image"] = parser.image_url
+        for root in parser.jsonld:
+            for item in _walk_jsonld(root):
+                kind = item.get("@type", [])
+                kinds = [kind] if isinstance(kind, str) else kind
+                if any(str(k).lower() in {"event", "musicevent"} for k in kinds):
+                    for field in ("endDate", "startDate", "description", "image", "offers", "name"):
+                        if item.get(field) not in (None, "", [], {}):
+                            metadata[field] = item[field]
+                    break
+        return metadata
     except Exception as exc:
-        print(f"Could not read poster from Bandsintown event {event_id}: {exc}")
-        return ""
+        print(f"Could not read event details from Bandsintown event {event_id}: {exc}")
+        return metadata
+
+
+def first_value(source: dict, keys: tuple[str, ...]):
+    for key in keys:
+        value = source.get(key)
+        if value not in (None, ""):
+            return value
+    return None
+
+
+def event_image_url(event: dict, image_overrides: dict, page_metadata: dict) -> str:
+    """Prefer the artist's actual event artwork from the feed or Bandsintown page."""
+    event_id = text(event.get("id"))
+    candidate = (
+        text(image_overrides.get(event_id)) or
+        text(first_value(event, ("image", "image_url", "event_image", "poster", "poster_url"))) or
+        text(page_metadata.get("image"))
+    )
+    return candidate if candidate.startswith(("https://", "http://")) else ""
 
 
 def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     title = display_title(event)
-    description = text(event.get("description"))
-    if not description or description.casefold() in {title.casefold(), venue_name.casefold()}:
+    page_metadata = event_page_metadata(event)
+    description = (
+        text(event.get("description")) or
+        text(page_metadata.get("description"))
+    )
+    if not description:
         city = text(venue.get("city"))
         region = text(venue.get("region"))
         country = text(venue.get("country"))
         place = ", ".join(part for part in [venue_name, city, region, country] if part)
-        description = (
-            f"Join Brhn Nysa for a live music event at {place}. "
-            "Check this page for event details and ticket information."
-        )
+        description = f"Join Brhn Nysa for a live music event at {place}."
     date_value = text(event.get("datetime"))
     date = event_datetime(event)
     start_date = date.isoformat() if date else date_value
+    end_value = first_value(event, (
+        "endDate", "end_date", "end_datetime", "datetime_end",
+        "endDateTime", "event_end_datetime", "ends_at"
+    )) or page_metadata.get("endDate")
+    end_date = text(end_value)
+    if isinstance(end_value, dict):
+        end_date = text(end_value.get("@value") or end_value.get("dateTime"))
+    if end_date:
+        parsed_end = parse_datetime(end_date)
+        if parsed_end and parsed_end.tzinfo is None and date and date.tzinfo:
+            parsed_end = parsed_end.replace(tzinfo=date.tzinfo)
+        if parsed_end:
+            end_date = parsed_end.isoformat()
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     address = {
         "streetAddress": text(venue.get("street_address")),
@@ -200,8 +269,11 @@ def build_page(event: dict, page_url: str) -> str:
             image_overrides = json.loads(IMAGE_MAP_PATH.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             image_overrides = {}
-    image_url = event_image_url(event, image_overrides)
-    raw_offers = event.get("offers") if isinstance(event.get("offers"), list) else []
+    image_url = event_image_url(event, image_overrides, page_metadata)
+    feed_offers = event.get("offers")
+    if not isinstance(feed_offers, list) or not feed_offers:
+        feed_offers = page_metadata.get("offers", [])
+    raw_offers = feed_offers if isinstance(feed_offers, list) else []
     schema_offers = []
     for raw_offer in raw_offers:
         if not isinstance(raw_offer, dict) or not text(raw_offer.get("url")):
@@ -227,12 +299,20 @@ def build_page(event: dict, page_url: str) -> str:
         "name": title,
         "url": page_url,
         "startDate": start_date,
+        "organizer": {
+            "@type": "Person",
+            "@id": BASE_URL + "/#artist",
+            "name": "Brhn Nysa",
+            "url": ARTIST_URL,
+        },
         "eventStatus": "https://schema.org/EventScheduled",
         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "location": location,
         "performer": {"@type": "Person", "@id": BASE_URL + "/#artist", "name": "Brhn Nysa"},
         "description": description,
     }
+    if end_date:
+        schema["endDate"] = end_date
     if schema_offers:
         schema["offers"] = schema_offers
     if image_url:
