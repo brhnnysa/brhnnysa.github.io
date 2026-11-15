@@ -26,6 +26,9 @@ MANIFEST_PATH = ROOT / "data" / "events.json"
 STATE_PATH = ROOT / "data" / "generated-event-pages.json"
 SITEMAP_PATH = ROOT / "sitemap.xml"
 
+# Correct venue names confirmed by the artist when the feed supplies only a region.
+VENUE_NAME_OVERRIDES = {"109156719": "Ryan Hotel and Suites Limited"}
+
 
 def text(value: object) -> str:
     return str(value).strip() if value is not None else ""
@@ -79,7 +82,7 @@ def safe_json(value: object) -> str:
 
 def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
-    venue_name = text(venue.get("name")) or "Venue to be announced"
+    venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     title = display_title(event)
     description = text(event.get("description")) or f"See Brhn Nysa perform live at {venue_name}."
     date_value = text(event.get("datetime"))
@@ -87,7 +90,7 @@ def build_page(event: dict, page_url: str) -> str:
     # Bandsintown event times are venue-local; keep the original local ISO time
     # when no IANA timezone is supplied so Google can interpret it at the venue.
     start_date = date_value or (date.isoformat() if date else "")
-    venue_name = text(venue.get("name")) or "Venue to be announced"
+    venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     address = {
         "streetAddress": text(venue.get("street_address")),
         "addressLocality": text(venue.get("city")),
