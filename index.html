@@ -37,20 +37,42 @@
 <meta name="twitter:image" content="/artist-headshot.jpg"/>
 
 <!-- Structured Information for Google -->
-<script type="application/ld+json">
+<script type="application/ld+json" id="brhn-artist-structured-data">
 {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Brhn Nysa",
-  "alternateName": "Brhn Nysa Official Website",
+  "@type": "MusicGroup",
+  "@id": "https://www.brhnnysa.com/#artist",
+  "name": "BRHN NYSA",
+  "alternateName": ["Brhn Nysa", "BRHN NYSA"],
   "url": "https://www.brhnnysa.com/",
-  "publisher": {
-    "@type": "Person",
-    "name": "Brhn Nysa",
-    "url": "https://www.brhnnysa.com/",
-    "jobTitle": "Singer and Songwriter",
-    "description": "Brhn Nysa is a Nigerian singer and songwriter."
-  }
+  "image": "https://www.brhnnysa.com/artist-headshot.jpg",
+  "description": "BRHN NYSA is a Nigerian singer and songwriter. Visit the official website for music, videos, releases, news and live show dates.",
+  "genre": ["Music"],
+  "sameAs": [
+    "https://www.bandsintown.com/a/15666367",
+    "https://musicbrainz.org/artist/211cbfc7-d9c2-4af2-bf91-378d41f20a2b",
+    "https://www.wikidata.org/wiki/Q141479857",
+    "https://www.youtube.com/@brhnnysa",
+    "https://www.instagram.com/heisbrhn/",
+    "https://www.facebook.com/brhnnysa",
+    "https://x.com/brhnnysa",
+    "https://www.tiktok.com/@brhnnysa",
+    "https://www.threads.com/@heisbrhn",
+    "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+    "https://audiomack.com/brhnnysa",
+    "https://soundcloud.com/brhnnysa-466715604",
+    "https://genius.com/artists/Brhn-nysa",
+    "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+    "https://www.discogs.com/artist/18294120-Brhn-Nysa",
+    "https://audio.com/brhn-nysa",
+    "https://beatstorapon.com/artist/brhnnysa",
+    "https://tidal.com/artist/88532992",
+    "https://www.songkick.com/artists/10415488-brhn-nysa",
+    "https://www.imdb.com/name/nm18985668/",
+    "https://www.snapchat.com/@brhnnysa",
+    "https://www.lyrics.com/sub-artist/Brhn-Nysa/75514",
+    "https://brhnnysa1.bandcamp.com/"
+  ]
 }
 </script>
 
@@ -1745,6 +1767,45 @@ body {
       const upcoming = data
         .filter(event => event && event.datetime && new Date(event.datetime).getTime() > Date.now())
         .sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+      // Publish current Bandsintown shows as structured MusicEvent data.
+      // Only include events with their own event URL; do not invent venue street addresses.
+      const eventSchema = upcoming.filter(event => event.url).map(event => {
+        const venue = event.venue || {};
+        const address = {};
+        if (venue.street_address) address.streetAddress = venue.street_address;
+        if (venue.city) address.addressLocality = venue.city;
+        if (venue.region) address.addressRegion = venue.region;
+        if (venue.postal_code) address.postalCode = venue.postal_code;
+        if (venue.country) address.addressCountry = venue.country;
+        const place = { "@type": "Place", name: venue.name || "Venue" };
+        if (Object.keys(address).length) place.address = { "@type": "PostalAddress", ...address };
+        if (venue.latitude && venue.longitude) {
+          place.geo = { "@type": "GeoCoordinates", latitude: venue.latitude, longitude: venue.longitude };
+        }
+        return {
+          "@type": "MusicEvent",
+          "@id": event.url + "#event",
+          name: event.title || (Array.isArray(event.lineup) ? event.lineup.join(" / ") : "BRHN NYSA LIVE"),
+          url: event.url,
+          startDate: new Date(event.datetime).toISOString(),
+          eventStatus: "https://schema.org/EventScheduled",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          location: place,
+          performer: { "@id": "https://www.brhnnysa.com/#artist" }
+        };
+      });
+      let eventScript = document.getElementById("brhn-live-event-structured-data");
+      if (!eventScript) {
+        eventScript = document.createElement("script");
+        eventScript.type = "application/ld+json";
+        eventScript.id = "brhn-live-event-structured-data";
+        document.head.appendChild(eventScript);
+      }
+      eventScript.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": eventSchema
+      });
 
       const key = upcoming.map(event => [event.id, event.title, event.datetime].join("|")).join(";");
       if (key !== lastEventKey) {
