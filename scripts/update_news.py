@@ -101,7 +101,7 @@ def fetch_feed(source: str, feed_url: str) -> list[tuple[float, dict[str, str]]]
     entries = root.findall(".//item") or root.findall(".//{*}entry")
     for item in entries:
         title = re.sub(
-            r"(?i)brhn\\s*nysa", "Brhn Nysa",
+            r"(?i)brhn\s*nysa", "Brhn Nysa",
             html.unescape(local_text(item, ("title",)))
         )
         url = post_url(item)
@@ -113,8 +113,8 @@ def fetch_feed(source: str, feed_url: str) -> list[tuple[float, dict[str, str]]]
         parser = ContentParser()
         parser.feed(raw_content)
         summary = re.sub(
-            r"(?i)brhn\\s*nysa", "Brhn Nysa",
-            re.sub(r"\\s+", " ", " ".join(parser.parts)).strip()
+            r"(?i)brhn\s*nysa", "Brhn Nysa",
+            re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
         )
         if len(summary) > 230:
             summary = summary[:227].rsplit(" ", 1)[0] + "…"
