@@ -1848,10 +1848,10 @@ body {
 <section class="brhn-news-section" id="brhn-news" aria-labelledby="brhn-news-title">
   <div class="brhn-news-heading">
     <div><h2 id="brhn-news-title">NEWS</h2><p>MUSIC · ARTIST UPDATES · PRESS</p></div>
-    <a class="brhn-news-blog-link" href="https://lealsnews.blogspot.com/" target="_blank" rel="noopener noreferrer">ALL NEWS ↗</a>
+    <a class="brhn-news-blog-link" href="https://brhnnysa.substack.com/" target="_blank" rel="noopener noreferrer">SUBSTACK ↗</a>
   </div>
   <div class="brhn-news-track" id="brhn-news-track" aria-live="polite">
-    <div class="brhn-news-empty">News updates will appear here when you publish your first post on Blogger.</div>
+    <div class="brhn-news-empty">News updates will appear here when you publish on Substack or Blogger.</div>
   </div>
 </section>
 <script id="brhn-news-feed-script">
@@ -1881,9 +1881,9 @@ body {
   function render(posts){
     track.replaceChildren();
     if(!Array.isArray(posts)||!posts.length){
-      var empty=make('div','brhn-news-empty','Your news section is connected. Publish a post on Blogger and it will appear here automatically.');
+      var empty=make('div','brhn-news-empty','Your news section is connected. Publish on Substack or Blogger and your post will appear here automatically.');
       var link=make('a','',' Open Blogger');
-      link.href='https://lealsnews.blogspot.com/';
+      link.href='https://brhnnysa.substack.com/';
       link.target='_blank';link.rel='noopener noreferrer';
       empty.appendChild(link);track.appendChild(empty);return;
     }
@@ -1892,6 +1892,16 @@ body {
       if(post.image){
         var img=make('img','brhn-news-image');
         img.src=post.image;img.alt='';img.loading='lazy';card.appendChild(img);
+      }
+      if(post.video){
+        var video=make('video','brhn-news-image');
+        video.src=post.video;video.controls=true;video.preload='none';
+        video.playsInline=true;card.appendChild(video);
+      }else if(post.embed){
+        var frame=make('iframe','brhn-news-image');
+        frame.src=post.embed;frame.title='Brhn Nysa video';frame.loading='lazy';
+        frame.setAttribute('allowfullscreen','');frame.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');
+        frame.referrerPolicy='strict-origin-when-cross-origin';card.appendChild(frame);
       }
       var body=make('div','brhn-news-card-body');
       var timeLabel=make('div','brhn-news-date',post.published||'Brhn Nysa NEWS');
