@@ -1671,7 +1671,7 @@ body {
     });
   }
 
-  function makeCard(event, eventPageUrl) {
+  function makeCard(event, eventPage) {
     const date = new Date(event.datetime);
     if (Number.isNaN(date.getTime()) || date.getTime() <= Date.now()) return null;
 
@@ -1682,7 +1682,7 @@ body {
 
     const title = document.createElement("h2");
     title.className = "brhn-event-title";
-    title.textContent = event.title || (Array.isArray(event.lineup) && event.lineup.length ? event.lineup.join(" / ") : "BRHN NYSA LIVE");
+    title.textContent = (eventPage && eventPage.title) || event.title || (Array.isArray(event.lineup) && event.lineup.length ? event.lineup.join(" / ") : "BRHN NYSA LIVE");
 
     const details = document.createElement("div");
     details.className = "brhn-event-details";
@@ -1716,10 +1716,10 @@ body {
     ticket.rel = "noopener noreferrer";
     ticket.textContent = "GET TICKETS NOW";
 
-    if (eventPageUrl) {
+    if (eventPage && eventPage.url) {
       const eventDetails = document.createElement("a");
       eventDetails.className = "brhn-event-details-link";
-      eventDetails.href = eventPageUrl;
+      eventDetails.href = eventPage.url;
       eventDetails.textContent = "VIEW EVENT DETAILS ↗";
       body.append(title, details, countdownLabel, countdown, eventDetails, ticket);
     } else {
@@ -1822,7 +1822,7 @@ body {
         const pageResponse = await fetch("data/events.json?refresh=" + Date.now(), { cache: "no-store" });
         if (pageResponse.ok) {
           const pageData = await pageResponse.json();
-          eventPageById = new Map((pageData.events || []).map(item => [String(item.id), item.url]));
+          eventPageById = new Map((pageData.events || []).map(item => [String(item.id), item]));
         }
       } catch (pageError) {
         console.warn("Brhn Nysa event detail pages are not ready yet:", pageError);
