@@ -5,21 +5,57 @@
       "title": "Brhn Nysa Live at Meritona Hotels, Abakaliki, Nigeria",
       "url": "https://www.brhnnysa.com/events/brhn-nysa-live-re-meritona-hotels-2026-11-19-4723175a/index.html",
       "bandsintown_url": "https://www.bandsintown.com/e/109161000?app_id=84610745a9c36219ffda7dc902864730&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
-      "datetime": "2026-11-19T19:30:00"
+      "datetime": "2026-11-19T19:30:00",
+      "venue": {
+        "city": "Abakaliki",
+        "country": "Nigeria",
+        "latitude": "6.3407222",
+        "location": "Abakaliki, Nigeria",
+        "longitude": "8.0770299",
+        "name": "Re Meritona Hotels",
+        "postal_code": "482112",
+        "region": "",
+        "street_address": "83RG+8R"
+      },
+      "description": "Brhn Nysa Live at Meritona Hotels, Abakaliki, Nigeria"
     },
     {
       "id": "109152212",
       "title": "3 Years of Brhn Nysa in the industry",
       "url": "https://www.brhnnysa.com/events/dom-sampros-hotel-and-suites-dom-sampros-hotel-and-suites-2026-11-22-cb2b089a/index.html",
       "bandsintown_url": "https://www.bandsintown.com/e/109152212?app_id=84610745a9c36219ffda7dc902864730&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
-      "datetime": "2026-11-22T20:00:00"
+      "datetime": "2026-11-22T20:00:00",
+      "venue": {
+        "city": "Abakaliki",
+        "country": "Nigeria",
+        "latitude": "6.323078199999999",
+        "location": "Abakaliki, Nigeria",
+        "longitude": "8.1120251",
+        "name": "Dom Sampros Hotel and Suites.",
+        "postal_code": "480106",
+        "region": "",
+        "street_address": "84F6+6RJ"
+      },
+      "description": "3 Years of Brhn Nysa in the industry"
     },
     {
       "id": "109156719",
       "title": "Still Us: An Intimate night with Brhn Nysa",
       "url": "https://www.brhnnysa.com/events/brhn-nysa-live-ebonyi-2026-12-06-31e83bfc/index.html",
       "bandsintown_url": "https://www.bandsintown.com/e/109156719?app_id=84610745a9c36219ffda7dc902864730&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event",
-      "datetime": "2026-12-06T22:00:00"
+      "datetime": "2026-12-06T22:00:00",
+      "venue": {
+        "city": "Abakaliki",
+        "country": "Nigeria",
+        "latitude": "6.323078199999999",
+        "location": "Abakaliki, Nigeria",
+        "longitude": "8.1120251",
+        "name": "Ebonyi",
+        "postal_code": "480106",
+        "region": "",
+        "street_address": "84F6+6RJ"
+      },
+      "description": "Still Us: An Intimate night with Brhn Nysa"
     }
   ]
 }
