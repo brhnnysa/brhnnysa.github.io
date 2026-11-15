@@ -229,7 +229,12 @@ def generated_event_artwork(event: dict, title: str, date: datetime | None) -> s
     venue_text = ", ".join(part for part in [
         text(venue.get("name")), text(venue.get("city")), text(venue.get("country"))
     ] if part)
-    date_text = date.strftime("%d %b %Y · %H:%M WAT") if date else "UPCOMING LIVE EVENT"
+    if date:
+        event_hour = int(date.strftime("%I"))
+        event_zone = date.strftime("%Z")
+        date_text = f"{date.strftime('%d %b %Y')} · {event_hour}:{date.strftime('%M %p')} {event_zone}".strip()
+    else:
+        date_text = "UPCOMING LIVE EVENT"
     title_lines = textwrap.wrap(title, width=30)[:2] or ["LIVE EVENT"]
     title_svg = "".join(
         f'<text x="600" y="{760 + index * 76}" text-anchor="middle" class="event-title">{html.escape(line)}</text>'
@@ -402,7 +407,8 @@ def build_page(event: dict, page_url: str) -> str:
     def format_event_datetime(value):
         if not value:
             return "Not provided by Bandsintown"
-        local_value = value.strftime("%a, %b %d, %Y · %H:%M")
+        event_hour = int(value.strftime("%I"))
+        local_value = f"{value.strftime('%a, %b %d, %Y')} · {event_hour}:{value.strftime('%M %p')}"
         zone = value.strftime("%Z") if value.tzinfo else ""
         return f"{local_value} {zone}".strip()
     display_start = format_event_datetime(date)
