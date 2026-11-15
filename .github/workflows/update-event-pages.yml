@@ -29,6 +29,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install timezone lookup
+        run: pip install timezonefinder
+
       - name: Generate individual event pages and sitemap
         run: python scripts/update_event_pages.py
 
