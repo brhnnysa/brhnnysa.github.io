@@ -65,7 +65,7 @@ def main() -> None:
     posts: list[dict[str, str]] = []
     sortable: list[tuple[float, dict[str, str]]] = []
     for item in root.findall(".//item"):
-        title = re.sub(r"(?i)\\bbrhn\\s+nysa\\b", "Brhn Nysa", html.unescape(local_text(item, ("title",))))
+        title = re.sub(r"(?i)\bbrhn\s+nysa\b", "Brhn Nysa", html.unescape(local_text(item, ("title",))))
         url = local_text(item, ("link",))
         raw_date = local_text(item, ("pubdate",))
         raw_content = local_text(item, ("encoded", "description"))
@@ -75,7 +75,7 @@ def main() -> None:
         parser = ContentParser()
         parser.feed(raw_content)
         image = parser.image
-        summary = re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
+        summary = re.sub(r"(?i)\bbrhn\s+nysa\b", "Brhn Nysa", re.sub(r"\s+", " ", " ".join(parser.parts)).strip())
         if len(summary) > 230:
             summary = summary[:227].rsplit(" ", 1)[0] + "…"
         date_label, timestamp = parse_date(raw_date)
