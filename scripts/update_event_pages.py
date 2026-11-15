@@ -70,10 +70,16 @@ def safe_json(value: object) -> str:
 
 def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
+    venue_name = text(venue.get("name")) or "Venue to be announced"
     title = text(event.get("title")) or "Brhn Nysa Live"
+    description = text(event.get("description")) or f"See Brhn Nysa perform live at {venue_name}."
+    if title.casefold() == venue_name.casefold() or title.casefold() in {"brhn nysa live", "live show", "concert", "event"}:
+        title = description.split(".")[0].strip() or "Brhn Nysa Live"
     date_value = text(event.get("datetime"))
     date = parse_datetime(date_value)
-    start_date = date.isoformat() if date else date_value
+    # Bandsintown event times are venue-local; keep the original local ISO time
+    # when no IANA timezone is supplied so Google can interpret it at the venue.
+    start_date = date_value or (date.isoformat() if date else "")
     venue_name = text(venue.get("name")) or "Venue to be announced"
     address = {
         "streetAddress": text(venue.get("street_address")),
@@ -98,9 +104,26 @@ def build_page(event: dict, page_url: str) -> str:
             pass
 
     event_url = text(event.get("url")) or page_url
-    description = text(event.get("description")) or f"See Brhn Nysa perform live at {venue_name}."
-    image_url = text(event.get("image"))
-    ticket_url = text(event.get("ticket_url")) or event_url
+    image_url = text(event.get("image")) or text(event.get("image_url"))
+    raw_offers = event.get("offers") if isinstance(event.get("offers"), list) else []
+    schema_offers = []
+    for raw_offer in raw_offers:
+        if not isinstance(raw_offer, dict) or not text(raw_offer.get("url")):
+            continue
+        offer = {"@type": "Offer", "url": text(raw_offer.get("url"))}
+        if text(raw_offer.get("type")):
+            offer["name"] = text(raw_offer.get("type"))
+        if raw_offer.get("price") not in (None, ""):
+            offer["price"] = raw_offer.get("price")
+        if text(raw_offer.get("currency")):
+            offer["priceCurrency"] = text(raw_offer.get("currency"))
+        status = text(raw_offer.get("status")).casefold()
+        if status in {"available", "in stock", "instock"}:
+            offer["availability"] = "https://schema.org/InStock"
+        elif status in {"sold out", "sold_out", "soldout"}:
+            offer["availability"] = "https://schema.org/SoldOut"
+        schema_offers.append(offer)
+    ticket_url = schema_offers[0]["url"] if schema_offers else event_url
     schema = {
         "@context": "https://schema.org",
         "@type": "MusicEvent",
@@ -113,12 +136,13 @@ def build_page(event: dict, page_url: str) -> str:
         "location": location,
         "performer": {"@type": "Person", "@id": BASE_URL + "/#artist", "name": "Brhn Nysa"},
         "description": description,
-        "offers": {"@type": "Offer", "url": ticket_url},
     }
+    if schema_offers:
+        schema["offers"] = schema_offers
     if image_url:
         schema["image"] = [image_url]
 
-    display_date = date.strftime("%A, %d %B %Y · %H:%M UTC") if date else date_value
+    display_date = date.strftime("%A, %d %B %Y · %H:%M") if date else date_value
     address_text = ", ".join(
         value for value in [
             address.get("streetAddress"), address.get("addressLocality"),
