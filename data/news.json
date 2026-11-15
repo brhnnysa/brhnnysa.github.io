@@ -3,7 +3,7 @@
     "https://lealsnews.blogspot.com/feeds/posts/default?alt=rss",
     "https://brhnnysa.substack.com/feed"
   ],
-  "updated_at": "2026-11-15T05:12:08.082483+00:00",
+  "updated_at": "2026-11-15T06:01:59.237489+00:00",
   "posts": [
     {
       "title": "No Time (cover)",
@@ -59,6 +59,14 @@
       "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg-WbZ0DPIAsmqZv5C6vn51rn0AfOOItkqHcvfuIwYL2gtV6Me8HQy7Qg-D7-MBJvrRQ4EVnb8rPUreHFGlWoINDb10sA6Cv0lQA0wjCyo4Z7r70WRwjBGEw_aDQAbIm0aMMIXii8cZVoGnwe8gxEUPHm1ZS3itEcy3UVgDP1f0b1NJez4O1U6YV_ak0tjA/s320/brhn-nysa-official.jpg.jpg"
     },
     {
+      "title": "Brhn Nysa - Still Us (Official Music Video)",
+      "url": "https://brhnnysa.substack.com/p/brhn-nysa-still-us-official-music",
+      "published": "NOV 15, 2026",
+      "published_at": "2026-11-15T02:16:16+00:00",
+      "summary": "listen more on boomplay",
+      "source": "Substack"
+    },
+    {
       "title": "Brhn Nysa Is Giving Fans More Reasons to Pay Attention",
       "url": "https://lealsnews.blogspot.com/2026/11/brhn-nysa-is-giving-fans-more-reasons.html",
       "published": "NOV 15, 2026",
@@ -105,6 +113,30 @@
       "published_at": "2026-11-14T19:49:42+00:00",
       "summary": "heis nehhiin n",
       "source": "Blogger"
+    },
+    {
+      "title": "my kind Brhn Nysa",
+      "url": "https://brhnnysa.substack.com/p/my-kind-brhn-nysa",
+      "published": "OCT 19, 2026",
+      "published_at": "2026-10-19T17:32:52+00:00",
+      "summary": "My Kind trending",
+      "source": "Substack"
+    },
+    {
+      "title": "Chisindu.mp3",
+      "url": "https://brhnnysa.substack.com/p/chisindump3",
+      "published": "DEC 13, 2025",
+      "published_at": "2025-12-13T08:44:28+00:00",
+      "summary": "Brhn Nysa's song",
+      "source": "Substack"
+    },
+    {
+      "title": "Coming soon",
+      "url": "https://brhnnysa.substack.com/p/coming-soon",
+      "published": "DEC 13, 2025",
+      "published_at": "2025-12-13T08:38:48+00:00",
+      "summary": "This is Brhn's Substack.",
+      "source": "Substack"
     }
   ]
 }
