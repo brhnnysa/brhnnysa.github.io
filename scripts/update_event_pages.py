@@ -174,6 +174,15 @@ def event_page_metadata(event: dict) -> dict:
         parser.feed(page)
         if parser.image_url:
             metadata["image"] = parser.image_url
+        # Bandsintown may embed the event payload in page scripts rather than JSON-LD.
+        # Read only explicit end-date fields; never estimate an event duration.
+        end_match = re.search(
+            r'["\\'](?:endDate|endDateTime|end_datetime|datetime_end|end_date|event_end_datetime)["\\']\\s*:\\s*["\\']([^"\\']+)["\\']',
+            page,
+            flags=re.IGNORECASE,
+        )
+        if end_match:
+            metadata["endDate"] = end_match.group(1)
         for root in parser.jsonld:
             for item in _walk_jsonld(root):
                 kind = item.get("@type", [])
