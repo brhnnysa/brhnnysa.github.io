@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the Brhn Nysa website news cards from the public Blogger RSS feed."""
+"""Refresh Brhn Nysa website news cards from Blogger and Substack RSS feeds."""
 from __future__ import annotations
 
 import html
@@ -11,10 +11,14 @@ from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 
-FEED_URL = "https://lealsnews.blogspot.com/feeds/posts/default?alt=rss"
+FEEDS = [
+    ("Blogger", "https://lealsnews.blogspot.com/feeds/posts/default?alt=rss"),
+    ("Substack", "https://brhnnysa.substack.com/feed"),
+]
 OUTPUT = Path("data/news.json")
-MAX_POSTS = 30
+MAX_POSTS = 40
 
 
 class ContentParser(HTMLParser):
@@ -22,11 +26,24 @@ class ContentParser(HTMLParser):
         super().__init__()
         self.parts: list[str] = []
         self.image: str | None = None
+        self.video: str | None = None
+        self.embed: str | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
         if tag.lower() == "img" and self.image is None:
-            values = dict(attrs)
             self.image = values.get("src") or values.get("data-src")
+        if tag.lower() in ("video", "source") and self.video is None:
+            self.video = values.get("src")
+        if tag.lower() == "iframe" and self.embed is None:
+            candidate = values.get("src", "")
+            host = urlparse(candidate).hostname or ""
+            allowed = ("youtube.com", "youtube-nocookie.com", "youtu.be",
+                       "player.vimeo.com", "substack.com")
+            if candidate.startswith("https://") and any(
+                host == domain or host.endswith("." + domain) for domain in allowed
+            ):
+                self.embed = candidate
 
     def handle_data(self, data: str) -> None:
         value = data.strip()
@@ -42,6 +59,18 @@ def local_text(element: ET.Element, names: tuple[str, ...]) -> str:
     return ""
 
 
+def post_url(item: ET.Element) -> str:
+    link = local_text(item, ("link",))
+    if link:
+        return link
+    for child in item.iter():
+        if child.tag.rsplit("}", 1)[-1].lower() == "link":
+            href = child.attrib.get("href", "")
+            if href:
+                return href
+    return ""
+
+
 def parse_date(value: str) -> tuple[str, float]:
     if not value:
         return "", 0.0
@@ -51,31 +80,42 @@ def parse_date(value: str) -> tuple[str, float]:
             parsed = parsed.replace(tzinfo=timezone.utc)
         return parsed.strftime("%b %d, %Y").upper(), parsed.timestamp()
     except (TypeError, ValueError, OverflowError):
-        return value, 0.0
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.strftime("%b %d, %Y").upper(), parsed.timestamp()
+        except (TypeError, ValueError, OverflowError):
+            return value, 0.0
 
 
-def main() -> None:
+def fetch_feed(source: str, feed_url: str) -> list[tuple[float, dict[str, str]]]:
     request = urllib.request.Request(
-        FEED_URL,
-        headers={"User-Agent": "BRHN-NYSA-NewsFeed/1.0 (+https://www.brhnnysa.com/)"},
+        feed_url,
+        headers={"User-Agent": "BrhnNysa-NewsFeed/1.0 (+https://www.brhnnysa.com/)"},
     )
     with urllib.request.urlopen(request, timeout=25) as response:
         root = ET.fromstring(response.read())
 
-    posts: list[dict[str, str]] = []
-    sortable: list[tuple[float, dict[str, str]]] = []
-    for item in root.findall(".//item"):
-        title = re.sub(r"(?i)\bbrhn\s+nysa\b", "Brhn Nysa", html.unescape(local_text(item, ("title",))))
-        url = local_text(item, ("link",))
-        raw_date = local_text(item, ("pubdate",))
-        raw_content = local_text(item, ("encoded", "description"))
+    results: list[tuple[float, dict[str, str]]] = []
+    entries = root.findall(".//item") or root.findall(".//{*}entry")
+    for item in entries:
+        title = re.sub(
+            r"(?i)brhn\\s*nysa", "Brhn Nysa",
+            html.unescape(local_text(item, ("title",)))
+        )
+        url = post_url(item)
+        raw_date = local_text(item, ("pubdate", "published", "updated"))
+        raw_content = local_text(item, ("encoded", "content", "description", "summary"))
         if not title or not url:
             continue
 
         parser = ContentParser()
         parser.feed(raw_content)
-        image = parser.image
-        summary = re.sub(r"(?i)\bbrhn\s+nysa\b", "Brhn Nysa", re.sub(r"\s+", " ", " ".join(parser.parts)).strip())
+        summary = re.sub(
+            r"(?i)brhn\\s*nysa", "Brhn Nysa",
+            re.sub(r"\\s+", " ", " ".join(parser.parts)).strip()
+        )
         if len(summary) > 230:
             summary = summary[:227].rsplit(" ", 1)[0] + "…"
         date_label, timestamp = parse_date(raw_date)
@@ -83,25 +123,63 @@ def main() -> None:
             "title": title,
             "url": url,
             "published": date_label,
-            "published_at": datetime.fromtimestamp(timestamp, timezone.utc).isoformat() if timestamp else "",
+            "published_at": datetime.fromtimestamp(
+                timestamp, timezone.utc
+            ).isoformat() if timestamp else "",
             "summary": summary,
+            "source": source,
         }
+        image = parser.image
+        if not image:
+            image = local_text(item, ("thumbnail",))
         if image and image.startswith(("https://", "http://")):
             post["image"] = image
-        sortable.append((timestamp, post))
+        if parser.video and parser.video.startswith(("https://", "http://")):
+            post["video"] = parser.video
+        if parser.embed:
+            post["embed"] = parser.embed
+        for child in item.iter():
+            if child.tag.rsplit("}", 1)[-1].lower() == "enclosure":
+                media_url = child.attrib.get("url", "")
+                media_type = child.attrib.get("type", "")
+                if media_url.startswith("https://") and media_type.startswith("video/"):
+                    post["video"] = media_url
+                    break
+        results.append((timestamp, post))
+    return results
 
-    sortable.sort(key=lambda pair: pair[0], reverse=True)
-    posts = [post for _, post in sortable[:MAX_POSTS]]
+
+def main() -> None:
+    sortable: list[tuple[float, dict[str, str]]] = []
+    for source, feed_url in FEEDS:
+        try:
+            feed_posts = fetch_feed(source, feed_url)
+            sortable.extend(feed_posts)
+            print(f"Loaded {len(feed_posts)} {source} posts")
+        except Exception as error:
+            print(f"Could not load {source} feed: {error}")
+
+    # Keep the website populated if one publisher temporarily fails.
+    if not sortable:
+        raise RuntimeError("No news feeds could be loaded")
+
+    unique: dict[str, tuple[float, dict[str, str]]] = {}
+    for timestamp, post in sortable:
+        unique[post["url"]] = (timestamp, post)
+    ordered = sorted(unique.values(), key=lambda pair: pair[0], reverse=True)
+    posts = [post for _, post in ordered[:MAX_POSTS]]
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(
         json.dumps(
-            {"source": FEED_URL, "updated_at": datetime.now(timezone.utc).isoformat(), "posts": posts},
+            {"sources": [url for _, url in FEEDS],
+             "updated_at": datetime.now(timezone.utc).isoformat(),
+             "posts": posts},
             ensure_ascii=False,
             indent=2,
         ) + "\n",
         encoding="utf-8",
     )
-    print(f"Saved {len(posts)} Blogger news posts to {OUTPUT}")
+    print(f"Saved {len(posts)} combined news posts to {OUTPUT}")
 
 
 if __name__ == "__main__":
