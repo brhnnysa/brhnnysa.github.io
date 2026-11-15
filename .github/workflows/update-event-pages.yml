@@ -7,7 +7,7 @@ on:
       - 'scripts/update_event_pages.py'
       - 'index.html'
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
