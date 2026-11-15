@@ -474,6 +474,8 @@ h1{{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:16px 0;color:#fff}}
 .back{{display:block;margin-top:24px;color:#d6b56d;text-decoration:none;font-size:13px}}
 @media(max-width:600px){{main{{width:calc(100% - 20px);margin:18px auto;padding:18px}}.event-poster{{max-width:150px}}.event-image{{max-height:100px}}h1{{font-size:clamp(25px,8vw,34px)}}}}\nfooter{{color:#777;text-align:center;padding:24px;font-size:12px}}
 </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2500597420211277"
+     crossorigin="anonymous"></script>
 </head>
 <body>
 <main>
