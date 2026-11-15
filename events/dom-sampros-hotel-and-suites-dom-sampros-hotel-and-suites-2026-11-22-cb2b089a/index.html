@@ -20,9 +20,10 @@ main{width:min(760px,calc(100% - 32px));margin:54px auto;padding:30px;background
 h1{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:16px 0;color:#fff}
 .label{color:#d6b56d;font-size:11px;font-weight:800;letter-spacing:.16em;margin-top:24px}
 .value{margin-top:4px;color:#ddd;overflow-wrap:anywhere}
-.event-image{display:block;width:100%;max-height:360px;object-fit:cover;border-radius:9px;margin:22px 0}
+.event-image{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;border-radius:9px;margin:22px 0}
 .ticket{display:inline-block;margin-top:28px;padding:12px 18px;border-radius:6px;background:#d6b56d;color:#111;text-decoration:none;font-size:12px;font-weight:900;letter-spacing:.1em}
 .back{display:block;margin-top:24px;color:#d6b56d;text-decoration:none;font-size:13px}
+@media(max-width:600px){main{width:calc(100% - 20px);margin:18px auto;padding:18px}.event-image{max-height:240px;margin:16px 0}h1{font-size:clamp(25px,8vw,34px)}}
 footer{color:#777;text-align:center;padding:24px;font-size:12px}
 </style>
 </head>
