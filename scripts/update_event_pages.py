@@ -11,6 +11,7 @@ import shutil
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,7 @@ FEED_URL = (
 MANIFEST_PATH = ROOT / "data" / "events.json"
 STATE_PATH = ROOT / "data" / "generated-event-pages.json"
 SITEMAP_PATH = ROOT / "sitemap.xml"
+IMAGE_MAP_PATH = ROOT / "data" / "event-images.json"
 
 # Correct venue names confirmed by the artist when the feed supplies only a region.
 VENUE_NAME_OVERRIDES = {"109156719": "Ryan Hotel and Suites Limited"}
@@ -67,13 +69,38 @@ def parse_datetime(value: str) -> datetime | None:
     if not value:
         return None
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-        # Bandsintown's event datetime feed is UTC; make a naive API value explicit.
-        if parsed.tzinfo is None:
-            parsed = parsed.replace(tzinfo=timezone.utc)
-        return parsed
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
         return None
+
+
+def event_datetime(event: dict) -> datetime | None:
+    """Interpret naive feed times in the venue's actual IANA timezone."""
+    parsed = parse_datetime(text(event.get("datetime")))
+    if not parsed or parsed.tzinfo is not None:
+        return parsed
+    venue = event.get("venue") or {}
+    zone_name = (
+        text(event.get("timezone")) or text(event.get("time_zone")) or
+        text(venue.get("timezone")) or text(venue.get("time_zone"))
+    )
+    if not zone_name:
+        latitude, longitude = venue.get("latitude"), venue.get("longitude")
+        if latitude not in (None, "") and longitude not in (None, ""):
+            try:
+                from timezonefinder import TimezoneFinder
+                zone_name = TimezoneFinder().timezone_at(
+                    lat=float(latitude), lng=float(longitude)
+                ) or ""
+            except (ImportError, TypeError, ValueError):
+                zone_name = ""
+    if zone_name:
+        try:
+            return parsed.replace(tzinfo=ZoneInfo(zone_name))
+        except ZoneInfoNotFoundError:
+            pass
+    # Retain the source wall time rather than inventing a timezone.
+    return parsed
 
 
 def safe_json(value: object) -> str:
@@ -84,12 +111,19 @@ def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     title = display_title(event)
-    description = text(event.get("description")) or f"See Brhn Nysa perform live at {venue_name}."
+    description = text(event.get("description"))
+    if not description:
+        city = text(venue.get("city"))
+        region = text(venue.get("region"))
+        country = text(venue.get("country"))
+        place = ", ".join(part for part in [venue_name, city, region, country] if part)
+        description = (
+            f"Join Brhn Nysa for a live music event at {place}. "
+            "Check this page for event details and ticket information."
+        )
     date_value = text(event.get("datetime"))
     date = parse_datetime(date_value)
-    # Bandsintown event times are venue-local; keep the original local ISO time
-    # when no IANA timezone is supplied so Google can interpret it at the venue.
-    start_date = date_value or (date.isoformat() if date else "")
+    start_date = date.isoformat() if date else date_value
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     address = {
         "streetAddress": text(venue.get("street_address")),
@@ -114,7 +148,16 @@ def build_page(event: dict, page_url: str) -> str:
             pass
 
     event_url = text(event.get("url")) or page_url
-    image_url = text(event.get("image")) or text(event.get("image_url"))
+    image_overrides = {}
+    if IMAGE_MAP_PATH.exists():
+        try:
+            image_overrides = json.loads(IMAGE_MAP_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            image_overrides = {}
+    image_url = (
+        text(image_overrides.get(text(event.get("id")))) or
+        text(event.get("image")) or text(event.get("image_url"))
+    )
     raw_offers = event.get("offers") if isinstance(event.get("offers"), list) else []
     schema_offers = []
     for raw_offer in raw_offers:
@@ -152,7 +195,11 @@ def build_page(event: dict, page_url: str) -> str:
     if image_url:
         schema["image"] = [image_url]
 
-    display_date = date.strftime("%A, %d %B %Y · %H:%M") if date else date_value
+    display_date = (
+        date.strftime("%A, %d %B %Y · %H:%M %Z")
+        if date and date.tzinfo else
+        (date.strftime("%A, %d %B %Y · %H:%M") if date else date_value)
+    )
     address_text = ", ".join(
         value for value in [
             address.get("streetAddress"), address.get("addressLocality"),
@@ -233,7 +280,9 @@ def main() -> None:
     for event in payload:
         if not isinstance(event, dict):
             continue
-        parsed = parse_datetime(text(event.get("datetime")))
+        parsed = event_datetime(event)
+        if parsed and parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
         if parsed and parsed > now:
             upcoming.append((parsed, event))
     upcoming.sort(key=lambda item: item[0])
