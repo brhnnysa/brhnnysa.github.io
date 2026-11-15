@@ -177,7 +177,7 @@ def event_page_metadata(event: dict) -> dict:
         # Bandsintown may embed the event payload in page scripts rather than JSON-LD.
         # Read only explicit end-date fields; never estimate an event duration.
         end_match = re.search(
-            r'["\\'](?:endDate|endDateTime|end_datetime|datetime_end|end_date|event_end_datetime)["\\']\\s*:\\s*["\\']([^"\\']+)["\\']',
+            r"""["'](?:endDate|endDateTime|end_datetime|datetime_end|end_date|event_end_datetime)["']\\s*:\\s*["']([^"']+)["']""",
             page,
             flags=re.IGNORECASE,
         )
