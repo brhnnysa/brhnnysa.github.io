@@ -1685,22 +1685,60 @@ body {
     title.className = "brhn-event-title";
     title.textContent = (eventPage && eventPage.title) || event.title || (Array.isArray(event.lineup) && event.lineup.length ? event.lineup.join(" / ") : "Brhn Nysa LIVE");
 
-    const details = document.createElement("div");
-    details.className = "brhn-event-details";
-    const dateLine = document.createElement("div");
-    dateLine.className = "brhn-event-detail";
-    dateLine.textContent = formatDate(date);
-    const timeLine = document.createElement("div");
-    timeLine.className = "brhn-event-detail";
-    timeLine.textContent = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+    const description = document.createElement("p");
+    description.className = "brhn-event-description";
+    description.textContent = event.description || title.textContent;
 
     const venue = event.venue || {};
-    const locationParts = [venue.name, venue.city, venue.region, venue.country]
-      .filter((value, index, values) => value && values.indexOf(value) === index);
-    const locationLine = document.createElement("div");
-    locationLine.className = "brhn-event-detail brhn-event-location";
-    locationLine.textContent = locationParts.length ? "⌖ " + locationParts.join(", ") : "⌖ Location to be announced";
-    details.append(dateLine, timeLine, locationLine);
+    const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+      weekday: "short", day: "numeric", month: "short", year: "numeric",
+      timeZone: "Africa/Lagos"
+    });
+    const timeFormatter = new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lagos", hour12: false
+    });
+    const dateLabel = document.createElement("div");
+    dateLabel.className = "brhn-event-field";
+    const startLabel = document.createElement("strong");
+    startLabel.textContent = "DATA";
+    const startValue = document.createElement("span");
+    startValue.textContent = dateFormatter.format(date) + " · " + timeFormatter.format(date) + " WAT";
+    dateLabel.append(startLabel, startValue);
+
+    const endValue = event.end_datetime || event.endDate || event.end_date || "";
+    const endDate = endValue ? new Date(endValue) : null;
+    const endLine = document.createElement("div");
+    endLine.className = "brhn-event-field";
+    const endLabel = document.createElement("strong");
+    endLabel.textContent = "END";
+    const endText = document.createElement("span");
+    endText.textContent = endDate && !Number.isNaN(endDate.getTime())
+      ? dateFormatter.format(endDate) + " · " + timeFormatter.format(endDate) + " WAT"
+      : "Not provided by Bandsintown";
+    endLine.append(endLabel, endText);
+
+    const organizerLine = document.createElement("div");
+    organizerLine.className = "brhn-event-field";
+    const organizerLabel = document.createElement("strong");
+    organizerLabel.textContent = "ORGANIZERS";
+    const names = Array.isArray(event.lineup) ? event.lineup
+      : Array.isArray(event.artists) ? event.artists : [];
+    const organizers = [...new Set(["Brhn Nysa", ...names.map(item =>
+      typeof item === "string" ? item : item && item.name ? item.name : ""
+    ).filter(Boolean)])];
+    const organizerText = document.createElement("span");
+    organizerText.textContent = organizers.join(" · ");
+    organizerLine.append(organizerLabel, organizerText);
+
+    const posterUrl = event.poster_url || event.image_url || event.image || "";
+    let poster = null;
+    if (typeof posterUrl === "string" && /^https?:\/\//i.test(posterUrl)) {
+      poster = document.createElement("img");
+      poster.className = "brhn-event-poster";
+      poster.src = posterUrl;
+      poster.alt = title.textContent + " event poster";
+      poster.loading = "lazy";
+    }
 
     const countdownLabel = document.createElement("div");
     countdownLabel.className = "brhn-event-count-label";
@@ -1710,22 +1748,29 @@ body {
     countdown.className = "countdown brhn-event-countdown";
     countdown.dataset.eventDate = date.toISOString();
 
+    const locationParts = [venue.name, venue.city, venue.region, venue.country]
+      .filter((value, index, values) => value && values.indexOf(value) === index);
+    const locationLine = document.createElement("div");
+    locationLine.className = "brhn-event-detail brhn-event-location";
+    locationLine.textContent = locationParts.length ? "⌖ " + locationParts.join(", ") : "⌖ Location to be announced";
+
     const ticket = document.createElement("a");
     ticket.className = "ticket-button brhn-event-ticket-button";
-    ticket.href = TICKET_URL;
+    ticket.href = event.ticket_url || event.bandsintown_url || TICKET_URL;
     ticket.target = "_blank";
     ticket.rel = "noopener noreferrer";
-    ticket.textContent = "GET TICKETS NOW";
+    ticket.textContent = "GET TICKETS";
 
-    if (eventPage && eventPage.url) {
-      const eventDetails = document.createElement("a");
-      eventDetails.className = "brhn-event-details-link";
-      eventDetails.href = eventPage.url;
-      eventDetails.textContent = "VIEW EVENT DETAILS ↗";
-      body.append(title, details, countdownLabel, countdown, eventDetails, ticket);
-    } else {
-      body.append(title, details, countdownLabel, countdown, ticket);
-    }
+    const eventDetails = document.createElement("a");
+    eventDetails.className = "brhn-event-details-link";
+    eventDetails.href = (eventPage && eventPage.url) || event.url || event.bandsintown_url || "#";
+    eventDetails.target = "_blank";
+    eventDetails.rel = "noopener noreferrer";
+    eventDetails.textContent = "VIEW DETAILS ↗";
+
+    body.append(title, description);
+    if (poster) body.appendChild(poster);
+    body.append(dateLabel, endLine, organizerLine, countdownLabel, countdown, locationLine, eventDetails, ticket);
     card.appendChild(body);
     return card;
   }
@@ -2827,6 +2872,11 @@ document.addEventListener('keydown', function(event) {
 .brhn-event-kicker span { padding:0 4px; color:#777; }
 .brhn-event-title { color:#fff; font-size:1.28rem; line-height:1.2; margin:10px 0 5px; }
 .brhn-event-description { color:#aaa; font-size:.78rem; line-height:1.5; min-height:2.3em; margin:0 0 15px; }
+.brhn-event-poster { display:block; width:auto; max-width:150px; max-height:105px; height:auto; object-fit:contain; object-position:left center; margin:0 0 13px; border-radius:5px; }
+.brhn-event-field { display:flex; flex-direction:column; gap:3px; color:#ddd; font-size:.76rem; line-height:1.4; }
+.brhn-event-field strong { color:#d6b56d; font-size:.58rem; letter-spacing:.15em; }
+.brhn-event-field span { overflow-wrap:anywhere; }
+
 .brhn-event-details { display:grid; gap:9px; padding:13px 0; border-top:1px solid #333; border-bottom:1px solid #333; }
 .brhn-event-detail { display:flex; align-items:flex-start; gap:9px; color:#ddd; font-size:.76rem; line-height:1.4; }
 .brhn-event-detail-icon { width:17px; flex:0 0 17px; color:#d6b56d; font-size:1rem; text-align:center; }
