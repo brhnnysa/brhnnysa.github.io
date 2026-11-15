@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the public BRHN NYSA YouTube uploads feed using YouTube's public RSS feed."""
+"""Refresh the public Brhn Nysa YouTube uploads feed using YouTube's public RSS feed."""
 from __future__ import annotations
 
 import json
@@ -128,7 +128,7 @@ def main() -> None:
             if not video_id or not title or video_id not in regular_video_ids:
                 continue
             videos.append({
-                "id": video_id, "title": title, "artist": "BRHN NYSA",
+                "id": video_id, "title": title, "artist": "Brhn Nysa",
                 "publishedAt": published,
                 "artwork": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
                 "url": f"https://www.youtube.com/watch?v={video_id}",
@@ -155,7 +155,7 @@ def main() -> None:
                 published = date_match.group(1) if date_match else ""
                 if title:
                     videos.append({
-                        "id": video_id, "title": title, "artist": "BRHN NYSA",
+                        "id": video_id, "title": title, "artist": "Brhn Nysa",
                         "publishedAt": published,
                         "artwork": f"https://i.ytimg.com/vi/{video_id}/hqdefault.jpg",
                         "url": watch_url,
@@ -170,7 +170,7 @@ def main() -> None:
         videos.sort(key=lambda item: item.get("publishedAt") or "", reverse=True)
 
     payload = {
-        "artist": "BRHN NYSA",
+        "artist": "Brhn Nysa",
         "channel": HANDLE_URL,
         "source": "YouTube public channel RSS feed",
         "updatedAt": datetime.now(timezone.utc).isoformat(),
@@ -178,7 +178,7 @@ def main() -> None:
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Updated BRHN NYSA regular-video feed with {len(payload['videos'])} videos (Shorts excluded).")
+    print(f"Updated Brhn Nysa regular-video feed with {len(payload['videos'])} videos (Shorts excluded).")
 
 
 if __name__ == "__main__":
