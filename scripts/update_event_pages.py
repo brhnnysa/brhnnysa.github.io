@@ -51,6 +51,15 @@ def event_slug(event: dict) -> str:
     return f"{slugify(label)}-{digest}"
 
 
+def display_title(event: dict) -> str:
+    venue_name = text((event.get("venue") or {}).get("name"))
+    title = text(event.get("title")) or "Brhn Nysa Live"
+    if title.casefold() == venue_name.casefold() or title.casefold() in {"brhn nysa live", "live show", "concert", "event"}:
+        description = text(event.get("description"))
+        title = description.split(".")[0].strip() or "Brhn Nysa Live"
+    return title
+
+
 def parse_datetime(value: str) -> datetime | None:
     if not value:
         return None
@@ -71,10 +80,8 @@ def safe_json(value: object) -> str:
 def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
     venue_name = text(venue.get("name")) or "Venue to be announced"
-    title = text(event.get("title")) or "Brhn Nysa Live"
+    title = display_title(event)
     description = text(event.get("description")) or f"See Brhn Nysa perform live at {venue_name}."
-    if title.casefold() == venue_name.casefold() or title.casefold() in {"brhn nysa live", "live show", "concert", "event"}:
-        title = description.split(".")[0].strip() or "Brhn Nysa Live"
     date_value = text(event.get("datetime"))
     date = parse_datetime(date_value)
     # Bandsintown event times are venue-local; keep the original local ISO time
@@ -245,7 +252,7 @@ def main() -> None:
         sitemap_urls.add(page_url)
         manifest_events.append({
             "id": text(event.get("id")),
-            "title": text(event.get("title")) or "Brhn Nysa Live",
+            "title": display_title(event),
             "url": page_url,
             "bandsintown_url": text(event.get("url")),
             "datetime": text(event.get("datetime")),
