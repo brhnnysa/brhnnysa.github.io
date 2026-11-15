@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+<title id="title">3 Years of Brhn Nysa in the industry · Brhn Nysa event artwork</title>
+<desc id="desc">Brhn Nysa branded artwork for 3 Years of Brhn Nysa in the industry at Dom Sampros Hotel and Suites., Abakaliki, Nigeria.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#242017"/><stop offset=".55" stop-color="#0b0b0b"/><stop offset="1" stop-color="#1b160d"/></linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#d6b56d" stop-opacity=".34"/><stop offset="1" stop-color="#d6b56d" stop-opacity="0"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4dfae"/><stop offset="1" stop-color="#b58a43"/></linearGradient>
+  <pattern id="grain" width="44" height="44" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#fff" opacity=".08"/></pattern>
+</defs>
+<rect width="1200" height="1200" fill="url(#bg)"/><rect width="1200" height="1200" fill="url(#grain)"/>
+<circle cx="600" cy="470" r="440" fill="url(#glow)"/>
+<rect x="70" y="70" width="1060" height="1060" rx="42" fill="none" stroke="#d6b56d" stroke-opacity=".55" stroke-width="3"/>
+<text x="600" y="180" text-anchor="middle" fill="#d6b56d" font-family="Arial,sans-serif" font-size="38" font-weight="700" letter-spacing="13">BRHN NYSA</text>
+<text x="600" y="245" text-anchor="middle" fill="#b8a47e" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="9">OFFICIAL EVENT</text>
+<circle cx="600" cy="475" r="210" fill="#0c0b09" stroke="url(#gold)" stroke-width="5"/><circle cx="600" cy="475" r="178" fill="none" stroke="#d6b56d" stroke-opacity=".3" stroke-width="2"/>
+<path d="M648 340v210c0 55-43 92-96 92-42 0-72-25-72-60 0-40 39-69 88-69 13 0 25 2 36 6V388l142-34v158c0 55-43 92-96 92-42 0-72-25-72-60 0-40 39-69 88-69 13 0 25 2 36 6V340z" fill="url(#gold)" transform="translate(-30,-28) scale(.92)"/>
+<path d="M350 500h-44m588 0h-44M600 240v-38m0 584v-38" stroke="#d6b56d" stroke-opacity=".65" stroke-width="5" stroke-linecap="round"/>
+<text x="600" y="760" text-anchor="middle" class="event-title">3 Years of Brhn Nysa in the</text><text x="600" y="836" text-anchor="middle" class="event-title">industry</text>
+<text x="600" y="960" text-anchor="middle" fill="#e6c985" font-family="Arial,sans-serif" font-size="34" font-weight="700" letter-spacing="4">22 Nov 2026 · 20:00 WAT</text>
+<text x="600" y="1030" text-anchor="middle" fill="#aaa18e" font-family="Arial,sans-serif" font-size="24" letter-spacing="2">Dom Sampros Hotel and Suites., Abakaliki, Nigeria</text>
+<text x="600" y="1090" text-anchor="middle" fill="#776b54" font-family="Arial,sans-serif" font-size="17" letter-spacing="6">WWW.BRHNNYSA.COM</text>
+</svg>
