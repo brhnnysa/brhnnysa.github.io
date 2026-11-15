@@ -92,7 +92,12 @@ def parse_date(value: str) -> tuple[str, float]:
 def fetch_feed(source: str, feed_url: str) -> list[tuple[float, dict[str, str]]]:
     request = urllib.request.Request(
         feed_url,
-        headers={"User-Agent": "BrhnNysa-NewsFeed/1.0 (+https://www.brhnnysa.com/)"},
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                          "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
+            "Accept-Language": "en-US,en;q=0.9",
+        },
     )
     with urllib.request.urlopen(request, timeout=25) as response:
         root = ET.fromstring(response.read())
@@ -151,17 +156,43 @@ def fetch_feed(source: str, feed_url: str) -> list[tuple[float, dict[str, str]]]
 
 def main() -> None:
     sortable: list[tuple[float, dict[str, str]]] = []
+    unavailable_sources: set[str] = set()
+    previous_posts: list[dict[str, str]] = []
+    if OUTPUT.exists():
+        try:
+            previous = json.loads(OUTPUT.read_text(encoding="utf-8"))
+            previous_posts = [
+                post for post in previous.get("posts", [])
+                if isinstance(post, dict) and post.get("url")
+            ]
+        except (OSError, json.JSONDecodeError, AttributeError):
+            print("Could not read the previous news feed; continuing with live sources.")
+
     for source, feed_url in FEEDS:
         try:
             feed_posts = fetch_feed(source, feed_url)
+            if not feed_posts:
+                raise RuntimeError("feed returned no posts")
             sortable.extend(feed_posts)
             print(f"Loaded {len(feed_posts)} {source} posts")
         except Exception as error:
-            print(f"Could not load {source} feed: {error}")
+            unavailable_sources.add(source)
+            print(f"WARNING: Could not load {source} feed: {error}; keeping its previous posts.")
 
-    # Keep the website populated if one publisher temporarily fails.
+    # Preserve the last good posts from any publisher temporarily blocking or
+    # failing the request. A partial feed must never erase another publisher.
+    for post in previous_posts:
+        if post.get("source") in unavailable_sources:
+            try:
+                timestamp = datetime.fromisoformat(
+                    str(post.get("published_at", "")).replace("Z", "+00:00")
+                ).timestamp()
+            except (TypeError, ValueError, OverflowError):
+                timestamp = 0.0
+            sortable.append((timestamp, post))
+
     if not sortable:
-        raise RuntimeError("No news feeds could be loaded")
+        raise RuntimeError("No news feeds could be loaded and no previous posts are available")
 
     unique: dict[str, tuple[float, dict[str, str]]] = {}
     for timestamp, post in sortable:
