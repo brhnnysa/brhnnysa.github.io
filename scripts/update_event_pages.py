@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import textwrap
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -217,6 +218,51 @@ def event_image_url(event: dict, image_overrides: dict, page_metadata: dict) -> 
     return candidate if candidate.startswith(("https://", "http://")) else ""
 
 
+def generated_event_artwork(event: dict, title: str, date: datetime | None) -> str:
+    """Create a crawlable, event-specific branded fallback image when no real poster exists."""
+    event_id = text(event.get("id")) or hashlib.sha1(title.encode("utf-8")).hexdigest()[:10]
+    safe_id = re.sub(r"[^a-zA-Z0-9_-]+", "-", event_id)
+    filename = f"brhn-nysa-event-{safe_id}.svg"
+    output_dir = ROOT / "assets" / "event-artwork"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    venue = event.get("venue") or {}
+    venue_text = ", ".join(part for part in [
+        text(venue.get("name")), text(venue.get("city")), text(venue.get("country"))
+    ] if part)
+    date_text = date.strftime("%d %b %Y · %H:%M WAT") if date else "UPCOMING LIVE EVENT"
+    title_lines = textwrap.wrap(title, width=30)[:2] or ["LIVE EVENT"]
+    title_svg = "".join(
+        f'<text x="600" y="{760 + index * 76}" text-anchor="middle" class="event-title">{html.escape(line)}</text>'
+        for index, line in enumerate(title_lines)
+    )
+    svg = f'''<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+<title id="title">{html.escape(title)} · Brhn Nysa event artwork</title>
+<desc id="desc">Brhn Nysa branded artwork for {html.escape(title)}{(" at " + html.escape(venue_text)) if venue_text else ""}.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#242017"/><stop offset=".55" stop-color="#0b0b0b"/><stop offset="1" stop-color="#1b160d"/></linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#d6b56d" stop-opacity=".34"/><stop offset="1" stop-color="#d6b56d" stop-opacity="0"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4dfae"/><stop offset="1" stop-color="#b58a43"/></linearGradient>
+  <pattern id="grain" width="44" height="44" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#fff" opacity=".08"/></pattern>
+</defs>
+<rect width="1200" height="1200" fill="url(#bg)"/><rect width="1200" height="1200" fill="url(#grain)"/>
+<circle cx="600" cy="470" r="440" fill="url(#glow)"/>
+<rect x="70" y="70" width="1060" height="1060" rx="42" fill="none" stroke="#d6b56d" stroke-opacity=".55" stroke-width="3"/>
+<text x="600" y="180" text-anchor="middle" fill="#d6b56d" font-family="Arial,sans-serif" font-size="38" font-weight="700" letter-spacing="13">BRHN NYSA</text>
+<text x="600" y="245" text-anchor="middle" fill="#b8a47e" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="9">OFFICIAL EVENT</text>
+<circle cx="600" cy="475" r="210" fill="#0c0b09" stroke="url(#gold)" stroke-width="5"/><circle cx="600" cy="475" r="178" fill="none" stroke="#d6b56d" stroke-opacity=".3" stroke-width="2"/>
+<path d="M648 340v210c0 55-43 92-96 92-42 0-72-25-72-60 0-40 39-69 88-69 13 0 25 2 36 6V388l142-34v158c0 55-43 92-96 92-42 0-72-25-72-60 0-40 39-69 88-69 13 0 25 2 36 6V340z" fill="url(#gold)" transform="translate(-30,-28) scale(.92)"/>
+<path d="M350 500h-44m588 0h-44M600 240v-38m0 584v-38" stroke="#d6b56d" stroke-opacity=".65" stroke-width="5" stroke-linecap="round"/>
+{title_svg}
+<text x="600" y="960" text-anchor="middle" fill="#e6c985" font-family="Arial,sans-serif" font-size="34" font-weight="700" letter-spacing="4">{html.escape(date_text)}</text>
+<text x="600" y="1030" text-anchor="middle" fill="#aaa18e" font-family="Arial,sans-serif" font-size="24" letter-spacing="2">{html.escape(venue_text[:58] or "LIVE MUSIC EXPERIENCE")}</text>
+<text x="600" y="1090" text-anchor="middle" fill="#776b54" font-family="Arial,sans-serif" font-size="17" letter-spacing="6">WWW.BR HNNYSA.COM</text>
+</svg>
+'''
+    (output_dir / filename).write_text(svg, encoding="utf-8")
+    return f"{BASE_URL}/assets/event-artwork/{filename}"
+
+
 def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
@@ -278,7 +324,7 @@ def build_page(event: dict, page_url: str) -> str:
             image_overrides = json.loads(IMAGE_MAP_PATH.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             image_overrides = {}
-    image_url = event_image_url(event, image_overrides, page_metadata)
+    image_url = event_image_url(event, image_overrides, page_metadata) or generated_event_artwork(event, title, date)
     feed_offers = event.get("offers")
     if not isinstance(feed_offers, list) or not feed_offers:
         feed_offers = page_metadata.get("offers", [])
@@ -375,8 +421,9 @@ def build_page(event: dict, page_url: str) -> str:
     safe_start = html.escape(display_start)
     safe_end = html.escape(display_end)
     organizers_html = ", ".join(html.escape(name) for name in artist_names)
+    generated_image = "/assets/event-artwork/" in image_url
     image_html = (
-        f'<figure class="event-poster"><img class="event-image" src="{html.escape(image_url, quote=True)}" alt="{safe_title} poster" loading="lazy" /></figure>'
+        f'<figure class="event-poster{" generated-event-icon" if generated_image else ""}"><img class="event-image" src="{html.escape(image_url, quote=True)}" alt="{safe_title} event artwork" loading="lazy" /></figure>'
         if image_url else ""
     )
     schema_text = safe_json(schema)
@@ -414,7 +461,7 @@ h1{{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:16px 0;color:#fff}}
 .label{{color:#d6b56d;font-size:11px;font-weight:800;letter-spacing:.16em;margin-top:24px}}
 .value{{margin-top:4px;color:#ddd;overflow-wrap:anywhere}}
 .event-poster{{margin:14px 0 20px;max-width:190px;padding:6px;border:1px solid #3b3325;border-radius:9px;background:#111}}
-.event-image{{display:block;width:100%;height:auto;max-height:125px;object-fit:contain;border-radius:5px;margin:0}}
+.event-image{{display:block;width:100%;height:auto;max-height:125px;object-fit:contain;border-radius:5px;margin:0}}\n .event-poster.generated-event-icon{{width:58px;height:58px;max-width:58px;margin:14px 0 20px;padding:0;border:1px solid #80683e;border-radius:9px;overflow:hidden;background:#111}}\n .event-poster.generated-event-icon .event-image{{width:100%;height:100%;max-height:none;object-fit:cover}}
 .action{{display:inline-block;margin:12px 8px 0 0;padding:11px 15px;border-radius:6px;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.08em}}
 .action.primary{{background:#d6b56d;color:#111}}.action.secondary{{border:1px solid #80683e;color:#e6d5b4}}
 .countdown{{margin-top:22px;padding:14px;border:1px solid #3b3325;border-radius:8px;background:#111;color:#d6b56d;font-weight:800}}
@@ -517,7 +564,7 @@ def main() -> None:
             "bandsintown_url": text(event.get("url")),
             "datetime": text(event.get("datetime")),
             "end_datetime": text(end_value),
-            "image": event_image_url(event, image_overrides, page_metadata),
+            "image": event_image_url(event, image_overrides, page_metadata) or generated_event_artwork(event, display_title(event), event_datetime(event)),
             "venue": event.get("venue") if isinstance(event.get("venue"), dict) else {},
             "description": text(event.get("description")),
             "lineup": event.get("lineup") if isinstance(event.get("lineup"), list) else [],
