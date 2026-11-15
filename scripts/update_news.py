@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the BRHN NYSA website news cards from the public Blogger RSS feed."""
+"""Refresh the Brhn Nysa website news cards from the public Blogger RSS feed."""
 from __future__ import annotations
 
 import html
@@ -65,7 +65,7 @@ def main() -> None:
     posts: list[dict[str, str]] = []
     sortable: list[tuple[float, dict[str, str]]] = []
     for item in root.findall(".//item"):
-        title = html.unescape(local_text(item, ("title",)))
+        title = re.sub(r"(?i)\\bbrhn\\s+nysa\\b", "Brhn Nysa", html.unescape(local_text(item, ("title",))))
         url = local_text(item, ("link",))
         raw_date = local_text(item, ("pubdate",))
         raw_content = local_text(item, ("encoded", "description"))
