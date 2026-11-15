@@ -327,11 +327,27 @@ def build_page(event: dict, page_url: str) -> str:
     if image_url:
         schema["image"] = [image_url]
 
-    display_date = (
-        date.strftime("%A, %d %B %Y · %H:%M %Z")
-        if date and date.tzinfo else
-        (date.strftime("%A, %d %B %Y · %H:%M") if date else date_value)
-    )
+    # Show the full event date range when Bandsintown supplies a genuine end date.
+    # Keep the start time visible; do not infer or fabricate an end time.
+    parsed_end_for_display = parse_datetime(end_date) if end_date else None
+    if date:
+        if parsed_end_for_display and parsed_end_for_display.date() != date.date():
+            if parsed_end_for_display.year == date.year:
+                date_range = (
+                    f"{date.strftime('%a, %b %d')} – "
+                    f"{parsed_end_for_display.strftime('%a, %b %d, %Y')}"
+                )
+            else:
+                date_range = (
+                    f"{date.strftime('%a, %b %d, %Y')} – "
+                    f"{parsed_end_for_display.strftime('%a, %b %d, %Y')}"
+                )
+        else:
+            date_range = date.strftime("%a, %b %d, %Y")
+        start_time = date.strftime("%H:%M %Z") if date.tzinfo else date.strftime("%H:%M")
+        display_date = f"{date_range} · {start_time}"
+    else:
+        display_date = date_value
     address_text = ", ".join(
         value for value in [
             address.get("streetAddress"), address.get("addressLocality"),
