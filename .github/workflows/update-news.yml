@@ -28,13 +28,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Refresh combined Blogger and Substack news feeds
+      - name: Refresh Blogger news feed
         run: python scripts/update_news.py
 
       - name: Commit news when it changes
         run: |
           if git diff --quiet -- data/news.json; then
-            echo "No new Blogger or Substack posts."
+            echo "No new Blogger posts."
             exit 0
           fi
           git config user.name "github-actions[bot]"
