@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh BRHN NYSA's latest releases from the artist's public SoundCloud RSS feed."""
+"""Refresh Brhn Nysa's latest releases from the artist's public SoundCloud RSS feed."""
 from __future__ import annotations
 
 import json
@@ -79,7 +79,7 @@ def soundcloud_releases() -> list[dict]:
         releases.append({
             "id": guid or link.rstrip("/").split("/")[-1],
             "title": clean_title or title,
-            "artist": "BRHN NYSA",
+            "artist": "Brhn Nysa",
             "releaseDate": release_date,
             "artwork": artwork,
             "links": {"soundcloud": link, **PROFILE_LINKS},
@@ -97,7 +97,7 @@ def soundcloud_releases() -> list[dict]:
 def main():
     releases = soundcloud_releases()
     payload = {
-        "artist": "BRHN NYSA",
+        "artist": "Brhn Nysa",
         "source": "SoundCloud artist RSS",
         "sourceUrl": SOUNDCLOUD_RSS,
         "updatedAt": datetime.now(timezone.utc).isoformat(),
