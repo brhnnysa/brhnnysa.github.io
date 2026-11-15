@@ -1258,6 +1258,7 @@ Stream & download anywhere.    </p>
 }
 
 .video-info h3 {
+    text-transform: none !important;
     color: #e3c477;
     font-size: 15px;
     font-weight: 600;
@@ -1397,7 +1398,7 @@ track.addEventListener("click", event => {
             const info = document.createElement("div");
             info.className = "video-info";
             const title = document.createElement("h3");
-            title.textContent = video.title;
+            title.textContent = video.title.replace(/brhn\\s*nysa/gi, "Brhn Nysa").replace(/brhnnysa/gi, "Brhn Nysa");
             const date = document.createElement("p");
             if (video.publishedAt) {
                 const published = new Date(video.publishedAt);
