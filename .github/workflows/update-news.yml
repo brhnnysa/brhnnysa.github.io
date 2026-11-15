@@ -22,24 +22,34 @@ jobs:
     steps:
       - name: Check out website
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Refresh Blogger news feed
-        run: python scripts/update_news.py
-
-      - name: Commit news when it changes
+      - name: Refresh and publish Blogger news safely
         run: |
-          if git diff --quiet -- data/news.json; then
-            echo "No new Blogger posts."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/news.json
-          git commit -m "chore: refresh BRHN NYSA news"
-          git pull --rebase origin main
-          git push
+          set -e
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/update_news.py
+            if git diff --quiet -- data/news.json; then
+              echo "No new Blogger posts."
+              exit 0
+            fi
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/news.json
+            git commit -m "chore: refresh BRHN NYSA news"
+            if git push origin HEAD:main; then
+              echo "Blogger news update published."
+              exit 0
+            fi
+            echo "Push race detected; retrying with the latest main branch."
+          done
+          echo "Could not publish Blogger news after three attempts."
+          exit 1
