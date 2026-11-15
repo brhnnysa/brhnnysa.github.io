@@ -11,6 +11,7 @@ import shutil
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from pathlib import Path
 
@@ -107,6 +108,51 @@ def safe_json(value: object) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
 
 
+class EventImageParser(HTMLParser):
+    """Read share-image metadata from a public Bandsintown event details page."""
+    def __init__(self) -> None:
+        super().__init__()
+        self.image_url = ""
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "meta":
+            return
+        values = {key.lower(): value or "" for key, value in attrs}
+        key = (values.get("property") or values.get("name") or "").lower()
+        candidate = values.get("content", "").strip()
+        if key in {"og:image", "og:image:url", "twitter:image", "twitter:image:src"} and candidate.startswith(("https://", "http://")):
+            self.image_url = candidate
+
+
+def event_image_url(event: dict, image_overrides: dict) -> str:
+    """Prefer explicit feed/override images, then inspect the public event details page."""
+    event_id = text(event.get("id"))
+    candidate = (
+        text(image_overrides.get(event_id)) or
+        text(event.get("image")) or text(event.get("image_url"))
+    )
+    if candidate.startswith(("https://", "http://")):
+        return candidate
+
+    event_url = text(event.get("url"))
+    if not event_url.startswith("https://www.bandsintown.com/e/"):
+        return ""
+    try:
+        request = urllib.request.Request(
+            event_url,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; BrhnNysaEventPages/1.0)",
+                     "Accept": "text/html,application/xhtml+xml"},
+        )
+        with urllib.request.urlopen(request, timeout=12) as response:
+            page = response.read(2_000_000).decode("utf-8", errors="replace")
+        parser = EventImageParser()
+        parser.feed(page)
+        return parser.image_url
+    except Exception as exc:
+        print(f"Could not read poster from Bandsintown event {event_id}: {exc}")
+        return ""
+
+
 def build_page(event: dict, page_url: str) -> str:
     venue = event.get("venue") or {}
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
@@ -154,10 +200,7 @@ def build_page(event: dict, page_url: str) -> str:
             image_overrides = json.loads(IMAGE_MAP_PATH.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             image_overrides = {}
-    image_url = (
-        text(image_overrides.get(text(event.get("id")))) or
-        text(event.get("image")) or text(event.get("image_url"))
-    )
+    image_url = event_image_url(event, image_overrides)
     raw_offers = event.get("offers") if isinstance(event.get("offers"), list) else []
     schema_offers = []
     for raw_offer in raw_offers:
@@ -245,10 +288,10 @@ main{{width:min(760px,calc(100% - 32px));margin:54px auto;padding:30px;backgroun
 h1{{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:16px 0;color:#fff}}
 .label{{color:#d6b56d;font-size:11px;font-weight:800;letter-spacing:.16em;margin-top:24px}}
 .value{{margin-top:4px;color:#ddd;overflow-wrap:anywhere}}
-.event-image{{display:block;width:100%;max-height:360px;object-fit:cover;border-radius:9px;margin:22px 0}}
+.event-image{{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;border-radius:9px;margin:22px 0}}
 .ticket{{display:inline-block;margin-top:28px;padding:12px 18px;border-radius:6px;background:#d6b56d;color:#111;text-decoration:none;font-size:12px;font-weight:900;letter-spacing:.1em}}
 .back{{display:block;margin-top:24px;color:#d6b56d;text-decoration:none;font-size:13px}}
-footer{{color:#777;text-align:center;padding:24px;font-size:12px}}
+@media(max-width:600px){{main{{width:calc(100% - 20px);margin:18px auto;padding:18px}}.event-image{{max-height:240px;margin:16px 0}}h1{{font-size:clamp(25px,8vw,34px)}}}}\nfooter{{color:#777;text-align:center;padding:24px;font-size:12px}}
 </style>
 </head>
 <body>
