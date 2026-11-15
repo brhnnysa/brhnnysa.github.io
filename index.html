@@ -1734,7 +1734,7 @@ body {
     let poster = null;
     if (typeof posterUrl === "string" && /^https?:\/\//i.test(posterUrl)) {
       poster = document.createElement("img");
-      poster.className = "brhn-event-poster";
+      poster.className = "brhn-event-poster" + (posterUrl.includes("/assets/event-artwork/") ? " brhn-generated-event-icon" : "");
       poster.src = posterUrl;
       poster.alt = title.textContent + " event poster";
       poster.loading = "lazy";
@@ -2921,6 +2921,7 @@ document.addEventListener('keydown', function(event) {
 #events-container .brhn-event-field { display:flex; flex-direction:row; align-items:flex-start; gap:8px; min-width:0; }
 #events-container .brhn-event-field strong { flex:0 0 clamp(5.4rem, 27%, 6.8rem); width:clamp(5.4rem, 27%, 6.8rem); padding-top:1px; }
 #events-container .brhn-event-field span { flex:1 1 auto; min-width:0; overflow-wrap:anywhere; }
+#events-container .brhn-event-poster.brhn-generated-event-icon { width:56px; height:56px; max-width:56px; max-height:56px; object-fit:cover; margin:10px 0 12px; border:1px solid rgba(214,181,109,.55); border-radius:8px; }
 @media(max-width:700px) {
   #events-container .brhn-event-field { gap:6px; font-size:.72rem; line-height:1.3; }
   #events-container .brhn-event-field strong { flex-basis:5.4rem; width:5.4rem; font-size:.55rem; }
