@@ -256,7 +256,7 @@ def generated_event_artwork(event: dict, title: str, date: datetime | None) -> s
 {title_svg}
 <text x="600" y="960" text-anchor="middle" fill="#e6c985" font-family="Arial,sans-serif" font-size="34" font-weight="700" letter-spacing="4">{html.escape(date_text)}</text>
 <text x="600" y="1030" text-anchor="middle" fill="#aaa18e" font-family="Arial,sans-serif" font-size="24" letter-spacing="2">{html.escape(venue_text[:58] or "LIVE MUSIC EXPERIENCE")}</text>
-<text x="600" y="1090" text-anchor="middle" fill="#776b54" font-family="Arial,sans-serif" font-size="17" letter-spacing="6">WWW.BR HNNYSA.COM</text>
+<text x="600" y="1090" text-anchor="middle" fill="#776b54" font-family="Arial,sans-serif" font-size="17" letter-spacing="6">WWW.BRHNNYSA.COM</text>
 </svg>
 '''
     (output_dir / filename).write_text(svg, encoding="utf-8")
