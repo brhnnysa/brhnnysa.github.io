@@ -1,0 +1,46 @@
+name: Update Brhn Nysa event pages
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-event-pages.yml'
+      - 'scripts/update_event_pages.py'
+      - 'index.html'
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-brhn-nysa-event-pages
+  cancel-in-progress: false
+
+jobs:
+  generate-event-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate individual event pages and sitemap
+        run: python scripts/update_event_pages.py
+
+      - name: Commit generated event pages
+        run: |
+          if git diff --quiet -- data/events.json data/generated-event-pages.json sitemap.xml events/; then
+            echo "Event pages and sitemap are already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/events.json data/generated-event-pages.json sitemap.xml events/
+          git commit -m "chore: refresh Brhn Nysa event pages"
+          git pull --rebase origin main
+          git push
