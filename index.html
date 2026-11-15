@@ -40,41 +40,86 @@
 <script type="application/ld+json" id="brhn-artist-structured-data">
 {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": "https://www.brhnnysa.com/#artist",
-  "name": "Brhn Nysa",
-  "url": "https://www.brhnnysa.com/",
-  "image": "https://www.brhnnysa.com/artist-headshot.jpg",
-  "description": "Brhn Nysa is a Nigerian singer and songwriter. Visit the official website for music, videos, releases, news and live show dates.",
-  "genre": [
-    "Afrobeat"
-  ],
-  "sameAs": [
-    "https://www.bandsintown.com/a/15666367",
-    "https://musicbrainz.org/artist/211cbfc7-d9c2-4af2-bf91-378d41f20a2b",
-    "https://www.wikidata.org/wiki/Q141479857",
-    "https://www.youtube.com/@brhnnysa",
-    "https://www.instagram.com/heisbrhn/",
-    "https://www.facebook.com/brhnnysa",
-    "https://x.com/brhnnysa",
-    "https://www.tiktok.com/@brhnnysa",
-    "https://www.threads.com/@heisbrhn",
-    "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-    "https://audiomack.com/brhnnysa",
-    "https://soundcloud.com/brhnnysa-466715604",
-    "https://genius.com/artists/Brhn-nysa",
-    "https://play.mdundo.com/artist/717441/Brhn-Nysa",
-    "https://www.discogs.com/artist/18294120-Brhn-Nysa",
-    "https://audio.com/brhn-nysa",
-    "https://beatstorapon.com/artist/brhnnysa",
-    "https://tidal.com/artist/88532992",
-    "https://www.songkick.com/artists/10415488-brhn-nysa",
-    "https://www.imdb.com/name/nm18985668/",
-    "https://www.snapchat.com/@brhnnysa",
-    "https://www.lyrics.com/sub-artist/Brhn-Nysa/75514",
-    "https://brhnnysa1.bandcamp.com/"
-  ],
-  "jobTitle": "Singer and Songwriter"
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://www.brhnnysa.com/#artist",
+      "name": "Brhn Nysa",
+      "url": "https://www.brhnnysa.com/",
+      "image": "https://www.brhnnysa.com/artist-headshot.jpg",
+      "description": "Brhn Nysa is a Nigerian singer and songwriter. Visit the official website for music, videos, releases, news and live show dates.",
+      "genre": ["Afrobeat"],
+      "sameAs": [
+        "https://www.bandsintown.com/a/15666367",
+        "https://musicbrainz.org/artist/211cbfc7-d9c2-4af2-bf91-378d41f20a2b",
+        "https://www.wikidata.org/wiki/Q141479857",
+        "https://www.youtube.com/@brhnnysa",
+        "https://www.instagram.com/heisbrhn/",
+        "https://www.facebook.com/brhnnysa",
+        "https://x.com/brhnnysa",
+        "https://www.tiktok.com/@brhnnysa",
+        "https://www.threads.com/@heisbrhn",
+        "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "https://audiomack.com/brhnnysa",
+        "https://soundcloud.com/brhnnysa-466715604",
+        "https://genius.com/artists/Brhn-nysa",
+        "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "https://www.discogs.com/artist/18294120-Brhn-Nysa",
+        "https://audio.com/brhn-nysa",
+        "https://beatstorapon.com/artist/brhnnysa",
+        "https://tidal.com/artist/88532992",
+        "https://www.songkick.com/artists/10415488-brhn-nysa",
+        "https://www.imdb.com/name/nm18985668/",
+        "https://www.snapchat.com/@brhnnysa",
+        "https://www.lyrics.com/sub-artist/Brhn-Nysa/75514",
+        "https://brhnnysa1.bandcamp.com/"
+      ],
+      "jobTitle": "Singer and Songwriter"
+    },
+    {
+      "@type": "MusicRecording",
+      "@id": "https://www.brhnnysa.com/#still-us-2026",
+      "name": "Still Us",
+      "datePublished": "2026",
+      "byArtist": {"@id": "https://www.brhnnysa.com/#artist"}
+    },
+    {
+      "@type": "MusicAlbum",
+      "@id": "https://www.brhnnysa.com/#second-chances-2026",
+      "name": "Second Chances",
+      "datePublished": "2026",
+      "albumProductionType": "https://schema.org/StudioAlbum",
+      "byArtist": {"@id": "https://www.brhnnysa.com/#artist"},
+      "url": "https://audiomack.com/brhnnysa/album/second-chances-1",
+      "track": [
+        {
+          "@type": "MusicRecording",
+          "name": "Leals Talk",
+          "datePublished": "2026",
+          "byArtist": {"@id": "https://www.brhnnysa.com/#artist"}
+        },
+        {
+          "@type": "MusicRecording",
+          "name": "My Darling",
+          "datePublished": "2026",
+          "byArtist": {"@id": "https://www.brhnnysa.com/#artist"}
+        },
+        {
+          "@type": "MusicRecording",
+          "name": "Sanity",
+          "datePublished": "2026",
+          "byArtist": {"@id": "https://www.brhnnysa.com/#artist"},
+          "contributor": {"@type": "Person", "name": "Newlord"}
+        },
+        {
+          "@type": "MusicRecording",
+          "name": "My Kind",
+          "datePublished": "2026",
+          "byArtist": {"@id": "https://www.brhnnysa.com/#artist"}
+        }
+      ]
+    }
+  ]
 }
 </script>
 
@@ -532,6 +577,15 @@ document.addEventListener('DOMContentLoaded', function () {
     under his independent imprint, featuring standout tracks such as "Still Us" and "Leals Talk".
     <a href="https://www.wikidata.org/wiki/Q141479857" class="wikidata-highlight" target="_blank" rel="noopener noreferrer">Wikidata</a>.
 </p>
+<h3 class="profile-title">2026 Discography</h3>
+<p><strong>Still Us</strong> — Single (2026)</p>
+<p><strong>Second Chances</strong> — Album (2026)</p>
+<ul>
+  <li>Leals Talk</li>
+  <li>My Darling</li>
+  <li>Sanity (feat. Newlord)</li>
+  <li>My Kind</li>
+</ul>
             </div>
         </main>
 
