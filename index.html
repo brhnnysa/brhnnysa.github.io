@@ -863,7 +863,7 @@ Stream & download anywhere.    </p>
 .brhn-auto-releases .release-card{flex:0 0 calc(33.333% - 15px);min-width:0;scroll-snap-align:start;text-align:center;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
 .brhn-auto-releases .release-card img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid #b8944e;border-radius:8px;background:#111}
 .brhn-auto-releases .release-card h3{font-size:15px;letter-spacing:1.5px;text-transform:none;color:#d6b56d;margin:17px 0 7px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brhn-auto-releases .release-card .release-artist{color:#999;font-size:13px;margin:0}
+.brhn-auto-releases .release-card .release-artist{color:#999;font-size:13px;margin:0;text-transform:none !important}
 .brhn-auto-releases .release-card .release-date{color:#999;font-size:12px;margin:5px 0 0}
 .brhn-auto-releases .release-card .release-listen{display:inline-block;margin-top:10px;padding:6px 14px;border:1px solid #b8944e;border-radius:18px;background:transparent;color:#d6b56d;font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer}
 .brhn-auto-releases .release-card .release-listen:hover{background:#d6b56d;color:#080808}
@@ -903,7 +903,7 @@ Stream & download anywhere.    </p>
     return Number.isNaN(d.getTime())?String(value):d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
   };
   function showListen(song){
-    document.getElementById('brhn-listen-song').textContent=(song.title||'Untitled')+' • '+(song.artist||'Brhn Nysa');
+    document.getElementById('brhn-listen-song').textContent=(song.title||'Untitled')+' • Brhn Nysa';
     platforms.replaceChildren();
     Object.entries(platformNames).forEach(([key,label])=>{
       const url=(song.links||{})[key];
@@ -923,7 +923,7 @@ Stream & download anywhere.    </p>
       const img=document.createElement('img');img.src=song.artwork||'';img.alt=(song.title||'Song')+' cover artwork';img.loading='lazy';
       img.addEventListener('error',()=>{img.style.visibility='hidden';img.parentElement.style.background='#171717';});
       const title=document.createElement('h3');title.textContent=song.title||'Untitled';
-      const artist=document.createElement('p');artist.className='release-artist';artist.textContent=song.artist||'Brhn Nysa';
+      const artist=document.createElement('p');artist.className='release-artist';artist.textContent='Brhn Nysa';
       const date=document.createElement('p');date.className='release-date';date.textContent='Released: '+dateText(song.releaseDate);
       const button=document.createElement('button');button.type='button';button.className='release-listen';button.textContent='LISTEN NOW';button.addEventListener('click',()=>showListen(song));
       card.append(img,title,artist,date,button);rail.appendChild(card);
