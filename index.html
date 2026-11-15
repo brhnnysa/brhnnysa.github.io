@@ -1700,7 +1700,7 @@ body {
     const dateLabel = document.createElement("div");
     dateLabel.className = "brhn-event-field";
     const startLabel = document.createElement("strong");
-    startLabel.textContent = "DATA";
+    startLabel.textContent = "DATE";
     const startValue = document.createElement("span");
     startValue.textContent = dateFormatter.format(date) + " · " + timeFormatter.format(date) + " WAT";
     dateLabel.append(startLabel, startValue);
@@ -2917,6 +2917,14 @@ document.addEventListener('keydown', function(event) {
 #events-container .brhn-event-ticket-button { display:flex; justify-content:center; align-items:center; width:100%; margin-top:auto; padding:13px 12px; border-radius:6px; background:#d6b56d; color:#111; font-size:.7rem; letter-spacing:.13em; font-weight:900; text-decoration:none; }
 #events-container .brhn-event-ticket-button:hover { background:#f4dfae; }
 @media(max-width:700px) { #events-container .brhn-event-ticket { flex:0 0 86% !important; min-width:0; max-width:360px; } #events-container .brhn-event-body { min-height:235px; padding:19px 17px 17px; } }
+/* Compact, aligned event metadata: keep existing card dimensions unchanged. */
+#events-container .brhn-event-field { display:flex; flex-direction:row; align-items:flex-start; gap:8px; min-width:0; }
+#events-container .brhn-event-field strong { flex:0 0 clamp(5.4rem, 27%, 6.8rem); width:clamp(5.4rem, 27%, 6.8rem); padding-top:1px; }
+#events-container .brhn-event-field span { flex:1 1 auto; min-width:0; overflow-wrap:anywhere; }
+@media(max-width:700px) {
+  #events-container .brhn-event-field { gap:6px; font-size:.72rem; line-height:1.3; }
+  #events-container .brhn-event-field strong { flex-basis:5.4rem; width:5.4rem; font-size:.55rem; }
+}
 </style>
 
 
