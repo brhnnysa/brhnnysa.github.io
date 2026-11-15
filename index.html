@@ -1695,14 +1695,14 @@ body {
       timeZone: "Africa/Lagos"
     });
     const timeFormatter = new Intl.DateTimeFormat("en-GB", {
-      hour: "2-digit", minute: "2-digit", timeZone: "Africa/Lagos", hour12: false
+      hour: "numeric", minute: "2-digit", timeZone: "Africa/Lagos", hour12: true
     });
     const dateLabel = document.createElement("div");
     dateLabel.className = "brhn-event-field";
     const startLabel = document.createElement("strong");
     startLabel.textContent = "DATE";
     const startValue = document.createElement("span");
-    startValue.textContent = dateFormatter.format(date) + " · " + timeFormatter.format(date) + " WAT";
+    startValue.textContent = dateFormatter.format(date) + " · " + timeFormatter.format(date).toUpperCase() + " WAT";
     dateLabel.append(startLabel, startValue);
 
     const endValue = event.end_datetime || event.endDate || event.end_date || "";
@@ -1713,7 +1713,7 @@ body {
     endLabel.textContent = "END";
     const endText = document.createElement("span");
     endText.textContent = endDate && !Number.isNaN(endDate.getTime())
-      ? dateFormatter.format(endDate) + " · " + timeFormatter.format(endDate) + " WAT"
+      ? dateFormatter.format(endDate) + " · " + timeFormatter.format(endDate).toUpperCase() + " WAT"
       : "Not provided by Bandsintown";
     endLine.append(endLabel, endText);
 
