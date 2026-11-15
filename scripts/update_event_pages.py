@@ -351,6 +351,8 @@ def main() -> None:
             "url": page_url,
             "bandsintown_url": text(event.get("url")),
             "datetime": text(event.get("datetime")),
+            "venue": event.get("venue") if isinstance(event.get("venue"), dict) else {},
+            "description": text(event.get("description")),
         })
 
     # Remove only pages previously created by this generator that are no longer upcoming.
