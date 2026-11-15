@@ -112,7 +112,7 @@ def build_page(event: dict, page_url: str) -> str:
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     title = display_title(event)
     description = text(event.get("description"))
-    if not description:
+    if not description or description.casefold() in {title.casefold(), venue_name.casefold()}:
         city = text(venue.get("city"))
         region = text(venue.get("region"))
         country = text(venue.get("country"))
@@ -122,7 +122,7 @@ def build_page(event: dict, page_url: str) -> str:
             "Check this page for event details and ticket information."
         )
     date_value = text(event.get("datetime"))
-    date = parse_datetime(date_value)
+    date = event_datetime(event)
     start_date = date.isoformat() if date else date_value
     venue_name = VENUE_NAME_OVERRIDES.get(text(event.get("id"))) or text(venue.get("name")) or "Venue to be announced"
     address = {
