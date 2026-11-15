@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh Brhn Nysa website news cards from Blogger and Substack RSS feeds."""
+"""Refresh Brhn Nysa website news cards from the Blogger RSS feed."""
 from __future__ import annotations
 
 import html
@@ -15,7 +15,6 @@ from urllib.parse import urlparse
 
 FEEDS = [
     ("Blogger", "https://lealsnews.blogspot.com/feeds/posts/default?alt=rss"),
-    ("Substack", "https://brhnnysa.substack.com/feed"),
 ]
 OUTPUT = Path("data/news.json")
 MAX_POSTS = 40
@@ -39,7 +38,7 @@ class ContentParser(HTMLParser):
             candidate = values.get("src", "")
             host = urlparse(candidate).hostname or ""
             allowed = ("youtube.com", "youtube-nocookie.com", "youtu.be",
-                       "player.vimeo.com", "substack.com")
+                       "player.vimeo.com")
             if candidate.startswith("https://") and any(
                 host == domain or host.endswith("." + domain) for domain in allowed
             ):
@@ -179,8 +178,8 @@ def main() -> None:
             unavailable_sources.add(source)
             print(f"WARNING: Could not load {source} feed: {error}; keeping its previous posts.")
 
-    # Preserve the last good posts from any publisher temporarily blocking or
-    # failing the request. A partial feed must never erase another publisher.
+    # Preserve the last good Blogger posts if the feed temporarily blocks
+    # or fails the request.
     for post in previous_posts:
         if post.get("source") in unavailable_sources:
             try:
