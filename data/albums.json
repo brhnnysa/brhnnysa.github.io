@@ -1,7 +1,7 @@
 {
   "artist": "Brhn Nysa",
   "source": "Audio.com authenticated API",
-  "updatedAt": "2026-11-16T12:22:22.069751+00:00",
+  "updatedAt": "2026-11-16T15:33:41.451845+00:00",
   "albums": [
     {
       "id": "1882016450228632",
@@ -21,9 +21,9 @@
       },
       "tracks": [
         {
-          "title": "Right now remix",
-          "url": "https://audio.com/brhn-nysa/audio/right-now-remix-1",
-          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/05/87/1878958075958705-1878958118899618.jpeg"
+          "title": "Sanity ft Newlord",
+          "url": "https://audio.com/brhn-nysa/audio/sanityftnewlord",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/12/13/1876875247251312-1876878831732213.jpeg"
         }
       ],
       "trackCount": 1
@@ -63,7 +63,7 @@
         {
           "title": "My Last Apology",
           "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-my-last-apology-kx83tl7hhulxdpatwxpf",
-          "artwork": ""
+          "artwork": "https://audio.com/s3/audio.com.static/placeholder/T07-S06-3-0.png"
         }
       ],
       "trackCount": 4
@@ -98,7 +98,7 @@
         {
           "title": "In Love",
           "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-in-love-vegqozcf0heifmvedu6d",
-          "artwork": ""
+          "artwork": "https://audio.com/s3/audio.com.static/placeholder/T03-S12-4-0.png"
         }
       ],
       "trackCount": 3
