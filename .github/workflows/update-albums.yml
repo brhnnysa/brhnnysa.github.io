@@ -6,7 +6,7 @@ on:
       - 'scripts/update_albums.py'
       - '.github/workflows/update-albums.yml'
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
