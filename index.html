@@ -951,7 +951,7 @@ Stream & download anywhere.    </p>
   const rail=document.getElementById('brhn-release-rail');
   const dialog=document.getElementById('brhn-listen-dialog');
   const platforms=document.getElementById('brhn-platform-links');
-  const platformNames={audiomack:'Audiomack',boomplay:'Boomplay',soundcloud:'SoundCloud',mdundo:'Mdundo',genius:'Genius'};
+  const platformNames={audiomack:'Audiomack',boomplay:'Boomplay',soundcloud:'SoundCloud',mdundo:'Mdundo',genius:'Genius',tidal:'TIDAL',audiocom:'Audio.com'};
   const dateText=value=>{
     if(!value)return 'Release date unavailable';
     const d=new Date(value);
@@ -970,6 +970,7 @@ Stream & download anywhere.    </p>
     });
     dialog.showModal();
   }
+  window.brhnShowListen=showListen;
   function render(items){
     rail.replaceChildren();
     if(!items.length){const p=document.createElement('p');p.className='brhn-release-status';p.textContent='New Brhn Nysa releases will appear here automatically.';rail.appendChild(p);return;}
@@ -995,6 +996,188 @@ Stream & download anywhere.    </p>
 })();
 </script>
 <!-- END Brhn Nysa AUTOMATIC MUSIC RELEASES -->
+
+<!-- Brhn Nysa AUTOMATIC ALBUMS -->
+<section id="brhn-auto-albums" class="brhn-auto-albums" aria-labelledby="brhn-albums-title">
+  <h2 id="brhn-albums-title" class="brhn-albums-heading">LATEST ALBUMS</h2>
+  <div class="brhn-albums-carousel">
+    <button class="brhn-albums-arrow" id="brhn-albums-prev" type="button" aria-label="Previous albums">‹</button>
+    <div class="brhn-albums-track" id="brhn-albums-rail" aria-live="polite">
+      <p class="brhn-albums-status">Loading Brhn Nysa albums…</p>
+    </div>
+    <button class="brhn-albums-arrow" id="brhn-albums-next" type="button" aria-label="Next albums">›</button>
+  </div>
+</section>
+
+<dialog id="brhn-album-tracklist-dialog" class="brhn-album-dialog" aria-labelledby="brhn-album-tracklist-title">
+  <div class="brhn-album-dialog-inner">
+    <div class="brhn-album-dialog-heading">
+      <div>
+        <p class="brhn-album-dialog-kicker">BRHN NYSA • ALBUM TRACKLIST</p>
+        <h3 id="brhn-album-tracklist-title">Album</h3>
+      </div>
+      <button type="button" id="brhn-album-tracklist-close" aria-label="Close tracklist">×</button>
+    </div>
+    <ol id="brhn-album-tracklist" class="brhn-album-tracklist"></ol>
+    <button type="button" id="brhn-album-tracklist-listen" class="brhn-album-listen">LISTEN NOW</button>
+  </div>
+</dialog>
+
+<style id="brhn-auto-albums-style">
+.brhn-auto-albums {
+  width:100%; max-width:none; margin:0; padding:48px 5% 54px;
+  color:#d6b56d; background:#080808; border-bottom:1px solid #b8944e;
+  overflow:hidden; box-sizing:border-box;
+}
+.brhn-albums-heading {
+  margin:0 0 30px; text-align:center; color:#d6b56d;
+  font-size:28px; font-weight:800; letter-spacing:5px;
+}
+.brhn-albums-carousel { position:relative; max-width:1200px; margin:0 auto; }
+.brhn-albums-track {
+  display:flex; gap:22px; width:100%; min-width:0; overflow-x:auto;
+  overflow-y:hidden; padding:8px 2px 18px; scroll-snap-type:x mandatory;
+  scroll-behavior:smooth; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+.brhn-albums-track::-webkit-scrollbar { display:none; }
+.brhn-album-card {
+  flex:0 0 calc(33.333% - 15px); min-width:0; scroll-snap-align:start;
+  text-align:center; background:transparent; color:#fff;
+}
+.brhn-album-art {
+  display:block; width:100%; aspect-ratio:1/1; object-fit:cover;
+  border:1px solid #b8944e; border-radius:8px; background:#151515;
+}
+.brhn-album-card h3 {
+  margin:15px 0 6px; color:#d6b56d; font-size:16px; font-weight:800;
+  letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.brhn-album-artist { margin:0; color:#999; font-size:13px; }
+.brhn-album-count { margin:6px 0 12px; color:#888; font-size:12px; }
+.brhn-album-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
+.brhn-album-actions button, .brhn-album-listen {
+  display:inline-block; padding:9px 13px; border:1px solid #b8944e;
+  border-radius:20px; background:transparent; color:#d6b56d;
+  font-size:10px; font-weight:800; letter-spacing:1px; cursor:pointer;
+}
+.brhn-album-actions button:hover, .brhn-album-listen:hover {
+  background:#d6b56d; color:#080808;
+}
+.brhn-albums-arrow {
+  position:absolute; z-index:2; top:42%; transform:translateY(-50%);
+  width:42px; height:42px; border:1px solid #d6b56d; border-radius:50%;
+  background:#080808; color:#d6b56d; font-size:25px; cursor:pointer;
+}
+#brhn-albums-prev { left:-20px; }
+#brhn-albums-next { right:-20px; }
+.brhn-albums-status { flex:1 0 100%; padding:24px; color:#999; text-align:center; }
+.brhn-album-dialog {
+  width:min(560px,calc(100% - 28px)); max-height:min(82vh,720px);
+  margin:auto; padding:0; border:1px solid #8e713c; border-radius:12px;
+  background:#101010; color:#fff; box-shadow:0 20px 70px rgba(0,0,0,.7);
+}
+.brhn-album-dialog::backdrop { background:rgba(0,0,0,.78); }
+.brhn-album-dialog-inner { padding:22px; overflow:auto; max-height:min(82vh,720px); }
+.brhn-album-dialog-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; padding-bottom:16px; border-bottom:1px solid #3b3020; }
+.brhn-album-dialog-kicker { margin:0 0 6px; color:#d6b56d; font-size:9px; font-weight:800; letter-spacing:1.6px; }
+.brhn-album-dialog-heading h3 { margin:0; color:#fff; font-size:21px; }
+#brhn-album-tracklist-close {
+  flex:0 0 34px; width:34px; height:34px; border:1px solid #57462b;
+  border-radius:50%; background:transparent; color:#d6b56d; font-size:22px; cursor:pointer;
+}
+.brhn-album-tracklist { margin:14px 0 18px; padding-left:25px; }
+.brhn-album-tracklist li { padding:10px 4px; border-bottom:1px solid #28231b; color:#ddd; font-size:14px; }
+.brhn-album-tracklist a { color:#e4c27d; text-decoration:none; }
+.brhn-album-tracklist a:hover { text-decoration:underline; }
+.brhn-album-listen { width:100%; padding:13px; border-radius:6px; }
+@media(max-width:700px) {
+  .brhn-auto-albums { padding:40px 5% 44px; }
+  .brhn-albums-heading { font-size:23px; letter-spacing:4px; margin-bottom:22px; }
+  .brhn-album-card { flex:0 0 82%; }
+  .brhn-albums-arrow { display:none; }
+  .brhn-album-dialog-inner { padding:18px; }
+}
+@media(prefers-reduced-motion:reduce) { .brhn-albums-track { scroll-behavior:auto; } }
+</style>
+
+<script id="brhn-auto-albums-script">
+(function(){
+  const rail=document.getElementById('brhn-albums-rail');
+  const tracklistDialog=document.getElementById('brhn-album-tracklist-dialog');
+  const tracklistTitle=document.getElementById('brhn-album-tracklist-title');
+  const tracklist=document.getElementById('brhn-album-tracklist');
+  const listenButton=document.getElementById('brhn-album-tracklist-listen');
+  let selectedAlbum=null;
+
+  function openTracklist(album){
+    selectedAlbum=album;
+    tracklistTitle.textContent=album.title||'Album';
+    tracklist.replaceChildren();
+    (album.tracks||[]).forEach(function(track){
+      const li=document.createElement('li');
+      const a=document.createElement('a');
+      a.textContent=track.title||'Untitled track';
+      a.href=track.url||album.url||'#';
+      a.target='_blank'; a.rel='noopener noreferrer';
+      li.appendChild(a); tracklist.appendChild(li);
+    });
+    if(!tracklist.children.length){
+      const li=document.createElement('li'); li.textContent='Tracklist unavailable.';
+      tracklist.appendChild(li);
+    }
+    tracklistDialog.showModal();
+  }
+
+  function render(albums){
+    rail.replaceChildren();
+    if(!albums.length){
+      const p=document.createElement('p'); p.className='brhn-albums-status';
+      p.textContent='Brhn Nysa albums will appear here automatically.';
+      rail.appendChild(p); return;
+    }
+    albums.forEach(function(album){
+      const card=document.createElement('article'); card.className='brhn-album-card';
+      const img=document.createElement('img'); img.className='brhn-album-art';
+      img.src=album.artwork||''; img.alt=(album.title||'Album')+' cover artwork'; img.loading='lazy';
+      img.addEventListener('error',function(){img.style.visibility='hidden';});
+      const title=document.createElement('h3'); title.textContent=album.title||'Untitled album';
+      const artist=document.createElement('p'); artist.className='brhn-album-artist'; artist.textContent='Brhn Nysa';
+      const count=document.createElement('p'); count.className='brhn-album-count';
+      count.textContent=(album.trackCount||((album.tracks||[]).length))+' tracks';
+      const actions=document.createElement('div'); actions.className='brhn-album-actions';
+      const view=document.createElement('button'); view.type='button'; view.textContent='VIEW TRACKLIST';
+      view.addEventListener('click',function(){openTracklist(album);});
+      const listen=document.createElement('button'); listen.type='button'; listen.textContent='LISTEN NOW';
+      listen.addEventListener('click',function(){
+        if(typeof window.brhnShowListen==='function') window.brhnShowListen(album);
+      });
+      actions.append(view,listen);
+      card.append(img,title,artist,count,actions); rail.appendChild(card);
+    });
+  }
+
+  document.getElementById('brhn-album-tracklist-close').addEventListener('click',function(){tracklistDialog.close();});
+  tracklistDialog.addEventListener('click',function(event){if(event.target===tracklistDialog)tracklistDialog.close();});
+  listenButton.addEventListener('click',function(){
+    if(!selectedAlbum)return;
+    tracklistDialog.close();
+    if(typeof window.brhnShowListen==='function') window.brhnShowListen(selectedAlbum);
+  });
+  document.getElementById('brhn-albums-prev').addEventListener('click',function(){rail.scrollBy({left:-rail.clientWidth*.75,behavior:'smooth'});});
+  document.getElementById('brhn-albums-next').addEventListener('click',function(){rail.scrollBy({left:rail.clientWidth*.75,behavior:'smooth'});});
+
+  fetch('./data/albums.json?updated='+Date.now(),{cache:'no-store'})
+    .then(function(response){if(!response.ok)throw new Error('Album feed unavailable');return response.json();})
+    .then(function(data){render(Array.isArray(data.albums)?data.albums:[]);})
+    .catch(function(){
+      const p=document.createElement('p'); p.className='brhn-albums-status';
+      p.textContent='Albums are temporarily unavailable. Please check again soon.';
+      rail.replaceChildren(p);
+    });
+})();
+</script>
+<!-- END Brhn Nysa AUTOMATIC ALBUMS -->
+
 
 <style>
 .brhn-auto-releases.latest-releases {
