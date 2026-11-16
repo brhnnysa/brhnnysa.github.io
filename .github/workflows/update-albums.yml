@@ -34,13 +34,13 @@ jobs:
         run: python scripts/update_albums.py
       - name: Commit album feed when it changes
         run: |
-          if git diff --quiet -- data/albums.json; then
+          git add data/albums.json
+          if git diff --cached --quiet -- data/albums.json; then
             echo "No album metadata changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/albums.json
           git commit -m "chore: refresh BRHN NYSA album feed"
           git pull --rebase origin main
           git push
