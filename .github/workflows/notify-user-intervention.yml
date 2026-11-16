@@ -1,0 +1,159 @@
+name: Notify Brhn Nysa only when user action is required
+
+on:
+  workflow_run:
+    workflows:
+      - Update BRHN NYSA albums
+      - Update BRHN NYSA music releases
+      - Update BRHN NYSA YouTube uploads
+      - Update Brhn Nysa event pages
+      - Update BRHN NYSA news
+    types: [completed]
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: intervention-alert-${{ github.event.workflow_run.id }}
+  cancel-in-progress: false
+
+jobs:
+  check-and-alert:
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.run_attempt == 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retry failed jobs once and check whether user intervention is needed
+        id: inspect
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const run = context.payload.workflow_run;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const run_id = run.id;
+
+            core.setOutput("needs_user", "false");
+
+            const firstJobs = await github.rest.actions.listJobsForWorkflowRun({
+              owner, repo, run_id, per_page: 100
+            });
+            const firstFailed = firstJobs.data.jobs.filter(j => j.conclusion === "failure");
+            if (firstFailed.length === 0) {
+              core.notice("No failed jobs to retry.");
+              return;
+            }
+
+            core.info(`Retrying ${firstFailed.length} failed job(s) for ${run.name}.`);
+            await github.rest.actions.reRunFailedJobsForWorkflowRun({ owner, repo, run_id });
+
+            let latestRun = null;
+            for (let attempt = 0; attempt < 36; attempt++) {
+              await new Promise(resolve => setTimeout(resolve, 10000));
+              const response = await github.rest.actions.getWorkflowRun({ owner, repo, run_id });
+              latestRun = response.data;
+              if (latestRun.run_attempt > run.run_attempt &&
+                  latestRun.status === "completed") break;
+            }
+
+            if (!latestRun ||
+                latestRun.run_attempt <= run.run_attempt ||
+                latestRun.status !== "completed") {
+              core.warning("The retry did not finish within six minutes; no email was sent because the final result is not yet verified.");
+              return;
+            }
+
+            const finalJobsResponse = await github.rest.actions.listJobsForWorkflowRun({
+              owner, repo, run_id, per_page: 100
+            });
+            const failedAfterRetry = finalJobsResponse.data.jobs.filter(j => j.conclusion === "failure");
+            if (failedAfterRetry.length === 0) {
+              core.notice("The retry succeeded. No email will be sent.");
+              return;
+            }
+
+            const actionNeededPatterns = [
+              { label: "a required credential is missing, invalid, or expired", re: /(AUDIOCOM_TOKEN|GMAIL_APP_PASSWORD|token|secret).{0,100}(not set|missing|empty|invalid|expired|required)/i },
+              { label: "an account rejected authentication (401/unauthorized)", re: /(401 Unauthorized|HTTP Error 401|status code 401|Bad credentials|invalid_grant|authentication failed|unauthorized)/i },
+              { label: "GitHub or a connected service denied required permissions", re: /(Resource not accessible by integration|Permission to .{0,160} denied to github-actions\[bot\]|403 Forbidden.{0,100}(token|permission|access)|403 Client Error: Forbidden)/i }
+            ];
+
+            const confirmedReasons = new Set();
+            for (const job of failedAfterRetry) {
+              try {
+                const response = await fetch(
+                  `https://api.github.com/repos/${owner}/${repo}/actions/jobs/${job.id}/logs`,
+                  {
+                    headers: {
+                      authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+                      accept: "application/vnd.github+json",
+                      "x-github-api-version": "2022-11-28"
+                    }
+                  }
+                );
+                if (!response.ok) continue;
+                const logText = await response.text();
+                for (const pattern of actionNeededPatterns) {
+                  if (pattern.re.test(logText)) confirmedReasons.add(pattern.label);
+                }
+              } catch (error) {
+                core.warning(`Could not inspect logs for job ${job.name}: ${error.message}`);
+              }
+            }
+
+            if (confirmedReasons.size === 0) {
+              core.warning("The retry still failed, but logs do not establish that the user must intervene. No email was sent.");
+              return;
+            }
+
+            const jobNames = failedAfterRetry.map(j => j.name).join(", ");
+            core.setOutput("needs_user", "true");
+            core.setOutput("job_names", jobNames);
+            core.setOutput("reason", Array.from(confirmedReasons).join("; "));
+            core.setOutput("run_url", run.html_url);
+            core.notice("A confirmed user-action issue remains after retry; an email will be sent.");
+
+      - name: Email only when user intervention is confirmed
+        if: steps.inspect.outputs.needs_user == 'true'
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_ADDRESS: brhnnysa@gmail.com
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          JOB_NAMES: ${{ steps.inspect.outputs.job_names }}
+          REASON: ${{ steps.inspect.outputs.reason }}
+          RUN_URL: ${{ steps.inspect.outputs.run_url }}
+        run: |
+          python - <<'PY'
+          import os
+          import smtplib
+          from email.message import EmailMessage
+
+          address = os.environ["GMAIL_ADDRESS"]
+          password = os.environ["GMAIL_APP_PASSWORD"].replace(" ", "")
+          if not password:
+              raise SystemExit("GMAIL_APP_PASSWORD is empty.")
+
+          message = EmailMessage()
+          message["From"] = address
+          message["To"] = address
+          message["Subject"] = "Action needed: " + os.environ["WORKFLOW_NAME"]
+          message.set_content(
+              "A website automation still needs your attention after an automatic retry.\n\n"
+              f"Workflow: {os.environ['WORKFLOW_NAME']}\n"
+              f"Failed job(s): {os.environ['JOB_NAMES']}\n"
+              f"What needs attention: {os.environ['REASON']}\n\n"
+              "Please open the run for details and take the required account, credential, "
+              "or permission action:\n"
+              f"{os.environ['RUN_URL']}\n\n"
+              "No email is sent for routine failures that recover on retry."
+          )
+
+          with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
+              server.starttls()
+              server.login(address, password)
+              server.send_message(message)
+          print("User-action email sent.")
+          PY
