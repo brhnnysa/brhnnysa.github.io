@@ -1,0 +1,26 @@
+name: Test Audio.com public album access
+
+on:
+  push:
+    paths:
+      - 'scripts/test_audiocom_public_albums.py'
+      - '.github/workflows/test-audiocom-public-albums.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-public-albums:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependency
+        run: python -m pip install requests
+      - name: Test public Audio.com albums, covers and tracklists
+        run: python scripts/test_audiocom_public_albums.py
