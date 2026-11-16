@@ -88,4 +88,13 @@ if collection_response.status_code == 200:
         )
         print(f"COLLECTION_DETAIL {collection.get('title')} HTTP {detail.status_code}:")
         print(detail.text[:6000])
+        for endpoint in ("item/list", "items"):
+            item_response = requests.get(
+                f"https://api.audio.com/v1/collection/{endpoint}",
+                params={"id": collection_id, "collection_id": collection_id, "page": 1, "per-page": 100},
+                headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+                timeout=30,
+            )
+            print(f"COLLECTION_ITEMS {endpoint} for {collection.get('title')} HTTP {item_response.status_code}:")
+            print(item_response.text[:6000])
 print("NOTE: Read-only collection detail test; no account data is modified.")
