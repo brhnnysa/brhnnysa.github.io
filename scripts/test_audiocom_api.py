@@ -47,4 +47,18 @@ for item in data:
 
 print("PASS: AUDIOCOM_TOKEN was accepted by Audio.com's authenticated API.")
 print(json.dumps({"owned_audio_count_on_page": len(summary), "audio": summary}, ensure_ascii=False, indent=2))
-print("NOTE: This verifies token access and owned tracks only; it does not yet verify album collections or tracklists.")
+search_response = requests.get(
+    "https://api.audio.com/v1/search",
+    params={"q": "Brhn Nysa", "types": "collection", "page": 1},
+    headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+    timeout=30,
+)
+if search_response.status_code != 200:
+    raise SystemExit(f"FAIL: Audio.com collection search returned HTTP {search_response.status_code}: {search_response.text[:500]}")
+try:
+    search_data = search_response.json()
+except ValueError:
+    raise SystemExit("FAIL: Audio.com collection search returned non-JSON data.")
+print("COLLECTION_SEARCH:")
+print(json.dumps(search_data, ensure_ascii=False, indent=2)[:12000])
+print("NOTE: Search output is used to verify discoverable collections; collection detail/track ordering still needs verification.")
