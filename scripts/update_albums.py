@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 import os
+import re
 from pathlib import Path
 import sys
 import time
@@ -59,8 +60,13 @@ def main():
         track_items = []
         for track in tracks:
             track_slug = track.get("slug", "")
+            track_title = track.get("title") or "Untitled track"
+            if track_title.lower().startswith(("brhn_nysa_", "brhn nysa")):
+                track_title = re.sub(r"^Brhn[_\\s-]*Nysa[_\\s-]*", "", track_title, flags=re.IGNORECASE)
+                track_title = re.sub(r"[-_][A-Za-z0-9]{12,}$", "", track_title)
+                track_title = re.sub(r"[_-]+", " ", track_title).strip().title() or "Untitled track"
             track_items.append({
-                "title": track.get("title") or "Untitled track",
+                "title": track_title,
                 "url": f"https://audio.com/{USERNAME}/audio/{track_slug}" if track_slug else f"https://audio.com/{USERNAME}",
                 "artwork": track.get("image") or "",
             })
