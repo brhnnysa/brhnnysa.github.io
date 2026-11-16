@@ -83,9 +83,9 @@ def main() -> None:
 
     channel_id = ""
     for pattern in (
-        r'"channelId"\\s*:\\s*"(UC[A-Za-z0-9_-]{20,})"',
-        r'"externalId"\\s*:\\s*"(UC[A-Za-z0-9_-]{20,})"',
-        r'https://www\\.youtube\\.com/channel/(UC[A-Za-z0-9_-]{20,})',
+        r'"channelId"\s*:\s*"(UC[A-Za-z0-9_-]{20,})"',
+        r'"externalId"\s*:\s*"(UC[A-Za-z0-9_-]{20,})"',
+        r'https://www\.youtube\.com/channel/(UC[A-Za-z0-9_-]{20,})',
     ):
         match = re.search(pattern, page)
         if match:
@@ -105,8 +105,8 @@ def main() -> None:
     content_types: set[str] = set()
 
     for marker, id_key in (
-        ('"lockupViewModel"\\s*:\\s*\\{', "contentId"),
-        ('"videoRenderer"\\s*:\\s*\\{', "videoId"),
+        ('"lockupViewModel"\s*:\s*\{', "contentId"),
+        ('"videoRenderer"\s*:\s*\{', "videoId"),
     ):
         for match in re.finditer(marker, source):
             opening = source.find("{", match.start())
@@ -199,7 +199,7 @@ def main() -> None:
         "videos": videos[:20],
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(
         f"Updated Brhn Nysa regular-video feed with {len(payload['videos'])} videos "
         "(Shorts excluded; no per-video page scraping)."
