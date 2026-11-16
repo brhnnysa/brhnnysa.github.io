@@ -1,7 +1,7 @@
 {
   "artist": "Brhn Nysa",
   "source": "Audio.com authenticated API",
-  "updatedAt": "2026-11-16T11:01:35.270095+00:00",
+  "updatedAt": "2026-11-16T11:02:07.333008+00:00",
   "albums": [
     {
       "id": "1880177422512361",
@@ -36,7 +36,7 @@
           "artwork": "https://audio.com/s3w/audio.com.static/audio/image/05/33/1875999379993305-1875999465680057.jpeg"
         },
         {
-          "title": "Brhn_Nysa_-My_Last_Apology",
+          "title": "My Last Apology",
           "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-my-last-apology-kx83tl7hhulxdpatwxpf",
           "artwork": "https://audio.com/s3w/audio.com.static/user/avatar/55/72/1881336729447255.jpeg"
         }
@@ -71,7 +71,7 @@
           "artwork": "https://audio.com/s3w/audio.com.static/audio/image/23/98/1880071709399823-1880071758940027.jpeg"
         },
         {
-          "title": "Brhn_Nysa_-In_love_-VEgQoZcF0heifMVeDu6D",
+          "title": "In Love",
           "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-in-love-vegqozcf0heifmvedu6d",
           "artwork": "https://audio.com/s3w/audio.com.static/user/avatar/55/72/1881336729447255.jpeg"
         }
