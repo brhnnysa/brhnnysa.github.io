@@ -1,0 +1,82 @@
+{
+  "artist": "Brhn Nysa",
+  "source": "Audio.com authenticated API",
+  "updatedAt": "2026-11-16T11:01:35.270095+00:00",
+  "albums": [
+    {
+      "id": "1880177422512361",
+      "title": "Second Chances",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-10-27",
+      "artwork": "https://audio.com/s3w/audio.com.static/collection/image/61/23/1880177422512361-1880177451596455.jpeg",
+      "url": "https://audio.com/brhn-nysa/collections/second-chances",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa/",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/artists/Brhn-nysa",
+        "tidal": "https://tidal.com/artist/88532992",
+        "audiocom": "https://audio.com/brhn-nysa/collections/second-chances"
+      },
+      "tracks": [
+        {
+          "title": "Leals Talk",
+          "url": "https://audio.com/brhn-nysa/audio/leals-talk-1",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/87/57/1877839884195787-1877839892215602.jpeg"
+        },
+        {
+          "title": "My Kind",
+          "url": "https://audio.com/brhn-nysa/audio/mykind",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/63/36/1877839797983663-1877839825017687.jpeg"
+        },
+        {
+          "title": "Still Us",
+          "url": "https://audio.com/brhn-nysa/audio/still-us",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/05/33/1875999379993305-1875999465680057.jpeg"
+        },
+        {
+          "title": "Brhn_Nysa_-My_Last_Apology",
+          "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-my-last-apology-kx83tl7hhulxdpatwxpf",
+          "artwork": "https://audio.com/s3w/audio.com.static/user/avatar/55/72/1881336729447255.jpeg"
+        }
+      ],
+      "trackCount": 4
+    },
+    {
+      "id": "1880177273879170",
+      "title": "She Own It",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-10-27",
+      "artwork": "https://audio.com/s3w/audio.com.static/audio/image/42/38/1880177065933842-1880177131096439.jpeg",
+      "url": "https://audio.com/brhn-nysa/collections/she-own-it",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa/",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/artists/Brhn-nysa",
+        "tidal": "https://tidal.com/artist/88532992",
+        "audiocom": "https://audio.com/brhn-nysa/collections/she-own-it"
+      },
+      "tracks": [
+        {
+          "title": "My Darling ( SpeedUP )",
+          "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-my-darling-speed-up",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/42/38/1880177065933842-1880177131096439.jpeg"
+        },
+        {
+          "title": "My Darling",
+          "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-my-darling",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/23/98/1880071709399823-1880071758940027.jpeg"
+        },
+        {
+          "title": "Brhn_Nysa_-In_love_-VEgQoZcF0heifMVeDu6D",
+          "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-in-love-vegqozcf0heifmvedu6d",
+          "artwork": "https://audio.com/s3w/audio.com.static/user/avatar/55/72/1881336729447255.jpeg"
+        }
+      ],
+      "trackCount": 3
+    }
+  ]
+}
