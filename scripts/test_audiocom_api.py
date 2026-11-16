@@ -71,4 +71,21 @@ collection_response = requests.get(
 print(f"OWNED_COLLECTION_LIST_HTTP: {collection_response.status_code}")
 print("OWNED_COLLECTION_LIST_BODY:")
 print(collection_response.text[:12000])
-print("NOTE: Read-only collection discovery test; no account data is modified.")
+if collection_response.status_code == 200:
+    try:
+        owned = collection_response.json()
+    except ValueError:
+        owned = []
+    for collection in owned if isinstance(owned, list) else []:
+        collection_id = collection.get("id")
+        if not collection_id:
+            continue
+        detail = requests.get(
+            "https://api.audio.com/v1/collection/view",
+            params={"id": collection_id},
+            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+            timeout=30,
+        )
+        print(f"COLLECTION_DETAIL {collection.get('title')} HTTP {detail.status_code}:")
+        print(detail.text[:6000])
+print("NOTE: Read-only collection detail test; no account data is modified.")
