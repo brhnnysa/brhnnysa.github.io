@@ -1,8 +1,33 @@
 {
   "artist": "Brhn Nysa",
   "source": "Audio.com authenticated API",
-  "updatedAt": "2026-11-16T11:11:14.028178+00:00",
+  "updatedAt": "2026-11-16T12:22:22.069751+00:00",
   "albums": [
+    {
+      "id": "1882016450228632",
+      "title": "Unreleased",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-11-16",
+      "artwork": "https://audio.com/s3w/audio.com.static/collection/image/32/86/1882016450228632-1882016768793036.jpeg",
+      "url": "https://audio.com/brhn-nysa/collections/unreleased",
+      "links": {
+        "audiomack": "https://audiomack.com/brhnnysa/",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/artists/Brhn-nysa",
+        "tidal": "https://tidal.com/artist/88532992",
+        "audiocom": "https://audio.com/brhn-nysa/collections/unreleased"
+      },
+      "tracks": [
+        {
+          "title": "Right now remix",
+          "url": "https://audio.com/brhn-nysa/audio/right-now-remix-1",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/05/87/1878958075958705-1878958118899618.jpeg"
+        }
+      ],
+      "trackCount": 1
+    },
     {
       "id": "1880177422512361",
       "title": "Second Chances",
@@ -38,7 +63,7 @@
         {
           "title": "My Last Apology",
           "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-my-last-apology-kx83tl7hhulxdpatwxpf",
-          "artwork": "https://audio.com/s3w/audio.com.static/user/avatar/55/72/1881336729447255.jpeg"
+          "artwork": ""
         }
       ],
       "trackCount": 4
@@ -73,7 +98,7 @@
         {
           "title": "In Love",
           "url": "https://audio.com/brhn-nysa/audio/brhn-nysa-in-love-vegqozcf0heifmvedu6d",
-          "artwork": "https://audio.com/s3w/audio.com.static/user/avatar/55/72/1881336729447255.jpeg"
+          "artwork": ""
         }
       ],
       "trackCount": 3
