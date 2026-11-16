@@ -61,4 +61,14 @@ except ValueError:
     raise SystemExit("FAIL: Audio.com collection search returned non-JSON data.")
 print("COLLECTION_SEARCH:")
 print(json.dumps(search_data, ensure_ascii=False, indent=2)[:12000])
-print("NOTE: Search output is used to verify discoverable collections; collection detail/track ordering still needs verification.")
+
+collection_response = requests.get(
+    "https://api.audio.com/v1/collection/list",
+    params={"sort": "newest", "page": 1, "per-page": 100},
+    headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+    timeout=30,
+)
+print(f"OWNED_COLLECTION_LIST_HTTP: {collection_response.status_code}")
+print("OWNED_COLLECTION_LIST_BODY:")
+print(collection_response.text[:12000])
+print("NOTE: Read-only collection discovery test; no account data is modified.")
