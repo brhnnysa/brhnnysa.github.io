@@ -2,8 +2,16 @@
   "artist": "Brhn Nysa",
   "channel": "https://www.youtube.com/@brhnnysa",
   "source": "YouTube public channel Videos tab and RSS feed",
-  "updatedAt": "2026-11-16T12:15:50.526336+00:00",
+  "updatedAt": "2026-11-16T15:32:32.478370+00:00",
   "videos": [
+    {
+      "id": "fQOdzif3qUU",
+      "title": "Brhn Nysa -  My Last Apology (Official Music Video)",
+      "artist": "Brhn Nysa",
+      "publishedAt": "2026-11-16T12:16:37+00:00",
+      "artwork": "https://i.ytimg.com/vi/fQOdzif3qUU/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=fQOdzif3qUU"
+    },
     {
       "id": "l27A83sGlDA",
       "title": "Brhn Nysa - Leals Talk (Official Music Video)",
