@@ -42,5 +42,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore: refresh BRHN NYSA album feed"
-          git pull --rebase origin main
-          git push
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "Album feed published."
+              exit 0
+            fi
+            echo "Push race detected; retrying with the latest main branch."
+            sleep 2
+          done
+          echo "Could not publish album feed after three attempts."
+          exit 1
