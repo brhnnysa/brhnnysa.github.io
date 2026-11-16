@@ -1,3 +1,4 @@
+# Read-only diagnostics for Audio.com owned collections; no account changes.
 #!/usr/bin/env python3
 """Read-only authentication check for the Audio.com Public API."""
 import json
