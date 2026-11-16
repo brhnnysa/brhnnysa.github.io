@@ -2,8 +2,22 @@
   "artist": "Brhn Nysa",
   "source": "SoundCloud artist RSS",
   "sourceUrl": "https://feeds.soundcloud.com/users/soundcloud:users:1559781363/sounds.rss",
-  "updatedAt": "2026-11-16T06:17:08.801296+00:00",
+  "updatedAt": "2026-11-16T09:13:26.634168+00:00",
   "releases": [
+    {
+      "id": "tag:soundcloud,2010:tracks/2439061284",
+      "title": "Leals Mix",
+      "artist": "Brhn Nysa",
+      "releaseDate": "2026-11-16",
+      "artwork": "https://i1.sndcdn.com/artworks-0F6kMkXhoZ2lbi8B-vyAXwA-t3000x3000.jpg",
+      "links": {
+        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/leals-mix",
+        "audiomack": "https://audiomack.com/brhnnysa",
+        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
+        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
+        "genius": "https://genius.com/Brhn-nysa"
+      }
+    },
     {
       "id": "tag:soundcloud,2010:tracks/2426689311",
       "title": "My Darling (SpeedUP )",
