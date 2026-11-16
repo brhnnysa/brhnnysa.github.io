@@ -80,7 +80,7 @@ jobs:
             const actionNeededPatterns = [
               { label: "a required credential is missing, invalid, or expired", re: /(AUDIOCOM_TOKEN|GMAIL_APP_PASSWORD|token|secret).{0,100}(not set|missing|empty|invalid|expired|required)/i },
               { label: "an account rejected authentication (401/unauthorized)", re: /(401 Unauthorized|HTTP Error 401|status code 401|Bad credentials|invalid_grant|authentication failed|unauthorized)/i },
-              { label: "GitHub or a connected service denied required permissions", re: /(Resource not accessible by integration|Permission to .{0,160} denied to github-actions\[bot\]|403 Forbidden.{0,100}(token|permission|access)|403 Client Error: Forbidden)/i }
+              { label: "GitHub or a connected service denied required permissions", re: /(Resource not accessible by integration|Permission to .{0,160} denied to github-actions\\[bot\\]|403 Forbidden.{0,100}(token|permission|access)|(?:Audio\\.com|audiocom).{0,300}403 Client Error: Forbidden|403 Client Error: Forbidden.{0,300}(?:Audio\\.com|audiocom))/i }
             ];
 
             const confirmedReasons = new Set();
