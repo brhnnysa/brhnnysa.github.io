@@ -1,7 +1,7 @@
 {
   "artist": "Brhn Nysa",
   "source": "Audio.com authenticated API",
-  "updatedAt": "2026-11-20T12:14:44.913593+00:00",
+  "updatedAt": "2026-11-20T20:28:34.853132+00:00",
   "albums": [
     {
       "id": "1882016450228632",
@@ -24,9 +24,14 @@
           "title": "Sanity ft Newlord",
           "url": "https://audio.com/brhn-nysa/audio/sanityftnewlord",
           "artwork": "https://audio.com/s3w/audio.com.static/audio/image/12/13/1876875247251312-1876878831732213.jpeg"
+        },
+        {
+          "title": "No Time (cover)",
+          "url": "https://audio.com/brhn-nysa/audio/no-time-cover",
+          "artwork": "https://audio.com/s3w/audio.com.static/audio/image/20/98/1881513638789820-1881513713851004.jpeg"
         }
       ],
-      "trackCount": 1
+      "trackCount": 2
     },
     {
       "id": "1880177422512361",
