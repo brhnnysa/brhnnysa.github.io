@@ -2,7 +2,7 @@
   "artist": "Brhn Nysa",
   "source": "SoundCloud artist RSS",
   "sourceUrl": "https://feeds.soundcloud.com/users/soundcloud:users:1559781363/sounds.rss",
-  "updatedAt": "2026-11-22T07:58:56.192295+00:00",
+  "updatedAt": "2026-11-22T15:55:31.773532+00:00",
   "releases": [
     {
       "id": "tag:soundcloud,2010:tracks/2439061284",
@@ -96,20 +96,6 @@
       "artwork": "https://i1.sndcdn.com/artworks-1PwslRNDKzcNeAL5-fQkdsg-t3000x3000.jpg",
       "links": {
         "soundcloud": "https://soundcloud.com/brhnnysa-466715604/right-now",
-        "audiomack": "https://audiomack.com/brhnnysa",
-        "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
-        "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
-        "genius": "https://genius.com/Brhn-nysa"
-      }
-    },
-    {
-      "id": "tag:soundcloud,2010:tracks/2410700826",
-      "title": "Leals Talk",
-      "artist": "Brhn Nysa",
-      "releaseDate": "2026-09-30",
-      "artwork": "https://i1.sndcdn.com/artworks-MPhzPnuc1KPz0yM0-vEQaKQ-t3000x3000.jpg",
-      "links": {
-        "soundcloud": "https://soundcloud.com/brhnnysa-466715604/leals-talk",
         "audiomack": "https://audiomack.com/brhnnysa",
         "boomplay": "https://www.boomplay.com/artists/EQJZtA_A5BuhoOCxLVWDxWpn",
         "mdundo": "https://play.mdundo.com/artist/717441/Brhn-Nysa",
