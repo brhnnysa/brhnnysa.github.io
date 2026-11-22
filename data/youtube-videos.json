@@ -2,8 +2,16 @@
   "artist": "Brhn Nysa",
   "channel": "https://www.youtube.com/@brhnnysa",
   "source": "YouTube public channel Videos tab and RSS feed",
-  "updatedAt": "2026-11-22T01:46:37.571595+00:00",
+  "updatedAt": "2026-11-22T09:02:15.166498+00:00",
   "videos": [
+    {
+      "id": "Kd5uCRp9ZXw",
+      "title": "smallwave.fm",
+      "artist": "Brhn Nysa",
+      "publishedAt": "2026-11-22T06:07:37+00:00",
+      "artwork": "https://i.ytimg.com/vi/Kd5uCRp9ZXw/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=Kd5uCRp9ZXw"
+    },
     {
       "id": "fQOdzif3qUU",
       "title": "Brhn Nysa -  My Last Apology (Official Music Video)",
