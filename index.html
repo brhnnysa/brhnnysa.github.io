@@ -1023,7 +1023,7 @@ Stream & download anywhere.    </p>
         iconWrap.innerHTML='<svg viewBox="0 0 40 40" width="27" height="27" role="img" aria-label="YouTube Music"><rect width="40" height="40" rx="20" fill="#FF0033"/><circle cx="20" cy="20" r="11" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M18 15.5 25 20l-7 4.5z" fill="#fff"/></svg>';
       }else if(meta.icon){
         const icon=document.createElement('img');
-        icon.src='https://cdn.simpleicons.org/'+meta.icon+'/'+meta.color;
+        icon.src='/assets/platform-icons/'+meta.icon+'.svg';
         icon.alt='';icon.loading='lazy';icon.setAttribute('aria-hidden','true');
         icon.addEventListener('error',()=>{icon.remove();iconWrap.textContent=meta.name.slice(0,2).toUpperCase();iconWrap.classList.add('brhn-platform-icon-fallback');});
         iconWrap.appendChild(icon);
@@ -2537,19 +2537,19 @@ document.addEventListener('keydown', function(event) {
 </a>
         <!-- Spotify Artist Icon Link -->
         <a class="social-icon" href="https://open.spotify.com/artist/7yjxZ46txZctjfAvlV489M" rel="noopener noreferrer" target="_blank" title="Spotify">
-        <img src="https://cdn.simpleicons.org/spotify/1DB954" alt="Spotify" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
+        <img src="/assets/platform-icons/spotify.svg" alt="Spotify" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
         </a>
         <!-- Shazam Artist Icon Link -->
         <a class="social-icon" href="https://www.shazam.com/artist/-/6815074671" rel="noopener noreferrer" target="_blank" title="Shazam">
-        <img src="https://cdn.simpleicons.org/shazam/0088FF" alt="Shazam" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
+        <img src="/assets/platform-icons/shazam.svg" alt="Shazam" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
         </a>
         <!-- Deezer Artist Icon Link -->
         <a class="social-icon" href="https://www.deezer.com/en/artist/429684151" rel="noopener noreferrer" target="_blank" title="Deezer">
-        <img src="https://cdn.simpleicons.org/deezer/FEAA2D" alt="Deezer" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
+        <img src="/assets/platform-icons/deezer.svg" alt="Deezer" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
         </a>
         <!-- Apple Music Artist Icon Link -->
         <a class="social-icon" href="https://music.apple.com/us/artist/brhn-nysa/6815074671" rel="noopener noreferrer" target="_blank" title="Apple Music">
-        <img src="https://cdn.simpleicons.org/applemusic/FA243C" alt="Apple Music" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
+        <img src="/assets/platform-icons/applemusic.svg" alt="Apple Music" width="26" height="26" style="display:block;width:26px;height:26px;object-fit:contain" loading="lazy">
         </a>
         <!-- LINE MUSIC Artist Icon Link -->
         <a class="social-icon" href="https://music.line.me/webapp/artist/mi000000002e2280b6" rel="noopener noreferrer" target="_blank" title="LINE MUSIC">
