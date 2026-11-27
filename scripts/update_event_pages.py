@@ -460,7 +460,7 @@ def main() -> None:
         page_path.write_text(build_page(event, page_url), encoding="utf-8")
         new_pages.append(relative)
         sitemap_urls.add(page_url)
-            end_value = first_value(event, (
+        end_value = first_value(event, (
             "endDate", "end_date", "end_datetime", "datetime_end",
             "endDateTime", "event_end_datetime", "ends_at"
         ))
