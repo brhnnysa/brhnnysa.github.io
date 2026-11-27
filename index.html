@@ -1411,10 +1411,6 @@ Stream & download anywhere.    </p>
 
 <section class="video-section">
     <h2 class="video-heading">LATEST VIDEOS</h2>
-    <div class="brhn-watch-action-wrap">
-      <button type="button" class="brhn-watch-now" id="brhn-watch-now">WATCH NOW</button>
-    </div>
-
     <div class="video-carousel">
         <button aria-label="Previous videos" class="video-arrow prev">❮</button>
 
@@ -1430,6 +1426,9 @@ Stream & download anywhere.    </p>
                 <div class="video-info">
                     <h3>My Darling (Official Music Video)</h3>
                     <p>Release Year: 2026</p>
+                    <button type="button" class="brhn-watch-now video-watch-now">WATCH NOW</button>
+                    <button type="button" class="brhn-watch-now video-watch-now">WATCH NOW</button>
+                    <button type="button" class="brhn-watch-now video-watch-now">WATCH NOW</button>
                 </div>
             </div>
 
@@ -1469,6 +1468,7 @@ Stream & download anywhere.    </p>
                 <div class="video-info">
                     <h3>Cry (Official Music Video)</h3>
                     <p>Release Year: 2025</p>
+                    <button type="button" class="brhn-watch-now video-watch-now">WATCH NOW</button>
                 </div>
             </div>
 
@@ -1501,6 +1501,7 @@ Stream & download anywhere.    </p>
 .brhn-watch-action-wrap{display:flex;justify-content:center;margin:-10px 0 28px}
 .brhn-watch-now{padding:10px 28px;border:1px solid #b8944e;border-radius:22px;background:transparent;color:#d6b56d;font-size:12px;font-weight:800;letter-spacing:2px;cursor:pointer;transition:background .2s,color .2s}
 .brhn-watch-now:hover{background:#d6b56d;color:#080808}
+.video-info .video-watch-now{margin-top:10px;display:inline-block;padding:8px 18px;font-size:10px;letter-spacing:1.5px}
 .brhn-watch-dialog{width:min(430px,calc(100% - 28px));padding:0;border:1px solid #b8944e;border-radius:12px;background:#101010;color:#fff;box-shadow:0 25px 80px #000b}
 .brhn-watch-dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
 .brhn-watch-dialog-inner{padding:22px}
@@ -1683,7 +1684,6 @@ Stream & download anywhere.    </p>
 <script>
 const track = document.getElementById("videoTrack");
 const brhnWatchDialog = document.getElementById("brhn-watch-dialog");
-document.getElementById("brhn-watch-now").addEventListener("click", () => brhnWatchDialog.showModal());
 document.getElementById("brhn-watch-close").addEventListener("click", () => brhnWatchDialog.close());
 brhnWatchDialog.addEventListener("click", event => {
     if (event.target === brhnWatchDialog) brhnWatchDialog.close();
@@ -1704,6 +1704,13 @@ document.querySelector(".video-arrow.next").addEventListener("click", () => {
 });
 
 track.addEventListener("click", event => {
+    const watchButton = event.target.closest(".video-watch-now");
+    if (watchButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        brhnWatchDialog.showModal();
+        return;
+    }
     const card = event.target.closest(".video-card");
     if (!card || card.dataset.playing === "true") return;
     const videoId = card.dataset.video;
@@ -1760,7 +1767,11 @@ track.addEventListener("click", event => {
             } else {
                 date.textContent = "Brhn Nysa";
             }
-            info.append(title, date);
+            const watch = document.createElement("button");
+            watch.type = "button";
+            watch.className = "brhn-watch-now video-watch-now";
+            watch.textContent = "WATCH NOW";
+            info.append(title, date, watch);
             card.append(thumb, info);
             fragment.append(card);
         });
