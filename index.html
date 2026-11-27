@@ -1411,6 +1411,9 @@ Stream & download anywhere.    </p>
 
 <section class="video-section">
     <h2 class="video-heading">LATEST VIDEOS</h2>
+    <div class="brhn-watch-action-wrap">
+      <button type="button" class="brhn-watch-now" id="brhn-watch-now">WATCH NOW</button>
+    </div>
 
     <div class="video-carousel">
         <button aria-label="Previous videos" class="video-arrow prev">❮</button>
@@ -1475,7 +1478,44 @@ Stream & download anywhere.    </p>
     </div>
 </section>
 
+<dialog id="brhn-watch-dialog" class="brhn-watch-dialog" aria-labelledby="brhn-watch-dialog-title">
+  <div class="brhn-watch-dialog-inner">
+    <div class="brhn-watch-dialog-heading">
+      <h3 id="brhn-watch-dialog-title">WHAT DO YOU WANT TO WATCH?</h3>
+      <button type="button" id="brhn-watch-close" aria-label="Close">×</button>
+    </div>
+    <a class="brhn-watch-option" href="https://www.youtube.com/@brhnnysa/videos" target="_blank" rel="noopener noreferrer">
+      <span class="brhn-watch-option-icon" aria-hidden="true">▶</span>
+      <span><strong>YouTube</strong><small>Watch Brhn Nysa videos</small></span>
+      <span class="brhn-watch-option-arrow" aria-hidden="true">↗</span>
+    </a>
+    <a class="brhn-watch-option" href="https://www.tiktok.com/@brhnnysa" target="_blank" rel="noopener noreferrer">
+      <span class="brhn-watch-option-icon brhn-watch-short-icon" aria-hidden="true">♪</span>
+      <span><strong>Watch Shorts</strong><small>Watch Brhn Nysa short-form videos on TikTok</small></span>
+      <span class="brhn-watch-option-arrow" aria-hidden="true">↗</span>
+    </a>
+  </div>
+</dialog>
+
 <style>
+.brhn-watch-action-wrap{display:flex;justify-content:center;margin:-10px 0 28px}
+.brhn-watch-now{padding:10px 28px;border:1px solid #b8944e;border-radius:22px;background:transparent;color:#d6b56d;font-size:12px;font-weight:800;letter-spacing:2px;cursor:pointer;transition:background .2s,color .2s}
+.brhn-watch-now:hover{background:#d6b56d;color:#080808}
+.brhn-watch-dialog{width:min(430px,calc(100% - 28px));padding:0;border:1px solid #b8944e;border-radius:12px;background:#101010;color:#fff;box-shadow:0 25px 80px #000b}
+.brhn-watch-dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
+.brhn-watch-dialog-inner{padding:22px}
+.brhn-watch-dialog-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
+.brhn-watch-dialog-heading h3{margin:0;color:#d6b56d;font-size:15px;letter-spacing:1.2px}
+#brhn-watch-close{flex:0 0 32px;width:32px;height:32px;border:1px solid #b8944e;border-radius:50%;background:#080808;color:#d6b56d;font-size:21px;cursor:pointer}
+.brhn-watch-option{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid #38312a;border-radius:8px;background:#171717;color:#fff;text-decoration:none;margin-top:10px;min-height:62px}
+.brhn-watch-option:hover{border-color:#d6b56d;color:#d6b56d}
+.brhn-watch-option-icon{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:50%;background:#ff0033;color:#fff;font-size:17px}
+.brhn-watch-short-icon{background:#111;border:1px solid #d6b56d}
+.brhn-watch-option strong,.brhn-watch-option small{display:block}
+.brhn-watch-option strong{font-size:14px}
+.brhn-watch-option small{margin-top:4px;color:#999;font-size:11px}
+.brhn-watch-option-arrow{margin-left:auto;color:#d6b56d}
+@media(max-width:700px){.brhn-watch-now{padding:10px 25px}}
 .video-section {
     background: #080808;
     padding: 45px 5%;
@@ -1642,6 +1682,12 @@ Stream & download anywhere.    </p>
 
 <script>
 const track = document.getElementById("videoTrack");
+const brhnWatchDialog = document.getElementById("brhn-watch-dialog");
+document.getElementById("brhn-watch-now").addEventListener("click", () => brhnWatchDialog.showModal());
+document.getElementById("brhn-watch-close").addEventListener("click", () => brhnWatchDialog.close());
+brhnWatchDialog.addEventListener("click", event => {
+    if (event.target === brhnWatchDialog) brhnWatchDialog.close();
+});
 
 document.querySelector(".video-arrow.prev").addEventListener("click", () => {
     track.scrollBy({
